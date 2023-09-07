@@ -1,0 +1,22 @@
+{
+  "name": "sage_server",
+  "version": "1.0.0",
+  "description": "Node server for Sage",
+  "engines": {
+    "node": "16.x"
+  },
+  "scripts": {
+    "start": "node src/loader.js",
+    "test": "node src/loader.js --test"
+  },
+  "main": "loader.js",
+  "author": "teuzet <teuzet92@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "uuid": "^9.0.0",
+    "yaml": "^2.1.3"
+  }
+}
