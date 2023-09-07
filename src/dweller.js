@@ -3,6 +3,12 @@ class Dweller {
 		assert(data.id);
 		assert(data.config);
 		this.id = data.id;
+		this.parent = data.parent;
+		this.core = data.core;
+		this.fullId = this.id;
+		if (this.parent != this.core) {
+			this.fullId = `${this.parent.fullId}.${this.fullId}`;
+		}
 		this.config = data.config;
 	}
 
@@ -10,6 +16,7 @@ class Dweller {
 		let childClassname = data.config.class;
 		let childClass = getClass(childClassname);
 		data.parent = this;
+		data.core = this.core;
 		return new childClass(data);
 	}
 
@@ -25,8 +32,8 @@ class Dweller {
 		return nextChild.get(fullIdParts.join('.'));
 	}
 
-	test() {
-		env.log('Success!');
+	run() {
+		throw new Error (`'run' is not implemented for ${this.fullId}`);
 	}
 }
 

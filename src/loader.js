@@ -67,10 +67,12 @@ function loadConfig(modulePath) {
 function createCore() {
 	let coreClass = getClass('dweller:Dweller');
 	let core = new coreClass({ id: 'core', config });
+	core.core = core;
 	return core
 }
 
 let config = loadConfig('.');
+env.log(config);
 let core = createCore();
-let users = core.get('storage.users');
-users.test();
+let httpServer = core.get('httpServer');
+httpServer.run();

@@ -1,5 +1,5 @@
 requiredModules:
   users: true
+  api: true
 
-.engine:
-  class: 'dweller:Dweller'
+class: 'dweller:Dweller'

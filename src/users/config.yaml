@@ -4,3 +4,5 @@ requiredModules:
 .storage:
   .users:
     class: 'users/users:Users'
+    .getId:
+      class: 'users/commands/getId:Command'
