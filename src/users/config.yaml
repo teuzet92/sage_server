@@ -1,0 +1,6 @@
+requiredModules:
+  storage: true
+
+.storage:
+  .users:
+    class: 'users/users:Users'

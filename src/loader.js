@@ -72,4 +72,5 @@ function createCore() {
 
 let config = loadConfig('.');
 let core = createCore();
-core.test();
+let users = core.get('storage.users');
+users.test();

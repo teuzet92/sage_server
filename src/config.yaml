@@ -1,2 +1,5 @@
+requiredModules:
+  users: true
+
 .engine:
   class: 'dweller:Dweller'
