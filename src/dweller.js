@@ -1,4 +1,4 @@
-class Dweller {
+module.exports = class {
 	constructor(data) {
 		assert(data.id);
 		assert(data.config);
@@ -37,5 +37,3 @@ class Dweller {
 		throw new Error (`'run' is not implemented for ${this.fullId}`);
 	}
 }
-
-module.exports = { Dweller };

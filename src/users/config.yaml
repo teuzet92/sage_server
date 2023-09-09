@@ -3,9 +3,9 @@ requiredModules:
 
 .storage:
   .users:
-    class: 'users/users:Users'
+    class: 'users/users'
     .getId:
-      class: 'users/commands/getId:Command'
+      class: 'users/commands/getId'
       params: 
         paramName:
           type: 'int'

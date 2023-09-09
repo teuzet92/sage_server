@@ -1,5 +1,3 @@
-class Storage extends getClass('dweller:Dweller') {
+module.exports = class extends getClass('dweller') {
 
 }
-
-module.exports = { Storage }

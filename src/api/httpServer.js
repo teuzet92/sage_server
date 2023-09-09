@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require('cors');
 
-class HttpServer extends getClass('dweller:Dweller') { 
+module.exports = class extends getClass('dweller') { 
 
     async command(data, response) {
         let out = {
@@ -48,5 +48,3 @@ class HttpServer extends getClass('dweller:Dweller') {
         this.httpServer.listen(port);
     }
 }
-
-module.exports = { HttpServer };

@@ -7,14 +7,10 @@ require('./core/env');
 
 global._classes = {};
 global.getClass = function(path) {
-	let [ fileName, className ] = path.split(':');
-	let exp = require(`./${fileName}`);
-	let c = exp[className];
-	_classes[path] = c;
-	return c;
+	return require(`./${path}`);
 }
 
-getClass('dweller:Dweller')
+getClass('dweller')
 
 function parseConfig(configPath) {
 	const configYaml = fs.readFileSync(configPath, 'utf8');
@@ -65,7 +61,7 @@ function loadConfig(modulePath) {
 }
 
 function createCore() {
-	let coreClass = getClass('dweller:Dweller');
+	let coreClass = getClass('dweller');
 	let core = new coreClass({ id: 'core', config });
 	core.core = core;
 	return core

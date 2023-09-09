@@ -1,2 +1,2 @@
 .storage:
-  class: 'storage/storage:Storage'
+  class: 'storage/storage'

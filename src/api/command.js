@@ -1,4 +1,4 @@
-class Command extends getClass('dweller:Dweller') {
+module.exports = class extends getClass('dweller') {
 	
 	parseParams(requestParams = {}) {
 		let out = {};
@@ -24,5 +24,3 @@ class Command extends getClass('dweller:Dweller') {
 		throw new Error('Base command run!');
 	}
 }
-
-module.exports = { Command };

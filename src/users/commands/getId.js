@@ -1,7 +1,5 @@
-class Command extends getClass('api/command:Command') {
+module.exports = class extends getClass('api/command') {
 	run() {
 		return this.parent.fullId;		
 	}
 }
-
-module.exports = { Command }
