@@ -20,26 +20,6 @@ class Dweller {
 		return new childClass(data);
 	}
 
-	parseParams(requestParams = {}) {
-		let out = {};
-		let configParams = this.config.params;
-		if (!configParams) return out;
-		for (let [ paramName, paramConfig ] of Object.entries(configParams)) {
-			let paramValue = requestParams[paramName];
-			if (paramValue == undefined) {
-				assert(!paramConfig.required, `Param '${paramName}' is required`);
-			} else {
-				let paramType = paramConfig.type;
-				if (paramType == 'int') {
-					paramValue = parseInt(paramValue);
-					assert(!isNaN(paramValue), `Param ${paramName} must be a valid number`);
-				}
-				out[paramName] = paramValue;
-			}
-		}
-		return out;
-	}
-
 	get(query) {
 		assert(typeof query == 'string'); // Базовый двеллер работает только по прямому id дочернего объекта
 		let fullIdParts = query.split('.');
