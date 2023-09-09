@@ -6,3 +6,8 @@ requiredModules:
     class: 'users/users:Users'
     .getId:
       class: 'users/commands/getId:Command'
+      params: 
+        paramName:
+          type: 'int'
+          description: 'Some description'
+          required: true

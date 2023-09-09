@@ -3,7 +3,7 @@ const {
 } = require('uuid');
 
 global.assert = (value, message = 'Assertion failed') => { // TODO: format
-	if (value) return true;
+	if (value) return value;
 	throw new Error (message);
 }
 

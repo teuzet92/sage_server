@@ -11,7 +11,8 @@ class HttpServer extends getClass('dweller:Dweller') {
         try {
             let dweller = this.core.get(data.dwellerId);
             assert(dweller, `${this.fullId}Dweller with id '${data.dwellerId}' not found!`);
-            out.data = await dweller.run();
+            let params = dweller.parseParams(data.params);
+            out.data = await dweller.run(params);
         } catch (error) {
             out.status = false;
             out.error = error.message;
