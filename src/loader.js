@@ -5,42 +5,16 @@ const fs = require('fs');
 require('./core/util/util');
 require('./core/env');
 
-global._classes = {};
+env.projects = {};
+
 global.getClass = function(path) {
 	return require(`./${path}`);
 }
-
-getClass('dweller')
 
 function parseConfig(configPath) {
 	const configYaml = fs.readFileSync(configPath, 'utf8');
 	const config = YAML.parse(configYaml);
 	return config;
-}
-
-function getModuleConfig(modulePath) {
-	env.log(modulePath);
-	let config = parseConfig(`./${modulePath}/_config.yaml`);
-	config.moduleName = modulePath;
-	assert(config, `No config found for module at ${modulePath}`);
-	return config;
-}
-
-function loadModule(moduleConfig, modulePath) { // TODO: only path
-	if (modulePath) { // Если не рутовый модуль. Поправлю потом
-		if (env.loadedModules[modulePath]) return; // Не загружаем модули дважды
-		env.loadedModules[modulePath] = {
-			tests: []
-		};
-	}
-	env.log(`Loading module '${modulePath}'...`)
-	if (moduleConfig.requiredModules) {
-		for (let requiredModulePath of Object.keys(moduleConfig.requiredModules)) {
-			requiredModuleConfig = getModuleConfig(requiredModulePath);
-			loadModule(requiredModuleConfig, requiredModulePath);
-		}
-	}
-	objmerge(env.config, moduleConfig);
 }
 
 const loadedConfigs = {};
@@ -60,15 +34,28 @@ function loadConfig(modulePath) {
 	return out;
 }
 
-function createCore() {
-	let coreClass = getClass('dweller');
-	let core = new coreClass({ id: 'core', config });
-	core.core = core;
-	return core
+function createProject(id) {
+	let config = { ...env.config };
+	let projectConfig = config.projects[id];
+	if (typeof projectConfig == 'object') {
+		objmerge(config, projectConfig);
+	}
+	let projectClass = getClass('project');
+	let out = new projectClass({ id, config });
+	out.project = out;
+	env.projects[id] = out;
+	return out;
 }
 
-let config = loadConfig('.');
-env.log(config);
-let core = createCore();
-let httpServer = core.get('httpServer');
-httpServer.run();
+env.config = loadConfig('.');
+let projects = env.config.projects;
+if (projects) {
+	for (let projectName of Object.keys(projects)) {
+		createProject(projectName);
+	}
+}
+
+
+const HttpServer = require('./api/httpServer');
+const httpServer = new HttpServer();
+

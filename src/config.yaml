@@ -1,5 +1,9 @@
 requiredModules:
-  users: true
   api: true
+  content: true
+  mongo: true
 
-class: 'dweller'
+projects:
+  polygon:
+    .mongo:
+      db: 'polygon'

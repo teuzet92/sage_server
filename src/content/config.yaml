@@ -1,0 +1,5 @@
+requiredModules:
+  content/templates: true
+
+.content:
+  class: 'dweller'

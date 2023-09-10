@@ -1,0 +1,18 @@
+requiredModules:
+  api: true
+
+.content:
+  .templates:
+    class: 'storage/storage'
+    collection: 'templates'
+    .find:
+      class: 'storage/commands/find'
+      params: 
+        query:
+          type: 'json'
+          description: 'Query to search with'
+  .objects:
+    class: 'storage/storage'
+    collection: 'objects'
+    .find:
+      class: 'storage/commands/find'

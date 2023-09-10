@@ -1,4 +1,4 @@
-module.exports = class extends getClass('dweller') {
+module.exports = class ApiCommand extends getClass('dweller') {
 	
 	parseParams(requestParams = {}) {
 		let out = {};
@@ -13,6 +13,8 @@ module.exports = class extends getClass('dweller') {
 				if (paramType == 'int') {
 					paramValue = parseInt(paramValue);
 					assert(!isNaN(paramValue), `Param ${paramName} must be a valid number`);
+				} else if (paramType == 'json') {
+					paramValue = JSON.parse(paramValue);
 				}
 				out[paramName] = paramValue;
 			}

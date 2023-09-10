@@ -1,27 +1,36 @@
-module.exports = class {
+module.exports = class Dweller {
 	constructor(data) {
 		assert(data.id);
 		assert(data.config);
 		this.id = data.id;
 		this.parent = data.parent;
-		this.core = data.core;
+		this.project = data.project;
 		this.fullId = this.id;
-		if (this.parent != this.core) {
+		if (this.parent != this.project) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
 		}
 		this.config = data.config;
+		if (this.onCreate) {
+			this.onCreate(data);
+		}
+		if (this.config.cacheDweller) {
+			this.project.cachedDwellers[this.fullId] = this;
+		}
 	}
 
 	create(data) {
 		let childClassname = data.config.class;
 		let childClass = getClass(childClassname);
 		data.parent = this;
-		data.core = this.core;
+		data.project = this.project;
 		return new childClass(data);
 	}
 
 	get(query) {
 		assert(typeof query == 'string'); // Базовый двеллер работает только по прямому id дочернего объекта
+		if (this.project.cachedDwellers[query]) {
+			return this.project.cachedDwellers[query];
+		}
 		let fullIdParts = query.split('.');
 		let nextChildId = fullIdParts.shift();
 		let nextChildConfig = this.config[`.${nextChildId}`];
