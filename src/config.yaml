@@ -2,8 +2,9 @@ requiredModules:
   api: true
   content: true
   mongo: true
+  storage: true
 
 projects:
   polygon:
     .mongo:
-      db: 'polygon'
+      db: 'test_sage'

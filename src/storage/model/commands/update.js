@@ -1,5 +1,5 @@
 module.exports = class extends getClass('api/command') {
-	run() {
-		return this.parent.fullId;		
+	run(params) {
+		return `model.update run: ${params}`;	
 	}
 }

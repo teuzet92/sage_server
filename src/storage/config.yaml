@@ -1,2 +1,3 @@
-.storage:
-  class: 'storage/storage'
+requiredModules:
+  storage/commands: true
+  storage/model: true

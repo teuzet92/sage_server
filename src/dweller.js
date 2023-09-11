@@ -6,10 +6,10 @@ module.exports = class Dweller {
 		this.parent = data.parent;
 		this.project = data.project;
 		this.fullId = this.id;
+		this.config = data.config;
 		if (this.parent != this.project) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
 		}
-		this.config = data.config;
 		if (this.onCreate) {
 			this.onCreate(data);
 		}
@@ -26,20 +26,27 @@ module.exports = class Dweller {
 		return new childClass(data);
 	}
 
+	resolveChild(id) {
+		throw new Error(`'resolveDweller' is not implemented for ${this.fullId}`)
+	}
+
 	get(query) {
 		assert(typeof query == 'string'); // Базовый двеллер работает только по прямому id дочернего объекта
 		if (this.project.cachedDwellers[query]) {
 			return this.project.cachedDwellers[query];
 		}
 		let fullIdParts = query.split('.');
-		let nextChildId = fullIdParts.shift();
-		let nextChildConfig = this.config[`.${nextChildId}`];
-		assert(nextChildConfig, `Dweller '${nextChildId}' is not a valid child for '${this.fullId}'`)
-		let nextChild = this.create({ id: nextChildId, config: nextChildConfig });
-		if (fullIdParts.length == 0) {
-			return nextChild;
+		let dweller = this;
+		while (fullIdParts.length > 0) {
+			let nextChildId = fullIdParts.shift();
+			let nextChildConfig = dweller.config[`.${nextChildId}`];
+			if (nextChildConfig) {
+				dweller = dweller.create({ id: nextChildId, config: nextChildConfig });
+			} else {
+				dweller = dweller.resolveChild(nextChildId);
+			}
 		}
-		return nextChild.get(fullIdParts.join('.'));
+		return dweller;
 	}
 
 	run() {

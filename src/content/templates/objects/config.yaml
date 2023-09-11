@@ -1,0 +1,7 @@
+.content:
+  .templates:
+    model:
+      .objects:
+        class: 'storage/storage'
+        model:
+          class: 'storage/model/model'

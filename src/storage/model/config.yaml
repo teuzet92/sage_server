@@ -1,0 +1,6 @@
+requiredModules:
+  storage/model/commands: true
+
+storage:
+  model:
+    class: 'storage/model/model'

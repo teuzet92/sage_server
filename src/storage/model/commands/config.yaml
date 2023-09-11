@@ -1,0 +1,16 @@
+storage:
+  model:
+    .get:
+      class: 'storage/model/commands/get'
+      description: 'Get model data'
+    .update:
+      class: 'storage/model/commands/update'
+      description: 'Update model'
+      params: 
+        data:
+          type: 'json'
+          description: 'Update model'
+    .delete:
+      class: 'storage/model/commands/delete'
+      description: 'Delete model'
+

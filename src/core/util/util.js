@@ -47,7 +47,7 @@ global.objinsert = (obj, value, ...path) => {
 	}, obj);
 }
 
-global.objmerge = (target, source, noCollisions) => {
+global.objmerge = (target, source, onCollision = 'source' /* target, source, assert */) => {
 	const isObject = (obj) => obj && typeof obj === 'object';
 
 	if (!isObject(target) || !isObject(source)) {
@@ -61,10 +61,24 @@ global.objmerge = (target, source, noCollisions) => {
 		if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
 			target[key] = targetValue.concat(sourceValue); // check collisions?
 		} else if (isObject(targetValue) && isObject(sourceValue)) {
-			target[key] = objmerge(Object.assign({}, targetValue), sourceValue);
+			target[key] = objmerge(Object.assign({}, targetValue), sourceValue, onCollision);
 		} else {
-			assert(!noCollisions || sourceValue === undefined, `Object merge collision at key '${key}'`);
-			target[key] = sourceValue;
+			if (targetValue == undefined) {
+				target[key] = sourceValue;
+				return;
+			} 		
+			if (sourceValue == undefined) {
+				return;
+			}
+			switch (onCollision) {
+				case 'source':
+					target[key] = sourceValue;
+					break;
+				case 'target':
+					break;
+				default:
+					throw new Error(`Object merge collision at key '${key}'`);
+			}
 		}
 	});
 	return target;

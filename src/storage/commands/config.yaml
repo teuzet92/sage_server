@@ -1,0 +1,15 @@
+storage:
+  .find:
+    class: 'storage/commands/find'
+    description: 'Find model'
+    params: 
+      query:
+        type: 'json'
+        description: 'Query'
+  .create:
+    class: 'storage/commands/create'
+    description: 'New model'
+    params: 
+      data:
+        type: 'json'
+        description: 'Fields'
