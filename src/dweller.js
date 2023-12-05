@@ -1,4 +1,5 @@
 module.exports = class Dweller {
+	
 	constructor(data) {
 		assert(data.id);
 		assert(data.config);
@@ -10,27 +11,26 @@ module.exports = class Dweller {
 		if (this.parent != this.project) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
 		}
-		if (this.onCreate) {
-			this.onCreate(data);
-		}
 		if (this.config.cacheDweller) {
 			this.project.cachedDwellers[this.fullId] = this;
 		}
 	}
 
-	create(data) {
+	init(data) {}
+
+	async create(data) {
 		let childClassname = data.config.class;
 		let childClass = getClass(childClassname);
 		data.parent = this;
 		data.project = this.project;
-		return new childClass(data);
+		let child = new childClass(data);
+		await child.init(data);
+		return child;
 	}
 
-	resolveChild(id) {
-		throw new Error(`'resolveDweller' is not implemented for ${this.fullId}`)
-	}
+	resolveChild(id) {}
 
-	get(query) {
+	async get(query) {
 		assert(typeof query == 'string'); // Базовый двеллер работает только по прямому id дочернего объекта
 		if (this.project.cachedDwellers[query]) {
 			return this.project.cachedDwellers[query];
@@ -41,15 +41,21 @@ module.exports = class Dweller {
 			let nextChildId = fullIdParts.shift();
 			let nextChildConfig = dweller.config[`.${nextChildId}`];
 			if (nextChildConfig) {
-				dweller = dweller.create({ id: nextChildId, config: nextChildConfig });
+				dweller = await dweller.create({ id: nextChildId, config: nextChildConfig });
 			} else {
-				dweller = dweller.resolveChild(nextChildId);
+				dweller = await dweller.resolveChild(nextChildId);
 			}
 		}
 		return dweller;
 	}
 
-	run() {
+	async tryRun(rawParams) {
+		let defaultCommandId = assert(this.config.defaultCommand, `'tryRun' is not implemented for ${this.fullId}`);
+		let defaultCommand = await this.get(defaultCommandId);
+		return defaultCommand.tryRun(rawParams);
+	}
+
+	run(params) {
 		throw new Error (`'run' is not implemented for ${this.fullId}`);
 	}
 }

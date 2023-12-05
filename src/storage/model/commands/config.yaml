@@ -1,5 +1,6 @@
 storage:
   model:
+    defaultCommand: 'get'
     .get:
       class: 'storage/model/commands/get'
       description: 'Get model data'

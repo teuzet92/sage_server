@@ -1,5 +1,7 @@
 module.exports = class extends getClass('api/command') {
 	run(params) {
-		return `model.delete run: ${params}`;	
+		let model = this.parent;
+		let storage = model.parent;
+		return storage.deleteOne({ id: model.id });
 	}
 }

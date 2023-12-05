@@ -5,6 +5,6 @@ requiredModules:
   storage: true
 
 projects:
-  polygon:
+  test_project:
     .mongo:
-      db: 'test_sage'
+      db: 'test_project'

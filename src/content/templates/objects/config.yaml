@@ -2,6 +2,7 @@
   .templates:
     model:
       .objects:
+        forceUuids: true
         class: 'storage/storage'
-        model:
-          class: 'storage/model/model'
+        providerConfig:
+          collection: 'objects'

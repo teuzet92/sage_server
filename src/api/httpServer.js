@@ -39,10 +39,9 @@ module.exports = class HttpServer {
         };
         try {
             let project = assert(env.projects[data.projectId], `Project '${data.projectId}' not found`);
-            let dweller = project.get(data.dwellerId);
+            let dweller = await project.get(data.dwellerId);
             assert(dweller, `${this.fullId}Dweller with id '${data.dwellerId}' not found`);
-            let params = dweller.parseParams(data.params);
-            out.data = await dweller.run(params);
+            out.data = await dweller.tryRun(data.params);
         } catch (error) {
             out.status = false;
             out.error = error.message;

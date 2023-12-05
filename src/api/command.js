@@ -22,6 +22,11 @@ module.exports = class ApiCommand extends getClass('dweller') {
 		return out;
 	}
 
+	tryRun(rawParams) {
+		let params = this.parseParams(rawParams);
+		return this.run(params);
+	}
+
 	run() {
 		throw new Error('Base command run!');
 	}

@@ -1,28 +1,44 @@
 module.exports = class extends getClass('dweller') {
-
-	constructor(data) {
-		let defaultStorageConfig = data.project.config['storage'];
-		objmerge(data.config, defaultStorageConfig, 'target');
-		super(data);
-		this.provider = this.project.get('mongo'); // TODO: Брать из конфига
+	async init(data) {
+		let defaultStorageConfig = this.project.config['storage'];
+		objmerge(this.config, defaultStorageConfig, 'target');
+		this.provider = await data.project.get('mongo');
 	}
 
-	resolveChild(id) {
+	async resolveChild(id) {
+		let values = await this.findOne({ id });
+		assert(values, 'Not a valid child')
 		return this.create({
-			id, // TODO: генерить, если пусто
+			id,
 			config: this.config.model,
+			values,
 		})
 	}
 
-	insert(query) {
-		return this.provider.find(this.config.collection, query);
+	insert(query = {}) {
+		let forceUuids = this.config.forceUuids;
+		if (forceUuids) {
+			assert(!query.id, 'Impossible to implicit ID for model in storage with forced uuids');
+			query.id = uuid();
+			return this.provider.insert(this.config.providerConfig, query);
+		}
+		assert(query.id, 'Id is required');
+		return this.provider.insert(this.config.providerConfig, query);
+	}
+
+	update(query) {
+		return this.provider.update(this.config.providerConfig, query);
 	}
 
 	find(query) {
-		return this.provider.find(this.config.collection, query);
+		return this.provider.find(this.config.providerConfig, query);
 	}
 
-	delete(query) {
-		return this.provider.delete(this.config.collection, query);
+	findOne(query) {
+		return this.provider.findOne(this.config.providerConfig, query);
+	}
+
+	deleteOne(query) {
+		return this.provider.deleteOne(this.config.providerConfig, query);
 	}
 }

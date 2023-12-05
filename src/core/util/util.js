@@ -1,9 +1,12 @@
-const { 
-  v1: uuidv1,
-} = require('uuid');
+const ShortUniqueId = require('short-unique-id');
+const uuidProvider = new ShortUniqueId({ length: 10 });
 
 global.assert = (value, message = 'Assertion failed') => { // TODO: format
 	if (value) return value;
+	throw new Error (message);
+}
+
+global.error = (message) => { // TODO: format
 	throw new Error (message);
 }
 
@@ -92,4 +95,6 @@ global.now = () => {
 	return Math.floor(Date.now() / 1000);
 }
 
-global.uuid = uuidv1;
+global.uuid = function() {
+	return uuidProvider.rnd();
+};

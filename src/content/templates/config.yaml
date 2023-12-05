@@ -4,6 +4,5 @@ requiredModules:
 .content:
   .templates:
     class: 'storage/storage'
-    collection: 'templates'
-    model:
-      class: 'storage/model/model'
+    providerConfig:
+      collection: 'templates'

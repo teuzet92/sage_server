@@ -1,5 +1,7 @@
 module.exports = class Project extends getClass('dweller') {
-	onCreate() {
+
+	constructor(data) {
+		super(data);
 		this.cachedDwellers = {};
 	}
 }

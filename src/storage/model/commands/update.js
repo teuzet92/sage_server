@@ -1,5 +1,7 @@
 module.exports = class extends getClass('api/command') {
-	run(params) {
-		return `model.update run: ${params}`;	
+	run({ data }) {
+		let model = this.parent;
+		let storage = model.parent;
+		return storage.update({ id: model.id }, data);
 	}
 }
