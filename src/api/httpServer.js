@@ -45,6 +45,8 @@ module.exports = class HttpServer {
         } catch (error) {
             out.status = false;
             out.error = error.message;
+            env.error('API ERROR\n');
+            env.error(data);
             env.error(error);
         } finally {
             response.json(out);
