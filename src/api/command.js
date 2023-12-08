@@ -21,6 +21,7 @@ module.exports = class ApiCommand extends getClass('dweller') {
 	}
 
 	tryRun(rawParams) {
+		assert(!this.config.block, 'Command is blocked');
 		let params = this.parseParams(rawParams);
 		return this.run(params);
 	}

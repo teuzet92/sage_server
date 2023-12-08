@@ -21,19 +21,22 @@ module.exports = class extends getClass('dweller') {
 		return Object.values(this.config.schema);
 	}
 
-	insert(query = {}) {
-		let forceUuids = this.config.forceUuids;
-		if (forceUuids) {
-			assert(!query.id, 'Impossible to implicit ID for model in storage with forced uuids');
-			query.id = uuid();
-			return this.provider.insert(this.config.providerConfig, query);
+	insert(newModel = {}) {
+		if (this.config.forceUuids) {
+			assert(!newModel.id, 'Impossible to implicit ID for model in storage with forced uuids');
+			newModel.id = uuid();
 		}
-		assert(query.id, 'Id is required');
-		return this.provider.insert(this.config.providerConfig, query);
+		// TODO: Проверять данные на соответствие схеме
+		assert(newModel.id, 'Id is required');
+		return this.provider.insert(this.config.providerConfig, newModel);
 	}
 
 	updateOne(query, updates) {
-		return this.provider.updateOne(this.config.providerConfig, query, updates);
+		let $set = {};
+		for (let key of Object.keys(updates)) {
+			$set[`data.${key}`] = updates[key];
+		}
+		return this.provider.updateOne(this.config.providerConfig, query, { $set });
 	}
 
 	find(query) {

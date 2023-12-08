@@ -1,6 +1,7 @@
 requiredModules:
   content/templates: true
   content/templateParams: true
+  content/construct: true
 
 .content:
   class: 'dweller'

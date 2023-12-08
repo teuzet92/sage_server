@@ -11,7 +11,7 @@ storage:
     class: 'storage/commands/create'
     description: 'New model'
     params: 
-      data:
+      model:
         type: 'json'
         description: 'Fields'
   .getSchema:

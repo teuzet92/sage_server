@@ -1,8 +1,20 @@
 requiredModules:
   content/templates/objects: true
+  content/templates/commands: true
 
 .content:
   .templates:
-    class: 'storage/storage'
+    class: storage/storage
     providerConfig:
-      collection: 'templates'
+      collection: templates
+    schema:
+      title:
+        code: title
+        title: Title
+        type:
+          name: string
+      singleton:
+        code: singleton
+        title: Singleton
+        type: 
+          name: bool

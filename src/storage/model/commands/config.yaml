@@ -8,7 +8,7 @@ storage:
       class: 'storage/model/commands/update'
       description: 'Update model'
       params: 
-        data:
+        updatedFields:
           type: 'json'
           description: 'Update model'
     .delete:

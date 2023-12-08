@@ -1,6 +1,6 @@
 module.exports = class extends getClass('api/command') {
-	run({ model }) {
+	run(params) {
 		let storage = this.parent;
-		return storage.insert(model);
+		return storage.find(params.query);
 	}
 }

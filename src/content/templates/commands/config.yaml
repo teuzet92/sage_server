@@ -1,0 +1,11 @@
+.content:
+  .templates:
+    .createTemplate:
+      class: content/templates/commands/createTemplate
+      description: Create template
+      params: 
+        templateId:
+          type: string
+          description: New template id
+    .create:
+      block: true

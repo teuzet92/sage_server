@@ -10,4 +10,8 @@ module.exports = class extends getClass('dweller') {
 		let storage = this.parent;
 		return storage.findOne({ id: this.id });
 	}
+
+	update(updatedValues) {
+		return this.parent.updateOne({ id: this.id }, updatedValues);
+	}
 }
