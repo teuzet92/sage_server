@@ -5,4 +5,9 @@ module.exports = class extends getClass('dweller') {
 		super(data);
 		this.values = data.values;
 	}
+
+	getMe () {
+		let storage = this.parent;
+		return storage.findOne({ id: this.id });
+	}
 }

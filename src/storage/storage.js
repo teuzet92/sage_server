@@ -15,6 +15,12 @@ module.exports = class extends getClass('dweller') {
 		})
 	}
 
+	getSchema() {
+		let schema = this.config.schema;
+		if (!schema) return [];
+		return Object.values(this.config.schema);
+	}
+
 	insert(query = {}) {
 		let forceUuids = this.config.forceUuids;
 		if (forceUuids) {
@@ -26,8 +32,8 @@ module.exports = class extends getClass('dweller') {
 		return this.provider.insert(this.config.providerConfig, query);
 	}
 
-	update(query) {
-		return this.provider.update(this.config.providerConfig, query);
+	updateOne(query, updates) {
+		return this.provider.updateOne(this.config.providerConfig, query, updates);
 	}
 
 	find(query) {
