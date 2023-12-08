@@ -3,6 +3,6 @@
     model:
       .objects:
         forceUuids: true
-        class: 'storage/storage'
+        class: 'content/templates/objects/objects'
         providerConfig:
           collection: 'objects'
