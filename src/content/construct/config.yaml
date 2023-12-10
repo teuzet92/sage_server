@@ -1,3 +1,7 @@
 .content:
   .construct:
     class: content/construct/construct
+  .constructedContent:
+    class: storage/storage
+    providerConfig:
+      collection: constuctedContent

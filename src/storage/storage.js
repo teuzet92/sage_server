@@ -29,12 +29,12 @@ module.exports = class extends getClass('dweller') {
 		return this.provider.insert(this.config.providerConfig, newModel);
 	}
 
-	updateOne(query, updates) {
+	updateOne(query, updates, params) {
 		let $set = {};
 		for (let key of Object.keys(updates)) {
 			$set[`data.${key}`] = updates[key];
 		}
-		return this.provider.updateOne(this.config.providerConfig, query, { $set });
+		return this.provider.updateOne(this.config.providerConfig, query, { $set }, params);
 	}
 
 	find(query) {

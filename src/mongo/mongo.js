@@ -31,10 +31,10 @@ module.exports = class MongoProvider extends getClass('dweller') {
 		return this.database.collection(collection).insertOne(query);
 	}
 
-	updateOne(config, query, updates) {
+	updateOne(config, query, updates, params) {
 		prepareQuery(query);
 		let collection = config.collection;
-		return this.database.collection(collection).updateOne(query, updates);
+		return this.database.collection(collection).updateOne(query, updates, params);
 	}
 
 	async find(config, query = {}) {

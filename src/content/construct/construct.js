@@ -1,20 +1,22 @@
 module.exports = class extends getClass('api/command') {
 
 	async constuctContent() {
-		let res = {};
+		let content = {};
 		let templatesStorage = await this.project.get('content.templates');
 		let templates = await templatesStorage.find();
 		for (let templateData of templates) {
-			res[templateData.id] = await this.constructTemplate(templateData);
+			content[templateData.id] = await this.constructTemplate(templateData);
 		}
-		return res;
+		let constructedContentStorage = await this.parent.get('constructedContent');
+		let res = await constructedContentStorage.updateOne({ id: 'latest' }, { content }, { upsert: true });
+		return content;
 	}
 
 	async constructObject(objectData, schema) {
 		let res = {
 			id: objectData.id,
 		};
-		for (let field of schema) {
+		for (let field of Object.values(schema.fields)) {
 			res[field.code] = objectData.data[field.code];
 		}
 		return res;
