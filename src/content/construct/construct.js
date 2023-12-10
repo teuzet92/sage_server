@@ -1,4 +1,4 @@
-module.exports = class extends getClass('api/command') {
+module.exports = class extends getClass('dweller') {
 
 	async constuctContent() {
 		let content = {};
@@ -35,7 +35,10 @@ module.exports = class extends getClass('api/command') {
 		return res;
 	}
 
-	run(params) {
+	cmd_run() {
+		return this.run();
+	}
+	run() {
 		return this.constuctContent();
 	}
 }

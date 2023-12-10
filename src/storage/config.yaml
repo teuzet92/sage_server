@@ -1,3 +1,20 @@
 requiredModules:
-  storage/commands: true
   storage/model: true
+
+storage:
+  defaultApiAction: find
+  apiActions:
+    find:
+      description: Find model
+      params: 
+        query:
+          type: json
+          description: Query
+    create:
+      description: New model
+      params: 
+        model:
+          type: json
+          description: Fields
+    getSchema:
+      description: Get storage schema

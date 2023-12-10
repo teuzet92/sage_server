@@ -1,6 +1,15 @@
-requiredModules:
-  storage/model/commands: true
-
 storage:
   model:
     class: 'storage/model/model'
+    defaultApiAction: 'load'
+    apiActions:
+      load:
+        description: 'Get model data'
+      update:
+        description: 'Update model'
+        params: 
+          updatedFields:
+            type: 'json'
+            description: 'Update model'
+      delete:
+        description: 'Delete model'

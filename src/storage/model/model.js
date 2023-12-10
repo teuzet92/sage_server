@@ -6,12 +6,24 @@ module.exports = class extends getClass('dweller') {
 		this.values = data.values;
 	}
 
-	getMe () {
-		let storage = this.parent;
-		return storage.findOne({ id: this.id });
+	cmd_delete() {
+		return this.parent.deleteOne({ id: this.id });
 	}
 
-	update(updatedValues) {
-		return this.parent.updateOne({ id: this.id }, updatedValues);
+	cmd_load() {
+		return this.load();
+	}
+	load() {
+		return this.parent.findOne({ id: this.id });
+	}
+
+	cmd_update({ updatedFields }) {
+		console.log('CMD update')
+		console.log(updatedFields)
+		if (!updatedFields) return;
+		return this.update(updatedFields);		
+	}
+	update(updatedFields) {
+		return this.parent.updateOne({ id: this.id }, updatedFields);
 	}
 }

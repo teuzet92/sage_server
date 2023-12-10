@@ -20,7 +20,7 @@ module.exports = class HttpServer {
                 dwellerId: request.params['1'],
                 params: request.query,
             }
-            this.command(data, response);
+            this.onHttpRequest(data, response);
         });
         this.app.post(urlMask, (request, response) => {
             let data = {
@@ -28,20 +28,24 @@ module.exports = class HttpServer {
                 dwellerId: request.params['1'],
                 params: request.body,
             }
-            this.command(data, response);
+            this.onHttpRequest(data, response);
         });
         this.httpServer.listen(port);
     }
 
-    async command(data, response) {
+    async onHttpRequest(data, response) {
         let out = {
             status: true,
         };
         try {
             let project = assert(env.projects[data.projectId], `Project '${data.projectId}' not found`);
             let dweller = await project.get(data.dwellerId);
-            assert(dweller, `${this.fullId}Dweller with id '${data.dwellerId}' not found`);
-            out.data = await dweller.tryRun(data.params);
+            let params = data.params ?? {};
+            assert(dweller, `Dweller with id '${data.dwellerId}' not found`);
+            let action = params.action ?? dweller.config.defaultApiAction;
+            assert(action, `No action specified, and '${data.dwellerId}' has no default action`);
+            delete params.action;
+            out.data = await dweller.runAction(action, params);
         } catch (error) {
             out.status = false;
             out.error = error.message;

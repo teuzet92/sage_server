@@ -1,10 +1,16 @@
 requiredModules:
   content/templates/objects: true
-  content/templates/commands: true
 
 .content:
   .templates:
-    class: storage/storage
+    class: content/templates/templates
+    apiActions:
+      createTemplate:
+        params:
+          templateId:
+            type: string
+            description: New template ID
+      create: false
     providerConfig:
       collection: templates
     schema:

@@ -49,13 +49,32 @@ module.exports = class Dweller {
 		return dweller;
 	}
 
-	async tryRun(rawParams) {
-		let defaultCommandId = assert(this.config.defaultCommand, `'tryRun' is not implemented for ${this.fullId}`);
-		let defaultCommand = await this.get(defaultCommandId);
-		return defaultCommand.tryRun(rawParams);
+	runAction(action, rawParams = {}) {
+		let apiActionConfig = this.config.apiActions[action];
+		assert(apiActionConfig);
+		let parsedParams = this.parseApiParams(apiActionConfig, rawParams);
+		let methodName = `cmd_${action}`;
+		assert(this[methodName]);
+		return this[methodName](parsedParams);
 	}
 
-	run(params) {
-		throw new Error (`'run' is not implemented for ${this.fullId}`);
+	parseApiParams(config, rawParams) {
+		let out = {};
+		let configParams = config.params;
+		if (!configParams) return out;
+		for (let [ paramName, paramConfig ] of Object.entries(configParams)) {
+			let paramValue = rawParams[paramName];
+			if (paramValue == undefined) {
+				assert(!paramConfig.required, `Param '${paramName}' is required`);
+			} else {
+				let paramType = paramConfig.type;
+				if (paramType == 'int') {
+					paramValue = parseInt(paramValue);
+					assert(!isNaN(paramValue), `Param ${paramName} must be a valid number`);
+				}
+				out[paramName] = paramValue;
+			}
+		}
+		return out;
 	}
 }
