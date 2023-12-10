@@ -5,24 +5,24 @@
     providerConfig:
       collection: 'templateParams'
     schema:
-      templateId:
-        code: 'templateId'
-        title: 'Template Id'
+      fields:
+        templateId:
+          code: 'templateId'
+          title: 'Template Id'
+          type:
+            name: 'string'
+        title:
+          code: 'title'
+          title: 'Title'
+          type:
+            name: 'string'
+        code:
+          code: 'code'
+          title: 'Code'
+          type:
+            name: 'string'
         type:
-          name: 'string'
-      title:
-        code: 'title'
-        title: 'Title'
-        type:
-          name: 'string'
-      code:
-        code: 'code'
-        title: 'Code'
-        type:
-          name: 'string'
-      type:
-        code: 'type'
-        title: 'Type'
-        type:
-          name: 'json'
-
+          code: 'type'
+          title: 'Type'
+          type:
+            name: 'json'

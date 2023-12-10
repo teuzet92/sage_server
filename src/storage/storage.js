@@ -16,9 +16,7 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	getSchema() {
-		let schema = this.config.schema;
-		if (!schema) return [];
-		return Object.values(this.config.schema);
+		return this.config.schema;
 	}
 
 	insert(newModel = {}) {

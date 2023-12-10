@@ -8,13 +8,19 @@ requiredModules:
     providerConfig:
       collection: templates
     schema:
-      title:
-        code: title
-        title: Title
-        type:
-          name: string
-      singleton:
-        code: singleton
-        title: Singleton
-        type: 
-          name: bool
+      fields:
+        title:
+          code: title
+          title: Title
+          type:
+            name: string
+        objectTitleField:
+          code: objectTitleField
+          title: Object title field
+          type:
+            name: string
+        singleton:
+          code: singleton
+          title: Singleton
+          type: 
+            name: bool

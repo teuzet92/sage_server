@@ -1,13 +1,22 @@
 module.exports = class extends getClass('storage/storage') {
+
 	async getSchema() {
-		let templateId = this.parent.id;
+		let templateModel = this.parent;
+		let templateId = templateModel.id;
 		let templateParamsStorage = await this.project.get('content.templateParams');
 		let myParams = await templateParamsStorage.find({ 'data.templateId': templateId });
-		return myParams.map(paramObject => ({
-			code: paramObject.data.code,
-			title: paramObject.data.title,
-			type: paramObject.data.type,
-		}));
+		let fields = {};
+		for (let paramObject of myParams) {
+			let { code, title, type } = paramObject.data;
+			fields[code] = {
+				code,
+				title,
+				type,
+			};
+		}
+		return {
+			fields,
+		}
 	}
 
 	insert(model) {
