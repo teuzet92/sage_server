@@ -44,11 +44,17 @@ module.exports = class extends getClass('dweller') {
 
 
 	async cmd_start() {
-		return 'Welcome'
+		return 'Welcome text will be here'
 	}
 
-	cmd_setModel({ modelCode }) {
-		return 'MODEL'
+	async cmd_setScenario({ playerModel, scenarioId }) {
+		if (scenarioId) {
+			assert(this.project.content.scenarios[scenarioId], `No scenario with id '${scenarioId}'`);
+		}
+		playerModel.values.scenario = scenarioId;
+		await playerModel.save();
+		let newScenarioName = scenarioId ?? 'default';
+		return `Changed scenario to ${newScenarioName}`;
 	}
 
 	cmd_next({ gameModel }) {
@@ -64,7 +70,7 @@ module.exports = class extends getClass('dweller') {
 	async cmd_newGame({ playerModel, cityName }) {
 		let gamesStorage = await this.project.get('shards.games');
 		let response = await gamesStorage.newGame({
-			modelId: this.project.content.gameSettings.defaultModel,
+			scenarioId: playerModel.values.scenario,
 			playerId: playerModel.id,
 			cityName,
 		})

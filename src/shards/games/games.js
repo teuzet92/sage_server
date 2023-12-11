@@ -4,9 +4,12 @@ module.exports = class extends getClass('storage/storage') {
 		return this.newGame(data);
 	}
 
-	async newGame({ modelId, cityName, playerId }) {
-		let gameModel = assert(this.project.content.models[modelId], `No game model with id '${modelId}'`);
-		let year = gameModel.startingYear;
+	async newGame({ scenarioId, cityName, playerId }) {
+		if (!scenarioId) {
+			scenarioId = this.project.content.gameSettings.defaultScenario;
+		}
+		let scenario = assert(this.project.content.scenarios[scenarioId], `No scenario with id '${scenarioId}'`);
+		let year = scenario.startingYear;
 		let season = 0;
 
 		return this.createModel({
@@ -15,7 +18,7 @@ module.exports = class extends getClass('storage/storage') {
 				cityName,
 				year,
 				season,
-				modelId,
+				scenarioId,
 			},
 		})
 	}

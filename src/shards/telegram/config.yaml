@@ -4,12 +4,16 @@
     apiActions:
       start:
         description: Creates player
-      setModel:
-        description: Sets preferred model
-        parseStringParam: modelCode
+      setScenario:
+        description: Sets preferred scenario
+        parseStringParam: scenarioId
         params:
-          modelCode:
+          scenarioId:
             description: Code of the model
+          playerModel:
+            required: true
+            description: Player model
+            type: model
       next:
         description: Generate next chronicle
         params:

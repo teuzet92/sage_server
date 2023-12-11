@@ -9,8 +9,7 @@ module.exports = class extends getClass('storage/model/model') {
 	}
 	async addEvent(text) {
 		await this.addMessage('system', text)
-		console.log('ADD EVENT')
-		return `Year: ${this.values.year}. ${this.getCurrentSeasonName()}\n${text}`;
+		return `Year ${this.values.year}, ${this.getCurrentSeasonName()}\n${text}`;
 	}
 
 	async addMessage(role, text) {
@@ -28,14 +27,14 @@ module.exports = class extends getClass('storage/model/model') {
 		let contentStorage = await this.project.get('content.constructed');
 		let contentResponse = await contentStorage.findOne({ id: 'latest' });
 		let content = contentResponse.values.content;
-		let modelId = this.values.modelId;
-		let gameModel = assert(content.models[modelId]);
+		let scenarioId = this.values.scenarioId;
+		let scenario = assert(content.scenarios[scenarioId]);
 		let storedMessages = await this.getMessages();
 		let chat = [{
 			role: 'system',
-			content: gameModel.rules,
+			content: scenario.rules,
 		}];
-		let cityDescriptionMessage = require('util').format(gameModel.cityDescription, this.values.cityName);
+		let cityDescriptionMessage = require('util').format(scenario.cityDescription, this.values.cityName);
 		chat.push({
 			role: 'system',
 			content: cityDescriptionMessage,
@@ -47,10 +46,10 @@ module.exports = class extends getClass('storage/model/model') {
 				content: message.values.content,
 			});
 		}
-		if (gameModel.agentNote) {
+		if (scenario.agentNote) {
 			chat.push({
 				role: 'system',
-				content: gameModel.agentNote,
+				content: scenario.agentNote,
 			})
 		}
 		return chat;

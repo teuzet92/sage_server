@@ -6,7 +6,7 @@
       newGame:
         description: Starts new game
         params:
-          modelId:
+          scenarioId:
             required: true
             description: 'Model of the game'
             type: string
@@ -22,7 +22,7 @@
     forceUuids: true
     schema:
       fields:
-        modelId:
+        scenarioId:
           code: modelId
           title: Model Id
           type:
