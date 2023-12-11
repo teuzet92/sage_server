@@ -7,8 +7,10 @@ module.exports = class extends getClass('storage/model/model') {
 	cmd_addEvent({ text }) {
 		return this.addEvent(text)
 	}
-	addEvent(text) {
-		return this.addMessage('system', text)
+	async addEvent(text) {
+		await this.addMessage('system', text)
+		console.log('ADD EVENT')
+		return `Year: ${this.values.year}. ${this.getCurrentSeasonName()}\n${text}`;
 	}
 
 	async addMessage(role, text) {
@@ -61,15 +63,19 @@ module.exports = class extends getClass('storage/model/model') {
 		}
 	}
 
-	getNextRecordMessage() {
+	getCurrentSeasonName() {
 		let seasonNames = [
 			'Spring',
 			'Summer',
 			'Autumn',
 			'Winter',
-		]
+		];
+		return seasonNames[this.values.season];
+	}
+
+	getNextRecordMessage() {
 		let year = this.values.year;
-		let seasonName = seasonNames[this.values.season];
+		let seasonName = this.getCurrentSeasonName();
 		return require('util').format('Produce a record for: Year %s, %s', this.values.year, seasonName);
 	}
 
@@ -83,6 +89,7 @@ module.exports = class extends getClass('storage/model/model') {
 			role: 'system',
 			content: this.getNextRecordMessage(),
 		});
+		console.log(messages)
 		const response = await openai.chat.completions.create({
 			model: "gpt-3.5-turbo",
 			messages,
@@ -91,7 +98,7 @@ module.exports = class extends getClass('storage/model/model') {
 		await this.addMessage('assistant', answer.content);
 		this.moveDate();
 		await this.save();
-		return answer;
+		return answer.content;
 	}
 
 	cmd_getChat() {

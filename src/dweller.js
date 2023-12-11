@@ -32,9 +32,6 @@ module.exports = class Dweller {
 
 	async get(query) {
 		assert(typeof query == 'string'); // Базовый двеллер работает только по прямому id дочернего объекта
-		if (this.project.cachedDwellers[query]) {
-			return this.project.cachedDwellers[query];
-		}
 		let fullIdParts = query.split('.');
 		let dweller = this;
 		while (fullIdParts.length > 0) {

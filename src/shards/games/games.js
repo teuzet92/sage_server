@@ -4,10 +4,7 @@ module.exports = class extends getClass('storage/storage') {
 		return this.newGame(data);
 	}
 
-	async newGame(data) {
-		let modelId = data.modelId;
-		let cityName = data.cityName;
-
+	async newGame({ modelId, cityName, playerId }) {
 		let contentStorage = await this.project.get('content.constructed');
 		let contentResponse = await contentStorage.findOne({ id: 'latest' });
 		let content = contentResponse.values.content;
@@ -18,6 +15,7 @@ module.exports = class extends getClass('storage/storage') {
 
 		return this.createModel({
 			values: {
+				playerId,
 				cityName,
 				year,
 				season,

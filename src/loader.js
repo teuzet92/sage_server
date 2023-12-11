@@ -60,3 +60,6 @@ if (projects) {
 
 const HttpServer = require('./api/httpServer');
 const httpServer = new HttpServer();
+
+const TelegramServer = require('./api/telegramServer');
+const telegramServer = new TelegramServer({ project: 'test_project' });
