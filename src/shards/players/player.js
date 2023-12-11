@@ -10,14 +10,16 @@ module.exports = class extends getClass('storage/model/model') {
 		return 'START'
 	}
 
+	cmd_setModel({ modelCode }) {
+		return 'MODEL'
+	}
+
 	async cmd_next() {
 		let game = await this.getOngoingGame();
 		if (!game) {
 			return 'You have no ongoing games';
 		}
 		let resp = await game.next();
-		console.log('GAME NEXT RESP')
-		console.log(resp)
 		return resp;
 	}
 
@@ -29,16 +31,18 @@ module.exports = class extends getClass('storage/model/model') {
 		return await game.addEvent(text)
 	}
 
-	async cmd_newGame({ cityName }) {
+	async cmd_newGame({ playerModel, cityName }) {
 		let gamesStorage = await this.project.get('shards.games');
+		let defaultModel = this.project.content.gameSettings.defaultModel;
+		console.log('default Model: ', defaultModel);
 		let response = await gamesStorage.newGame({
-			modelId: 'Sxv0QAyu0D',
-			playerId: this.id,
+			modelId: defaultModel,
+			playerId: playerModel.id,
 			cityName,
 		})
-		this.values.gameId = response.insertedId;
-		await this.save();
-		return 'STARTED NEW GAME'
+		playerModel.values.gameId = response.insertedId;
+		await playerModel.save();
+		return 'STARTED NEW GAME';
 	}
 
 }

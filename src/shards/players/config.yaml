@@ -20,23 +20,11 @@
           title: Telegram Nick
           type:
             name: string
+        preferredModel:
+          code: preferredModel
+          title: Preferred game model
+          type:
+            name: string
     model:
       class: shards/players/player
-      apiActions:
-        start:
-          description: Creates player
-        next:
-          description: Creates player
-        addEvent:
-          description: Creates player
-          params:
-            text:
-              description: Event text
-              type: string
-        newGame:
-          description: Starts new game
-          params:
-            cityName:
-              required: true
-              description: cityName
-              type: string
+     

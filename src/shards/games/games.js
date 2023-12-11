@@ -5,11 +5,7 @@ module.exports = class extends getClass('storage/storage') {
 	}
 
 	async newGame({ modelId, cityName, playerId }) {
-		let contentStorage = await this.project.get('content.constructed');
-		let contentResponse = await contentStorage.findOne({ id: 'latest' });
-		let content = contentResponse.values.content;
-		let gameModel = assert(content.models[modelId], `No game model with id '${modelId}'`);
-
+		let gameModel = assert(this.project.content.models[modelId], `No game model with id '${modelId}'`);
 		let year = gameModel.startingYear;
 		let season = 0;
 

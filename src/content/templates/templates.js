@@ -6,7 +6,7 @@ module.exports = class extends getClass('storage/storage') {
 	createTemplate(templateId) {
 		return this.createModel({
 			id: templateId,
-			data: {
+			values: {
 				title: templateId,
 			}
 		});

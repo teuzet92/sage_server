@@ -1,3 +1,42 @@
 .shards:
-  .telegram:
-    class: shards/telegram/telegram
+  .gameChatTelegram:
+    class: shards/telegram/gameChat
+    apiActions:
+      start:
+        description: Creates player
+      setModel:
+        description: Sets preferred model
+        parseStringParam: modelCode
+        params:
+          modelCode:
+            description: Code of the model
+      next:
+        description: Generate next chronicle
+        params:
+          gameModel:
+            required: true
+            description: Game model
+            type: model
+      addEvent:
+        description: Creates player
+        parseStringParam: text
+        params:
+          text:
+            description: Event text
+            type: string
+          gameModel:
+            required: true
+            description: Game model
+            type: model
+      newGame:
+        description: Starts new game
+        parseStringParam: cityName
+        params:
+          cityName:
+            required: true
+            description: City name
+            type: string
+          playerModel:
+            required: true
+            description: Player model
+            type: model

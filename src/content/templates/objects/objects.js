@@ -4,10 +4,11 @@ module.exports = class extends getClass('storage/storage') {
 		let templateModel = this.parent;
 		let templateId = templateModel.id;
 		let templateParamsStorage = await this.project.get('content.templateParams');
-		let myParams = await templateParamsStorage.find({ 'data.templateId': templateId });
+		let myParams = await templateParamsStorage.find({ 'values.templateId': templateId });
 		let fields = {};
 		for (let paramObject of myParams) {
-			let { code, title, type } = paramObject.data;
+			console.log(myParams)
+			let { code, title, type } = paramObject.values;
 			fields[code] = {
 				code,
 				title,

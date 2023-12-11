@@ -1,5 +1,4 @@
 requiredModules:
-  api: true
   content: true
   mongo: true
   storage: true
@@ -8,4 +7,11 @@ requiredModules:
 projects:
   test_project:
     .mongo:
-      db: 'test_project'
+      db: test_project
+    telegramServers:
+      main:
+        id: main
+        apiTokenKeyInEnv: TELEGRAM_API_TOKEN
+        handlerId: shards.gameChatTelegram
+httpServer:
+  urlMask: '/*/api/*'

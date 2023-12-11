@@ -74,4 +74,6 @@ module.exports = class Dweller {
 		}
 		return out;
 	}
+
+	help() {} // Возвращает список команд
 }

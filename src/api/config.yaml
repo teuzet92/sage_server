@@ -1,4 +1,0 @@
-.httpServer:
-  port: 5000
-  urlMask: '/*/api/*'
-  class: 'api/httpServer'

@@ -7,7 +7,7 @@ module.exports = class extends getClass('dweller') {
 
 	async resolveChild(id) {
 		let objectData = await this.findOne({ id });
-		assert(objectData, 'Not a valid child')
+		if (!objectData) return;
 		return this.createChild({
 			id,
 			config: this.config.model,
