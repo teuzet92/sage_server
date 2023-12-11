@@ -8,7 +8,7 @@ module.exports = class extends getClass('dweller') {
 	async resolveChild(id) {
 		let values = await this.findOne({ id });
 		assert(values, 'Not a valid child')
-		return this.create({
+		return this.createChild({
 			id,
 			config: this.config.model,
 			values,
@@ -18,12 +18,15 @@ module.exports = class extends getClass('dweller') {
 	cmd_getSchema() {
 		return this.getSchema();
 	}
-
-	cmd_insert({ model }) {
-		return this.insert(model);
+	getSchema() {
+		return this.config.schema;
 	}
 
-	insert(model = {}) {
+	cmd_create({ model }) {
+		return this.createModel(model);
+	}
+
+	createModel(model = {}) {
 		if (this.config.forceUuids) {
 			assert(!model.id, 'Impossible to implicit ID for model in storage with forced uuids');
 			model.id = uuid();
@@ -50,11 +53,11 @@ module.exports = class extends getClass('dweller') {
 		return this.provider.find(this.config.providerConfig, query);
 	}
 
-	findOne({ query }) {
+	findOne(query) {
 		return this.provider.findOne(this.config.providerConfig, query);
 	}
 
-	deleteOne({ query }) {
+	deleteOne(query) {
 		return this.provider.deleteOne(this.config.providerConfig, query);
 	}
 }

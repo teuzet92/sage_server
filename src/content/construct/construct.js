@@ -7,7 +7,7 @@ module.exports = class extends getClass('dweller') {
 		for (let templateData of templates) {
 			content[templateData.id] = await this.constructTemplate(templateData);
 		}
-		let constructedContentStorage = await this.parent.get('constructedContent');
+		let constructedContentStorage = await this.parent.get('constructed');
 		let res = await constructedContentStorage.updateOne({ id: 'latest' }, { content }, { upsert: true });
 		return content;
 	}

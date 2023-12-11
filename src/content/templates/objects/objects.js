@@ -19,8 +19,8 @@ module.exports = class extends getClass('storage/storage') {
 		}
 	}
 
-	insert(model) {
-		return super.insert({ templateId: this.parent.id, ...model });
+	createModel(model) {
+		return super.createModel({ templateId: this.parent.id, ...model });
 	}
 
 	updateOne(query = {}, updates) {

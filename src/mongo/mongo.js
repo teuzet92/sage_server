@@ -40,6 +40,9 @@ module.exports = class MongoProvider extends getClass('dweller') {
 	async find(config, query = {}) {
 		prepareQuery(query);
 		let collection = config.collection;
+		console.log('FIND')
+		console.log(collection)
+		console.log(query)
 		let res = await this.database.collection(collection).find(query).toArray();
 		return res.map(prepareObject);
 	}

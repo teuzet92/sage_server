@@ -18,7 +18,7 @@ module.exports = class Dweller {
 
 	init(data) {}
 
-	async create(data) {
+	async createChild(data) {
 		let childClassname = data.config.class;
 		let childClass = getClass(childClassname);
 		data.parent = this;
@@ -41,7 +41,7 @@ module.exports = class Dweller {
 			let nextChildId = fullIdParts.shift();
 			let nextChildConfig = dweller.config[`.${nextChildId}`];
 			if (nextChildConfig) {
-				dweller = await dweller.create({ id: nextChildId, config: nextChildConfig });
+				dweller = await dweller.createChild({ id: nextChildId, config: nextChildConfig });
 			} else {
 				dweller = await dweller.resolveChild(nextChildId);
 			}
@@ -54,7 +54,9 @@ module.exports = class Dweller {
 		assert(apiActionConfig);
 		let parsedParams = this.parseApiParams(apiActionConfig, rawParams);
 		let methodName = `cmd_${action}`;
-		assert(this[methodName]);
+		assert(this[methodName], `${this.fullId} does not implement API action ${action}`);
+		console.log(methodName)
+		console.log(this.fullId)
 		return this[methodName](parsedParams);
 	}
 

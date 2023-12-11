@@ -5,7 +5,7 @@
     apiActions:
       run:
         description: 'Constructs content'
-  .constructedContent:
+  .constructed:
     class: storage/storage
     providerConfig:
-      collection: constuctedContent
+      collection: constructedContent

@@ -7,6 +7,7 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	cmd_delete() {
+		console.log(this.parent.config)
 		return this.parent.deleteOne({ id: this.id });
 	}
 
@@ -18,8 +19,6 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	cmd_update({ updatedFields }) {
-		console.log('CMD update')
-		console.log(updatedFields)
 		if (!updatedFields) return;
 		return this.update(updatedFields);		
 	}

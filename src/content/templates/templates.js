@@ -4,8 +4,7 @@ module.exports = class extends getClass('storage/storage') {
 		return this.createTemplate(templateId)
 	}
 	createTemplate(templateId) {
-		let storage = this.parent;
-		return storage.insert({
+		return this.createModel({
 			id: templateId,
 			data: {
 				title: templateId,
