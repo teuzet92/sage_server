@@ -17,7 +17,6 @@ class Game {
 		};
 		this.cityDescription = data.cityDescription || util.format(getString('city_description'), this.cityName);
 		this.chat = data.chat || [];
-		this.virtualAgent = data.virtualAgent;
 		this.chatAgent = new ChatAgent({
 			virtual: data.virtualAgent,
 			name: getString('chat_name_chronist'),

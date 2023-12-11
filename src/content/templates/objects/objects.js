@@ -24,6 +24,7 @@ module.exports = class extends getClass('storage/storage') {
 	}
 
 	updateOne(query = {}, updates) {
+		console.log('UPDATE ONE CONTENT')
 		return super.updateOne({ templateId: this.parent.id, ...query }, updates);
 	}
 

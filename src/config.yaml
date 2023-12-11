@@ -3,6 +3,7 @@ requiredModules:
   content: true
   mongo: true
   storage: true
+  shards: true
 
 projects:
   test_project:

@@ -8,7 +8,7 @@ storage:
       update:
         description: 'Update model'
         params: 
-          updatedFields:
+          values:
             type: 'json'
             description: 'Update model'
       delete:

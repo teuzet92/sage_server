@@ -1,0 +1,55 @@
+.shards:
+  class: dweller
+  .games:
+    class: shards/games/games
+    apiActions:
+      newGame:
+        description: Starts new game
+        params:
+          modelId:
+            required: true
+            description: 'Model of the game'
+            type: string
+          cityName:
+            required: true
+            description: 'City name'
+            type: string
+    providerConfig:
+      collection: games
+    forceUuids: true
+    schema:
+      fields:
+        modelId:
+          code: modelId
+          title: Model Id
+          type:
+            name: string
+        cityName:
+          code: cityName
+          title: City Name
+          type:
+            name: string
+        year:
+          code: year
+          title: Year
+          type:
+            name: number
+        season:
+          code: season
+          title: Season [0-3]
+          type:
+            name: number
+    model:
+      class: shards/games/game
+      apiActions: 
+        addEvent:
+          description: Adds event
+          params:
+            text:
+              required: true
+              description: text
+              type: string
+        getChat:
+          description: Get chat
+        next:
+          description: Get to next chronicle

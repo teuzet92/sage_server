@@ -1,0 +1,3 @@
+.shards:
+  .telegram:
+    class: dweller

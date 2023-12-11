@@ -1,0 +1,3 @@
+requiredModules:
+  shards/games: true
+  shards/gameMessages: true

@@ -17,7 +17,7 @@ module.exports = class extends getClass('dweller') {
 			id: objectData.id,
 		};
 		for (let field of Object.values(schema.fields)) {
-			res[field.code] = objectData.data[field.code];
+			res[field.code] = objectData.values[field.code];
 		}
 		return res;
 	}

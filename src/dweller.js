@@ -55,8 +55,6 @@ module.exports = class Dweller {
 		let parsedParams = this.parseApiParams(apiActionConfig, rawParams);
 		let methodName = `cmd_${action}`;
 		assert(this[methodName], `${this.fullId} does not implement API action ${action}`);
-		console.log(methodName)
-		console.log(this.fullId)
 		return this[methodName](parsedParams);
 	}
 

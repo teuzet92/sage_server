@@ -1,0 +1,22 @@
+.shards:
+  .players:
+    class: storage/storage
+    providerConfig:
+      collection: players
+    schema:
+      fields:
+        gameId:
+          code: gameId
+          title: Game Id
+          type:
+            name: string
+        telegramId:
+          code: telegramId
+          title: Telegram ID
+          type:
+            name: string
+        telegramNick:
+          code: telegramNick
+          title: Code
+          type:
+            name: string

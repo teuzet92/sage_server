@@ -9,6 +9,7 @@ function prepareQuery(query) {
 }
 
 function prepareObject(obj) {
+	if (!obj) return obj;
 	if (obj._id) {
 		obj.id = obj._id;
 		delete obj._id;
@@ -40,9 +41,6 @@ module.exports = class MongoProvider extends getClass('dweller') {
 	async find(config, query = {}) {
 		prepareQuery(query);
 		let collection = config.collection;
-		console.log('FIND')
-		console.log(collection)
-		console.log(query)
 		let res = await this.database.collection(collection).find(query).toArray();
 		return res.map(prepareObject);
 	}

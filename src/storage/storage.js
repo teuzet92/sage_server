@@ -6,12 +6,12 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async resolveChild(id) {
-		let values = await this.findOne({ id });
-		assert(values, 'Not a valid child')
+		let objectData = await this.findOne({ id });
+		assert(objectData, 'Not a valid child')
 		return this.createChild({
 			id,
 			config: this.config.model,
-			values,
+			values: objectData.values,
 		})
 	}
 
@@ -26,9 +26,9 @@ module.exports = class extends getClass('dweller') {
 		return this.createModel(model);
 	}
 
-	createModel(model = {}) {
+	createModel(model, id) {
 		if (this.config.forceUuids) {
-			assert(!model.id, 'Impossible to implicit ID for model in storage with forced uuids');
+			assert(!id, 'Impossible to implicit ID for model in storage with forced uuids');
 			model.id = uuid();
 		}
 		// TODO: Проверять данные на соответствие схеме
@@ -37,10 +37,10 @@ module.exports = class extends getClass('dweller') {
 		return this.provider.insert(this.config.providerConfig, model);
 	}
 
-	updateOne(query, updates, params) {
+	updateOne(query, updatedValues, params) {
 		let $set = {};
-		for (let key of Object.keys(updates)) {
-			$set[`data.${key}`] = updates[key];
+		for (let key of Object.keys(updatedValues)) {
+			$set[`values.${key}`] = updatedValues[key];
 		}
 		return this.provider.updateOne(this.config.providerConfig, query, { $set }, params);
 	}

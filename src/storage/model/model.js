@@ -7,7 +7,6 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	cmd_delete() {
-		console.log(this.parent.config)
 		return this.parent.deleteOne({ id: this.id });
 	}
 
@@ -18,11 +17,15 @@ module.exports = class extends getClass('dweller') {
 		return this.parent.findOne({ id: this.id });
 	}
 
-	cmd_update({ updatedFields }) {
-		if (!updatedFields) return;
-		return this.update(updatedFields);		
+	save() { // TODO: Сделать основным способом сохранять
+		return this.update(this.values)
 	}
-	update(updatedFields) {
-		return this.parent.updateOne({ id: this.id }, updatedFields);
+
+	cmd_update({ values }) {
+		if (!values) return;
+		return this.update(values);		
+	}
+	update(values) {
+		return this.parent.updateOne({ id: this.id }, values);
 	}
 }
