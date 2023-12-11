@@ -40,6 +40,7 @@ module.exports = class extends getClass('storage/model/model') {
 			role: 'system',
 			content: cityDescriptionMessage,
 		});
+		storedMessages.sort((a, b) => a.createTime - b.createTime);
 		for (let message of storedMessages) {
 			chat.push({
 				role: message.values.role,
@@ -89,7 +90,6 @@ module.exports = class extends getClass('storage/model/model') {
 			role: 'system',
 			content: this.getNextRecordMessage(),
 		});
-		console.log(messages)
 		const response = await openai.chat.completions.create({
 			model: "gpt-3.5-turbo",
 			messages,
