@@ -1,63 +1,60 @@
 module.exports = class extends getClass('dweller') {
-	async init(data) {
+	init(data) {
 		let defaultStorageConfig = this.project.config['storage'];
 		objmerge(this.config, defaultStorageConfig, 'target');
-		this.provider = await data.project.get('mongo');
+		this.provider = data.project.get('mongo');
 	}
 
-	async resolveChild(id) {
-		let objectData = await this.findOne({ id });
-		if (!objectData) return;
-		return this.createChild({
-			id,
-			config: this.config.model,
-			values: objectData.values,
-		})
+	async resolveChild(query) {
+		let providerQuery
+		if (typeof query == 'string') {
+			providerQuery = { id: query };
+		} else {
+			providerQuery = query;
+		}
+		let [ childData ] = await this.providerCall('getAll', providerQuery, { limit: 1 });
+		if (!childData) return;
+		childData.config = this.config.model;
+		return this.createChild(childData);
+	}
+
+	getSchema() {
+		return this.config.schema;
+	}
+
+	async providerCall(method, query = {}, ...params) {
+		let provider = await this.provider;
+		return provider[method](this.config.providerConfig, query, ...params);
+	}
+
+	createModel(model) {
+		// TODO: Проверять данные на соответствие схеме
+		assert(model.id, 'Id is required');
+		model.config = this.config.model;
+		return this.createChild(model);
+	}
+
+	async getAll(query) {
+		let rawData = await this.providerCall('getAll', query);
+		return rawData.map(modelData => this.createModel(modelData));
 	}
 
 	cmd_getSchema() {
 		return this.getSchema();
 	}
-	getSchema() {
-		return this.config.schema;
-	}
 
-	cmd_create({ model }) {
-		return this.createModel(model);
-	}
-
-	createModel(model, id) {
+	async cmd_create({ values }) {
+		let id;
 		if (this.config.forceUuids) {
-			assert(!id, 'Impossible to implicit ID for model in storage with forced uuids');
-			model.id = uuid();
-		}
-		// TODO: Проверять данные на соответствие схеме
-		assert(model.id, 'Id is required');
-		model.createTime = Date.now();
-		return this.provider.insert(this.config.providerConfig, model);
+			id = uuid();
+		};
+		let model = this.createModel({ id, values });
+		await model.save();
+		return model.saveData();
 	}
 
-	updateOne(query, updatedValues, params) {
-		let $set = {};
-		for (let key of Object.keys(updatedValues)) {
-			$set[`values.${key}`] = updatedValues[key];
-		}
-		return this.provider.updateOne(this.config.providerConfig, query, { $set }, params);
-	}
-
-	cmd_find({ query }) { 
-		return this.find(query) 
-	}
-
-	find(query) {
-		return this.provider.find(this.config.providerConfig, query);
-	}
-
-	findOne(query) {
-		return this.provider.findOne(this.config.providerConfig, query);
-	}
-
-	deleteOne(query) {
-		return this.provider.deleteOne(this.config.providerConfig, query);
+	async cmd_getAll({ query }) { 
+		let models = await this.getAll(query);
+		return models.map(model => model.saveData());
 	}
 }

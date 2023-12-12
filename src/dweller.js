@@ -18,30 +18,45 @@ module.exports = class Dweller {
 
 	init(data) {}
 
-	async createChild(data) {
+	createChild(data) {
 		let childClassname = data.config.class;
 		let childClass = getClass(childClassname);
 		data.parent = this;
 		data.project = this.project;
 		let child = new childClass(data);
-		await child.init(data);
+		child.init(data)
 		return child;
 	}
 
-	resolveChild(id) {}
+	resolveChild(query) {
+		error(`Dweller '${this.fullId}' does not implement 'resolveChild'`);
+	}
 
-	async get(query) {
-		assert(typeof query == 'string'); // Базовый двеллер работает только по прямому id дочернего объекта
-		let fullIdParts = query.split('.');
-		let dweller = this;
-		while (fullIdParts.length > 0) {
-			let nextChildId = fullIdParts.shift();
-			let nextChildConfig = dweller.config[`.${nextChildId}`];
-			if (nextChildConfig) {
-				dweller = await dweller.createChild({ id: nextChildId, config: nextChildConfig });
+	async get(...path) {
+		let fullPath = [];
+		for (let pathNode of path) {
+			if (typeof pathNode == 'string') {
+				let splittedPath = pathNode.split('.');
+				fullPath = fullPath.concat(splittedPath);
 			} else {
-				dweller = await dweller.resolveChild(nextChildId);
+				fullPath.push(pathNode);
 			}
+		}
+		let dweller = this;
+		while (fullPath.length > 0) {
+			let nextChildQuery = fullPath.shift();
+			let nextChildConfig
+			if (typeof nextChildQuery == 'string') {
+				nextChildConfig = dweller.config[`.${nextChildQuery}`];
+			}
+			let nextDweller;
+			if (nextChildConfig) {
+				nextDweller = await dweller.createChild({ id: nextChildQuery, config: nextChildConfig });
+			} else {
+				nextDweller = await dweller.resolveChild(nextChildQuery);
+			}
+			assert(nextDweller, `No child dweller with id '${nextChildQuery}' for dweller ${dweller.fullId}`);
+			dweller = nextDweller;
 		}
 		return dweller;
 	}
@@ -53,6 +68,10 @@ module.exports = class Dweller {
 		let methodName = `cmd_${action}`;
 		assert(this[methodName], `${this.fullId} does not implement API action ${action}`);
 		return this[methodName](parsedParams);
+	}
+
+	time() {
+		return Date.now();
 	}
 
 	parseApiParams(config, rawParams) {

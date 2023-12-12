@@ -3,29 +3,50 @@ module.exports = class extends getClass('dweller') {
 		let defaultModelConfig = objget(data.project.config, 'storage', 'model');
 		objmerge(data.config, defaultModelConfig, 'target');
 		super(data);
-		this.values = data.values;
+	}
+
+	init(data) {
+		this.createTime = data.createTime;
+		this.updateTime = data.updateTime;
+		this.values = data.values ?? {};
+		this.temlateId = data.templateId;
+	}
+
+	saveData() {
+		let out = {
+			id: this.id,
+			createTime: this.createTime,
+			updateTime: this.updateTime,
+			templateId: this.temlateId, // Совсем костыль, но править долго
+			values: this.values,
+		};
+		return out;
+	}
+
+	save() {
+		let saveData = this.saveData();
+		if (!saveData.createTime) {
+			saveData.createTime = this.time();
+			return this.parent.providerCall('insert', saveData);
+		} else {
+			saveData.updateTime = this.time();
+			return this.parent.providerCall('update', { id: this.id }, saveData);
+		}
 	}
 
 	cmd_delete() {
-		return this.parent.deleteOne({ id: this.id });
+		this.parent.providerCall('delete', { id: this.id });
 	}
+
 
 	cmd_load() {
-		return this.load();
-	}
-	load() {
-		return this.parent.findOne({ id: this.id });
-	}
-
-	save() { // TODO: Сделать основным способом сохранять
-		return this.update(this.values)
+		return this.saveData();
 	}
 
 	cmd_update({ values }) {
-		if (!values) return;
-		return this.update(values);		
-	}
-	update(values) {
-		return this.parent.updateOne({ id: this.id }, values);
+		for (let key in values) {
+			this.values[key] = values[key];
+		}
+		return this.save();	
 	}
 }

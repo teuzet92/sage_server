@@ -1,11 +1,5 @@
 module.exports = class Project extends getClass('dweller') {
-	constructor(config) {
-		super(config);
-		this.cachedDwellers = {};
-	}
-
-	async init(config) {
-		this.reloadContent();
+	init(data) {
 		let telegramServers = this.config.telegramServers;
 		if (!telegramServers) return;
 		this.telegramServers = {};
@@ -13,6 +7,7 @@ module.exports = class Project extends getClass('dweller') {
 		for (let telegramServerConfig of Object.values(telegramServers)) {
 			this.telegramServers[telegramServerConfig.id] = new TelegramServer(this, telegramServerConfig);
 		}
+		//reloadContent()
 	}
 
 	async reloadContent() {

@@ -41,10 +41,11 @@ function createProject(id) {
 		objmerge(config, projectConfig);
 	}
 	let projectClass = getClass('project');
-	let out = new projectClass({ id, config });
+	let projectData = { id, config };
+	let out = new projectClass(projectData);
 	out.project = out;
+	out.init(projectData);
 	env.projects[id] = out;
-	out.init();
 	return out;
 }
 

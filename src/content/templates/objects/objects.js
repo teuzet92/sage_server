@@ -4,10 +4,9 @@ module.exports = class extends getClass('storage/storage') {
 		let templateModel = this.parent;
 		let templateId = templateModel.id;
 		let templateParamsStorage = await this.project.get('content.templateParams');
-		let myParams = await templateParamsStorage.find({ 'values.templateId': templateId });
+		let myParams = await templateParamsStorage.getAll({ 'values.templateId': templateId });
 		let fields = {};
 		for (let paramObject of myParams) {
-			console.log(myParams)
 			let { code, title, type } = paramObject.values;
 			fields[code] = {
 				code,
@@ -21,24 +20,13 @@ module.exports = class extends getClass('storage/storage') {
 	}
 
 	createModel(model) {
-		return super.createModel({ templateId: this.parent.id, ...model });
+		model.templateId = this.parent.id;
+		return super.createModel(model);
 	}
 
-	updateOne(query = {}, updates) {
-		return super.updateOne({ templateId: this.parent.id, ...query }, updates);
+	providerCall(method, query = {}, ...params) {
+		query.templateId = this.parent.id;
+		return super.providerCall(method, query, ...params);
 	}
-
-	find(query = {}) {
-		return super.find({ templateId: this.parent.id, ...query });
-	}
-
-	findOne(query = {}) {
-		return super.findOne({ templateId: this.parent.id, ...query })
-	}
-
-	deleteOne(query = {}) {
-		return super.deleteOne({ templateId: this.parent.id, ...query })
-	}
-
 
 }

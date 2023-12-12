@@ -18,6 +18,7 @@ function prepareObject(obj) {
 }
 
 module.exports = class MongoProvider extends getClass('dweller') {
+
 	init(data) {
 		let config = this.config;
 		assert(config.db);
@@ -28,33 +29,27 @@ module.exports = class MongoProvider extends getClass('dweller') {
 	insert(config, query) {
 		assert(query.id, 'Implicit id is required');
 		prepareQuery(query);
-		let collection = config.collection;
-		return this.database.collection(collection).insertOne(query);
+		return this.database.collection(config.collection).insertOne(query);
 	}
 
-	updateOne(config, query, updates, params) {
-		prepareQuery(query);
-		let collection = config.collection;
-		return this.database.collection(collection).updateOne(query, updates, params);
+	update(config, query, updates, params) {
+		if (!updates) return;
+		prepareQuery(query)
+		let $set = {};
+		for (let key in updates) {
+			$set[key] = updates[key];
+		}
+		return this.database.collection(config.collection).updateMany(query, { $set }, params);
 	}
 
-	async find(config, query = {}) {
+	async getAll(config, query = {}) {
 		prepareQuery(query);
-		let collection = config.collection;
-		let res = await this.database.collection(collection).find(query).toArray();
+		let res = await this.database.collection(config.collection).find(query).toArray();
 		return res.map(prepareObject);
 	}
 
-	async findOne(config, query = {}) {
+	delete(config, query) {
 		prepareQuery(query);
-		let collection = config.collection;
-		let res = await this.database.collection(collection).findOne(query);
-		return prepareObject(res);
-	}
-
-	deleteOne(config, query) {
-		prepareQuery(query);
-		let collection = config.collection;
-		return this.database.collection(collection).deleteOne(query);
+		return this.database.collection(config.collection).deleteMany(query);
 	}
 }

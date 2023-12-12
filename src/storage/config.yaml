@@ -2,10 +2,10 @@ requiredModules:
   storage/model: true
 
 storage:
-  defaultApiAction: find
+  defaultApiAction: getAll
   apiActions:
-    find:
-      description: Find model
+    getAll:
+      description: Find models
       params: 
         query:
           type: json
@@ -13,7 +13,7 @@ storage:
     create:
       description: New model
       params: 
-        model:
+        values:
           type: json
           description: Fields
     getSchema:

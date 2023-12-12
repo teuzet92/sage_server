@@ -34,7 +34,6 @@ module.exports = class extends getClass('storage/model/model') {
 	async cmd_newGame({ playerModel, cityName }) {
 		let gamesStorage = await this.project.get('shards.games');
 		let defaultScenario = this.project.content.gameSettings.defaultScenario;
-		console.log('default Model: ', defaultModel);
 		let response = await gamesStorage.newGame({
 			modelId: defaultModel,
 			playerId: playerModel.id,
