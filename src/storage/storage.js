@@ -35,6 +35,9 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	createModel(model) {
+		if (this.config.forceUuids && !model.id) {
+			model.id = uuid();
+		}
 		// TODO: Проверять данные на соответствие схеме
 		assert(model.id, 'Id is required');
 		model.config = this.config.model;
@@ -51,11 +54,7 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async cmd_create({ values }) {
-		let id;
-		if (this.config.forceUuids) {
-			id = uuid();
-		};
-		let model = this.createModel({ id, values });
+		let model = this.createModel({ values });
 		await model.save();
 		return model.saveData();
 	}

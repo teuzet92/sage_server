@@ -22,6 +22,7 @@
           title: Content
           type:
             name: string
+            textArea: true
 
   .chats:
     class: storage/storage
@@ -37,9 +38,26 @@
             name: link
             storageId: content.templates.chatAgents.objects
     model:
+      class: shards/chats/chat
+      apiActions:
+        continue:
+          description: Receive next message from ChatGPT
+        addMessage:
+          description: Add message
+          params:
+            role:
+              required: true
+              code: role
+              type:
+                name: string
+            content:
+              required: true
+              code: content
+              type:
+                name: string
       .messages:
-        class: shards/chats/messages
         forceUuids: true
+        class: shards/chats/messages
         providerConfig:
           collection: chatMessages
         schema: 
