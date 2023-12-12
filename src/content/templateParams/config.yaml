@@ -10,7 +10,8 @@
           code: 'templateId'
           title: 'Template Id'
           type:
-            name: 'string'
+            name: 'link'
+            storageId: 'content.templates'
         title:
           code: 'title'
           title: 'Title'

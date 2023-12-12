@@ -14,6 +14,7 @@ requiredModules:
     providerConfig:
       collection: templates
     schema:
+      objectTitleField: title
       fields:
         title:
           code: title
