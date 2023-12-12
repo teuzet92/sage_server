@@ -18,8 +18,15 @@ module.exports = class extends getClass('dweller') {
 		return this.createChild(childData);
 	}
 
-	getSchema() {
-		return this.config.schema;
+	async getSchema() {
+		let schema = {};
+		objmerge(schema, this.config.schema);
+		if (schema.provider) {
+			let schemaProvider = await this.project.get(schema.provider);
+			let providerSchema = await schemaProvider.getSchema();
+			objmerge(schema, providerSchema)
+		}
+		return schema;
 	}
 
 	async providerCall(method, query = {}, ...params) {

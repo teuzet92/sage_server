@@ -1,0 +1,47 @@
+.shards:
+  .chatMessages:
+    class: storage/storage
+    forceUuids: true
+    providerConfig:
+      collection: chatMessages
+    schema:
+      fields:
+        chatId:
+          code: chatId
+          title: Chat ID
+          type:
+            name: link
+            storageId: shards.chats
+        role:
+          code: role
+          title: Role
+          type:
+            name: string
+        content:
+          code: content
+          title: Content
+          type:
+            name: string
+
+  .chats:
+    class: storage/storage
+    forceUuids: true
+    providerConfig:
+      collection: chats
+    schema:
+      fields:
+        agentId:
+          code: agentId
+          title: Agent Id
+          type:
+            name: link
+            storageId: content.templates.chatAgents.objects
+    model:
+      .messages:
+        class: shards/chats/messages
+        forceUuids: true
+        providerConfig:
+          collection: chatMessages
+        schema: 
+          provider: chatMessages
+      
