@@ -42,6 +42,11 @@
       apiActions:
         continue:
           description: Receive next message from ChatGPT
+          # params:
+          #   task:
+          #     description: Task
+          #     type:
+          #       name: string
         addMessage:
           description: Add message
           params:

@@ -12,6 +12,15 @@ module.exports = class extends getClass('storage/model/model') {
 		return this.addMessage(role, content);
 	}
 
+	async start() {
+		let agent = await this.project.get(`content.templates.chatAgents.objects.${this.values.agentId}`);
+		let intro = agent.values.intro;
+		if (intro) {
+			await this.addMessage('system', intro);
+		}
+		await this.save();
+	}
+
 	async addMessage(role, content) {
 		let messageStorage = await this.get('messages');
 		let values = { role, content };
@@ -27,13 +36,21 @@ module.exports = class extends getClass('storage/model/model') {
 			let { role, content } = messageModel.values;
 			messages.push({ role, content });
 		}
+		let agent = await this.project.get(`content.templates.chatAgents.objects.${this.values.agentId}`);
+		let reminder = agent.values.reminder;
+		if (reminder) {
+			messages.push({
+				role: 'system',
+				content: reminder,
+			});
+		}
+		console.log(messages);
 		const response = await openai.chat.completions.create({
 			model: "gpt-3.5-turbo",
 			messages,
 		});
 		let answer = response.choices[0].message;
-		let answerModel = messageStorage.createModel({ values: answer });
-		await answerModel.save();
+		await this.addMessage(answer.role, answer.content);
 		return answer.content;
 	}
 

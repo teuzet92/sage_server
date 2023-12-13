@@ -7,7 +7,7 @@ module.exports = class Project extends getClass('dweller') {
 		for (let telegramServerConfig of Object.values(telegramServers)) {
 			this.telegramServers[telegramServerConfig.id] = new TelegramServer(this, telegramServerConfig);
 		}
-		//reloadContent()
+		// this.reloadContent();
 	}
 
 	async reloadContent() {

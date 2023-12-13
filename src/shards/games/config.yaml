@@ -22,11 +22,27 @@
     forceUuids: true
     schema:
       fields:
+        started:
+          code: started
+          title: Started
+          type:
+            name: number # time
+        finished:
+          code: finished
+          title: Finished
+          type:
+            name: number # time
         scenarioId:
-          code: modelId
-          title: Model Id
+          code: scenarioId
+          title: Scenario Id
           type:
             name: string
+        chronicleChatId:
+          code: chronicleChatId
+          title: Chronicle chat
+          type: 
+            name: link
+            storageId: shards.chats
         cityName:
           code: cityName
           title: City Name
@@ -61,3 +77,5 @@
           description: Get chat
         next:
           description: Get to next chronicle
+        callChancellor:
+          description: Calls chancellor

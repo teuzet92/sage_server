@@ -62,8 +62,6 @@ module.exports = class Dweller {
 	}
 
 	runAction(action, rawParams = {}) {
-		console.log(this.config.apiActions)
-		console.log(action)
 		let apiActionConfig = this.config.apiActions[action];
 		assert(apiActionConfig);
 		let parsedParams = this.parseApiParams(apiActionConfig, rawParams);

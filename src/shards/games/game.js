@@ -4,55 +4,55 @@ const openai = new OpenAI({
 });
 
 module.exports = class extends getClass('storage/model/model') {
+
 	cmd_addEvent({ text }) {
 		return this.addEvent(text)
 	}
 	async addEvent(text) {
-		await this.addMessage('system', text)
-		return `Year ${this.values.year}, ${this.getCurrentSeasonName()}\n${text}`;
+		let content = `Year ${this.values.year}, ${this.getCurrentSeasonName()}\n${text}`;
+		let chronicleChat = await this.parent.parent.get(`chats.${this.values.chronicleChatId}`);
+		await chronicleChat.addMessage('user', content)
+		return content
 	}
 
-	async addMessage(role, text) {
-		let messagesStorage = await this.project.get('shards.gameMessages');
-		return messagesStorage.createModel({
-			values: {
-				gameId: this.id,
-				role,
-				content: text,
-			}
-		});
+	cmd_callChancellor() {
+		return this.newChancellorChat();
 	}
 
-	async buildChat() {
-		let contentStorage = await this.project.get('content.constructed');
-		let contentResponse = await contentStorage.findOne({ id: 'latest' });
-		let content = contentResponse.values.content;
-		let scenarioId = this.values.scenarioId;
-		let scenario = assert(content.scenarios[scenarioId]);
-		let storedMessages = await this.getMessages();
-		let chat = [{
-			role: 'system',
-			content: scenario.rules,
-		}];
-		let cityDescriptionMessage = require('util').format(scenario.cityDescription, this.values.cityName);
-		chat.push({
-			role: 'system',
-			content: cityDescriptionMessage,
-		});
-		storedMessages.sort((a, b) => a.createTime - b.createTime);
-		for (let message of storedMessages) {
-			chat.push({
-				role: message.values.role,
-				content: message.values.content,
-			});
-		}
-		if (scenario.agentNote) {
-			chat.push({
-				role: 'system',
-				content: scenario.agentNote,
-			})
-		}
-		return chat;
+	async newChancellorChat() {
+
+		let chronicleChatMessageStorage = await this.parent.parent.get(`chats.${this.values.chronicleChatId}.messages`);
+		let chronicleMessages = await chronicleChatMessageStorage.getAll({ 'values.role': { $ne: 'system' } });
+		let chronicleText = chronicleMessages.map(model => model.values.content).join('\n\n');
+		chronicleText = `Here is a chronicle of the city: \n\n${chronicleText}`;
+
+		let scenario = await this.project.get(`content.templates.scenarios.objects.${this.values.scenarioId}`);
+		let agentId = assert(scenario.values.chancellorAgentId)
+	
+		let chatStorage = await this.parent.parent.get('chats');
+		let chancellorChat = chatStorage.createModel({ values: { agentId } });
+		await chancellorChat.start();
+		await chancellorChat.addMessage('system', chronicleText);
+		await chancellorChat.addMessage('assistant', 'How may I help you, Your Majesty?');
+	}
+
+	async start() {
+		let scenario = await this.project.get(`content.templates.scenarios.objects.${this.values.scenarioId}`);
+		this.values.year = scenario.values.startingYear;
+		this.values.season = 0;
+
+		let chronistAgentId = assert(scenario.values.chronistAgent);
+		let chatStorage = await this.parent.parent.get('chats');
+		let chronicleChat = chatStorage.createModel({ values: { agentId: chronistAgentId } });
+		await chronicleChat.start();
+		
+		let cityDescription = require('util').format(scenario.values.cityDescription, this.values.cityName);
+		await chronicleChat.addMessage('user', cityDescription);
+
+		this.values.started = this.time();
+		this.values.chronicleChatId = chronicleChat.id;
+		await this.save();
+		return cityDescription;
 	}
 
 	async moveDate() {
@@ -84,29 +84,12 @@ module.exports = class extends getClass('storage/model/model') {
 	}
 
 	async next() {
-		let messages = await this.buildChat();
-		messages.push({
-			role: 'system',
-			content: this.getNextRecordMessage(),
-		});
-		const response = await openai.chat.completions.create({
-			model: "gpt-3.5-turbo",
-			messages,
-		});
-		let answer = response.choices[0].message;
-		await this.addMessage('assistant', answer.content);
+		let chronicleChat = await this.parent.parent.get(`chats.${this.values.chronicleChatId}`);
+		await chronicleChat.addMessage('system', this.getNextRecordMessage()); // TODO: Не факт, что такие штуки нужно сохранять
+		let answerText = await chronicleChat.continue();
 		this.moveDate();
 		await this.save();
-		return answer.content;
-	}
-
-	cmd_getChat() {
-		return this.buildChat();
-	}
-
-	async getMessages() {
-		let gameMessagesStorage = await this.project.get('shards.gameMessages');
-		return gameMessagesStorage.find({ 'values.gameId': this.id });
+		return answerText;
 	}
 
 }
