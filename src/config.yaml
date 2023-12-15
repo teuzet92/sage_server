@@ -3,6 +3,7 @@ requiredModules:
   mongo: true
   storage: true
   shards: true
+  llmProviders: true
 
 projects:
   test_project:

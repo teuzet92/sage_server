@@ -1,3 +1,7 @@
+requiredModules:
+  shards/games/chronicle: true
+  shards/games/agents: true
+
 .shards:
   class: dweller
   .games:
@@ -37,15 +41,20 @@
           title: Scenario Id
           type:
             name: string
-        chronicleChatId:
-          code: chronicleChatId
-          title: Chronicle chat
+        chancellorChatId:
+          code: chancellorChatId
+          title: Chancellor chat
           type: 
             name: link
             storageId: shards.chats
         cityName:
           code: cityName
-          title: City Name
+          title: City name
+          type:
+            name: string
+        cityDescription:
+          code: cityDescription
+          title: City description
           type:
             name: string
         playerId:
@@ -53,29 +62,21 @@
           title: Player Id
           type:
             name: string
-        year:
-          code: year
-          title: Year
-          type:
-            name: number
-        season:
-          code: season
-          title: Season [0-3]
+        turn:
+          code: turn
+          title: Turn
           type:
             name: number
     model:
       class: shards/games/game
       apiActions: 
-        addEvent:
-          description: Adds event
-          params:
-            text:
-              required: true
-              description: text
-              type: string
-        getChat:
-          description: Get chat
         next:
           description: Get to next chronicle
-        callChancellor:
+        sayToChancellor:
           description: Calls chancellor
+          params:
+            text:
+              code: text
+              title: Text
+              type:
+                name: string

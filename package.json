@@ -13,6 +13,7 @@
   "author": "teuzet <teuzet92@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@mistralai/mistralai": "^0.0.7",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",

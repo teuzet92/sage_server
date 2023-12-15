@@ -1,0 +1,16 @@
+.shards:
+  class: dweller
+  .games:
+    model:
+      .chronist:
+        class: shards/games/agents/chronist
+        llmProvider: llmProviders.mistral
+        scenarioAgentKey: chronistAgentId
+      .chancellor:
+        class: shards/games/agents/chancellor
+        llmProvider: llmProviders.chatGpt
+        scenarioAgentKey: chancellorAgentId
+      .chancellorRecapper:
+        class: shards/games/agents/chancellorRecapper
+        llmProvider: llmProviders.chatGpt
+        scenarioAgentKey: chancellorRecapperAgentId

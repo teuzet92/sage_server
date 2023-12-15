@@ -1,0 +1,39 @@
+.shards:
+  .gameChronicles:
+    class: storage/storage
+    forceUuids: true
+    providerConfig:
+      collection: chronicles
+    schema:
+      fields:
+        gameId:
+          code: gameId
+          title: Game ID
+          type:
+            name: link
+            storageId: shards.games
+        type:
+          code: type # record / event
+          title: Type
+          type:
+            name: string
+        turn:
+          code: turn
+          title: Turn
+          type: 
+            name: number
+        content:
+          code: content
+          title: Content
+          type:
+            name: string
+  .games:
+    model:
+      .chronicle:
+        class: shards/games/chronicle/chronicle
+        forceUuids: true
+        schema:
+          provider: shards.gameChronicles
+        providerConfig:
+          collection: chronicles
+          

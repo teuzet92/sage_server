@@ -1,0 +1,6 @@
+.llmProviders:
+  class: dweller
+  .chatGpt:
+    class: llmProviders/chatGpt
+  .mistral:
+    class: llmProviders/mistral

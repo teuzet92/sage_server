@@ -23,7 +23,6 @@
           type:
             name: string
             textArea: true
-
   .chats:
     class: storage/storage
     forceUuids: true
@@ -31,22 +30,14 @@
       collection: chats
     schema:
       fields:
-        agentId:
-          code: agentId
-          title: Agent Id
+        reason:
+          code: reason
+          title: Reason
           type:
-            name: link
-            storageId: content.templates.chatAgents.objects
+            name: string
     model:
       class: shards/chats/chat
       apiActions:
-        continue:
-          description: Receive next message from ChatGPT
-          # params:
-          #   task:
-          #     description: Task
-          #     type:
-          #       name: string
         addMessage:
           description: Add message
           params:
