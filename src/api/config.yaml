@@ -1,0 +1,43 @@
+.apiLogs:
+  class: storage/storage
+  forceUuids: true
+  providerConfig:
+    collection: logs
+  schema:
+    fields:
+      level: 
+        code: level
+        title: Level
+        type:
+          name: string
+      session:
+        code: session
+        title: session
+        type:
+          name: string
+      playerId:
+        code: playerId
+        title: playerId
+        type:
+          name: link
+          storageId: shards.players
+      action:
+        code: action
+        title: Action
+        type:
+          name: string
+      dwellerId:
+        code: dwellerId
+        title: Dweller Id
+        type:
+          name: string
+      params:
+        code: params
+        title: Params
+        type:
+          name: json
+      response:
+        code: response
+        title: Response
+        type:
+          name: json

@@ -32,16 +32,24 @@ module.exports = class HttpServer {
 		this.httpServer.listen(port);
 	}
 
+	async logRequest(project, values) {
+		let apiLogStorage = await project.get('apiLogs');
+		apiLogStorage.createModel({ values }).save();
+	}
+
 	async onHttpRequest(data, response) {
+		// let projectLogs = await this.project.get('Project logs')
 		let out = {
 			status: true,
 		};
 		try {
-			let project = assert(env.projects[data.projectId], `Project '${data.projectId}' not found`);
-			let dweller = await project.get(data.dwellerId);
-			let params = data.params ?? {};
+			var project = assert(env.projects[data.projectId], `Project '${data.projectId}' not found`);
+			var dwellerId = data.dwellerId;
+			let dweller = await project.get(dwellerId);
+			var params = data.params ?? {};
+			var session = params.session;
 			assert(dweller, `Dweller with id '${data.dwellerId}' not found`);
-			let action = params.action ?? dweller.config.defaultApiAction;
+			var action = params.action ?? dweller.config.defaultApiAction;
 			assert(action, `No action specified, and '${data.dwellerId}' has no default action`);
 			out.data = await dweller.runAction(action, params);
 		} catch (error) {
@@ -50,6 +58,14 @@ module.exports = class HttpServer {
 			env.error('API ERROR\n');
 			env.error(data);
 			env.error(error);
+			this.logRequest(project, {
+				level: 'error',
+				dwellerId,
+				action,
+				session,
+				params,
+				response: out,
+			});
 		} finally {
 			response.json(out);
 		}

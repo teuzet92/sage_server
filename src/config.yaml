@@ -5,6 +5,7 @@ requiredModules:
   shards: true
   llmProviders: true
   admin: true
+  api: true
 
 projects:
   test_project:
