@@ -76,21 +76,20 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async setCityName({ gameModel, cityName }) {
-		console.log('setCityName')
 		gameModel.values.cityName = cityName;
 		return gameModel.start();
 	}
 
 	async setScenario({ gameModel, scenarioId }) {
-		let scenario = await this.project.get(`content.templates.scenarios.${body}`);
+		let scenariosStorage = await this.project.get('content.templates.scenarios.objects');
+		let scenarios = await scenariosStorage.getAll({ id: scenarioId });
+		let scenario = scenarios[0];
 		if (!scenario) {
-			return `Scenario with if '${body}' not found.`;
+			return `Scenario with if '${scenarioId}' not found.`;
 		} else {
-			gameModel.values.scenarioId = body;
+			gameModel.values.scenarioId = scenarioId;
 			await gameModel.save();
-			let gameStartResult = await this.startGame();
-			if (gameStartResult) return gameStartResult;
-			return `You have selected scenario '${body}'. Now please enter city name:`;
+			return `You have selected scenario '${scenarioId}'. Now please enter city name:`;
 		}
 	}
 
@@ -112,7 +111,6 @@ module.exports = class extends getClass('dweller') {
 		let gamesStorage = await this.project.get('play.games');
 		let gameModel = await gamesStorage.newGame({
 			playerId: playerModel.id,
-			cityName,
 		})
 		playerModel.values.gameId = gameModel.id;
 		await playerModel.save();
