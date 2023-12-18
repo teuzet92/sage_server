@@ -38,7 +38,7 @@ module.exports = class TelegramServer {
 				level: 'error',
 				session: userId,
 				params: { message },
-				response: out,
+				response: `Server error: ${error.message}`,
 			});
 			this.bot.sendMessage(userId, `Server error: ${error.message}`);
 		}
