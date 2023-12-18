@@ -83,6 +83,8 @@ module.exports = class extends getClass('storage/model/model') {
 			if (summary) {
 				await this.addNewChronicle(summary, 'decision');
 			}
+			this.values.chancellorChatId = null;
+			await this.save();
 			// chancellorResponse = chancellorResponse.replace('END','');
 		}
 		return chancellorResponse;

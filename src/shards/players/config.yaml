@@ -4,6 +4,7 @@
     providerConfig:
       collection: players
     schema:
+      objectTitleField: telegramUsername
       fields:
         gameId:
           code: gameId

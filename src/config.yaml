@@ -4,6 +4,7 @@ requiredModules:
   storage: true
   shards: true
   llmProviders: true
+  admin: true
 
 projects:
   test_project:

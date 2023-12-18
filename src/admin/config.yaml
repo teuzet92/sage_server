@@ -1,0 +1,44 @@
+.users:
+  class: storage/storage
+  forceUuids: true
+  providerConfig:
+    collection: users
+  schema:
+    fields:
+      nick:
+        code: nick
+        title: Nick
+        type: 
+          name: string
+      password:
+        code: password
+        title: Password
+        type:
+          name: string
+      playerId:
+        code: playerId
+        title: PlayerId
+        type:
+          name: link
+          storageId: shards.players
+      session:
+        code: session
+        title: Session
+        type:
+          name: string
+      access:
+        code: access
+        title: Access
+        type:
+          name: string
+          textArea: true
+  model:
+    class: admin/user
+    apiActions:
+      login:
+        params:
+          password:
+            description: 'Password'
+            required: true
+            type:
+              name: string
