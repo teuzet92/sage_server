@@ -17,6 +17,12 @@ module.exports = class TelegramServer {
 		]);
 	}
 
+	async logRequest(values) {
+		let apiLogStorage = await this.project.get('apiLogs');
+		apiLogStorage.createModel({ values }).save();
+	}
+
+
 	async onMessage(message) {
 		let userId = message.chat.id;
 		let username = message.chat.username;
@@ -27,6 +33,13 @@ module.exports = class TelegramServer {
 		} catch (error) {
 			env.error('Telegram error\n');
 			env.error(error);
+			this.logRequest({
+				source: 'telegram',
+				level: 'error',
+				session: userId,
+				params: { message },
+				response: out,
+			});
 			this.bot.sendMessage(userId, `Server error: ${error.message}`);
 		}
 	}

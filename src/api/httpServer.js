@@ -59,6 +59,7 @@ module.exports = class HttpServer {
 			env.error(data);
 			env.error(error);
 			this.logRequest(project, {
+				source: 'api',
 				level: 'error',
 				dwellerId,
 				action,

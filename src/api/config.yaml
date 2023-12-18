@@ -5,6 +5,11 @@
     collection: logs
   schema:
     fields:
+      source:
+        code: source
+        title: Source
+        type:
+          name: string
       level: 
         code: level
         title: Level
