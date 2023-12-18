@@ -11,6 +11,9 @@ module.exports = class Dweller {
 		if (this.parent != this.project) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
 		}
+		if (this.project) {
+			this.project.cachedDwellers[this.fullId] = this;
+		}
 	}
 
 	init(data) {}
