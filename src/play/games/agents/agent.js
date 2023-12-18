@@ -60,9 +60,9 @@ module.exports = class extends getClass('storage/model/model') {
 		};
 		let temperature = this.agent.values.temperature ?? 1;
 		temperature = Math.min(2, Math.max(0, temperature))
-		let llmProviderId = 'chatGpt'
+		let llmProviderId = 'llmProvider.chatGpt'
 		if (this.agent.values.useMistralAsProvider) {
-			llmProviderId = 'mistral';
+			llmProviderId = 'llmProvider.mistral';
 			temperature = Math.min(1, Math.max(0, temperature));
 		} 
 		let llmProvider = await this.project.get(llmProviderId);
