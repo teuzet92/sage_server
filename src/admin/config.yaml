@@ -1,15 +1,24 @@
 .users:
-  class: storage/storage
-  forceUuids: true
+  class: admin/users
+  apiActions:
+    validateSession:
+      params:
+        session:
+          description: 'Session'
+          required: true
+          type:
+            name: string
+    createUser:
+      params:
+        id:
+          description: 'Id'
+          required: true
+          type:
+            name: string
   providerConfig:
     collection: users
   schema:
     fields:
-      nick:
-        code: nick
-        title: Nick
-        type: 
-          name: string
       password:
         code: password
         title: Password
