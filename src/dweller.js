@@ -11,9 +11,6 @@ module.exports = class Dweller {
 		if (this.parent != this.project) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
 		}
-		if (this.config.cacheDweller) {
-			this.project.cachedDwellers[this.fullId] = this;
-		}
 	}
 
 	init(data) {}
@@ -34,12 +31,21 @@ module.exports = class Dweller {
 
 	async get(...path) {
 		let fullPath = [];
+		let onlyString = true;
 		for (let pathNode of path) {
 			if (typeof pathNode == 'string') {
 				let splittedPath = pathNode.split('.');
 				fullPath = fullPath.concat(splittedPath);
 			} else {
+				onlyString = false;
 				fullPath.push(pathNode);
+			}
+		}
+		if (onlyString) {
+			let stringFullId = fullPath.join('.');
+			let cachedDweller = this.project.cachedDwellers[stringFullId];
+			if (cachedDweller) {
+				return cachedDweller;
 			}
 		}
 		let dweller = this;
