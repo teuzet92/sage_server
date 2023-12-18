@@ -87,7 +87,7 @@ module.exports = class extends getClass('dweller') {
 		if (!scenario) {
 			return `Scenario with code '${scenarioId}' not found.`;
 		} else {
-			gameModel.values.scenarioId = scenarioId;
+			gameModel.values.scenarioId = scenario.id;
 			await gameModel.save();
 			return `You have selected scenario '${scenarioId}'. Now please enter city name:`;
 		}
