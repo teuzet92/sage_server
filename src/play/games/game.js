@@ -5,16 +5,21 @@ module.exports = class extends getClass('storage/model/model') {
 
 
 	async start() {
+		assert(this.values.cityName, 'First assign a name to the city');
+		assert(this.values.scenarioId, 'First assign scenario to the game');
 		let scenario = await this.project.get(`content.templates.scenarios.objects.${this.values.scenarioId}`);
 		this.values.turn = 0;
 
-		let cityDescription = require('util').format(scenario.values.cityDescription, this.values.cityName);
+		let cityDescriptor = await this.get('cityDescriptor');
+		let cityDescription = await cityDescriptor.task(`Please generate a description for a city named ${this.values.cityName}`);
 
 		this.values.cityDescription = cityDescription;
 		this.values.started = this.time();
 		await this.save();
 		return cityDescription;
 	}
+
+
 
 	getTurnName(turn) {
 		let year = Math.floor(turn / 4) + 1415; // TODO: константа из собранного контента
@@ -31,6 +36,10 @@ module.exports = class extends getClass('storage/model/model') {
 
 	getNextRecordMessage() {
 		return `Produce a record for: ${this.getTurnName(this.values.turn + 1)}`;
+	}
+
+	cmd_setCityName({ name }) {
+		return this.setCityName(name);
 	}
 
 	cmd_next() {

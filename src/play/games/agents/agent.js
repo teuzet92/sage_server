@@ -12,6 +12,15 @@ module.exports = class extends getClass('storage/model/model') {
 		return this.onTask(task);
 	}
 
+	async onTask(task) {
+		return this.providerCall([
+			{
+				role: 'user',
+				content: task,
+			}
+		])
+	}
+
 	async collectGameChronicle() {
 		let game = this.parent;
 		let out = 'Initial city description: \n';

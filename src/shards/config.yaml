@@ -1,6 +1,0 @@
-requiredModules:
-  shards/games: true
-  shards/gameMessages: true
-  shards/telegram: true
-  shards/players: true
-  shards/chats: true

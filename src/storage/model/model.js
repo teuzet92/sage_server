@@ -24,9 +24,12 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	save() {
+		if (!this.createTime) {
+			this.createTime = this.time();
+			var creation = true;
+		}
 		let saveData = this.saveData();
-		if (!saveData.createTime) {
-			saveData.createTime = this.time();
+		if (creation) {
 			return this.parent.providerCall('insert', saveData);
 		} else {
 			saveData.updateTime = this.time();

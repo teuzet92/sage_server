@@ -1,11 +1,11 @@
 requiredModules:
-  shards/games/chronicle: true
-  shards/games/agents: true
+  play/games/chronicle: true
+  play/games/agents: true
 
-.shards:
+.play:
   class: dweller
   .games:
-    class: shards/games/games
+    class: play/games/games
     apiActions:
       newGame:
         description: Starts new game
@@ -15,7 +15,6 @@ requiredModules:
             description: 'Model of the game'
             type: string
           cityName:
-            required: true
             description: 'City name'
             type: string
           playerId:
@@ -46,7 +45,7 @@ requiredModules:
           title: Chancellor chat
           type: 
             name: link
-            storageId: shards.chats
+            storageId: play.chats
         cityName:
           code: cityName
           title: City name
@@ -68,7 +67,7 @@ requiredModules:
           type:
             name: number
     model:
-      class: shards/games/game
+      class: play/games/game
       apiActions: 
         next:
           description: Get to next chronicle
@@ -78,5 +77,13 @@ requiredModules:
             text:
               code: text
               title: Text
+              type:
+                name: string
+        setCityName:
+          description: Sets city name
+          params:
+            name:
+              code: name
+              title: Name
               type:
                 name: string

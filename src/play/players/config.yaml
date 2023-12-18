@@ -1,4 +1,4 @@
-.shards:
+.play:
   .players:
     class: storage/storage
     providerConfig:
@@ -10,7 +10,8 @@
           code: gameId
           title: Game Id
           type:
-            name: string
+            name: link
+            storageId: play.games
         telegramId:
           code: telegramId
           title: Telegram ID
@@ -26,6 +27,9 @@
           title: Preferred game model
           type:
             name: string
-    model:
-      class: shards/players/player
+        inNewGameCreation:
+          code: inNewGameCreation
+          title: In new game creation
+          type:
+            name: bool
      

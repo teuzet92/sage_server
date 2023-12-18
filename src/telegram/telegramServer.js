@@ -7,7 +7,14 @@ module.exports = class TelegramServer {
 		this.handlerId = assert(config.handlerId);
 		this.bot = new TelegramBot(token, { polling: true });
 		this.bot.on('message', (message) => this.onMessage(message));
-		// TODO: Садресовать хэндлер и вытащить список команд
+		this.bot.setMyCommands([
+			{ command: "start", description: "Welcome"},
+			{ command: "new_game", description: 'Starts new game' },
+			{ command: "next", description: "Generates next chronicle record" },
+			{ command: "new_scenario", description: "Starts new game with scenario ID" },
+			{ command: "end_game", description: "Ends current game if there is one" },
+			{ command: "help", description: 'Displays help' },
+		]);
 	}
 
 	async onMessage(message) {
@@ -25,9 +32,3 @@ module.exports = class TelegramServer {
 	}
 }
 
-// bot.setMyCommands([
-// 	// { command: "start", description: "Welcome"},
-// 	{ command: "new", description: "Starts new game" },
-// 	{ command: "next", description: "Generates next chronicle record" },
-// 	{ command: "event", description: "Add and event to the chronicle" },
-// ]);

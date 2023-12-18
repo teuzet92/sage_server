@@ -20,7 +20,7 @@
         title: playerId
         type:
           name: link
-          storageId: shards.players
+          storageId: play.players
       action:
         code: action
         title: Action

@@ -28,9 +28,7 @@ module.exports = class Dweller {
 		return child;
 	}
 
-	resolveChild(query) {
-		error(`Dweller '${this.fullId}' does not implement 'resolveChild'`);
-	}
+	resolveChild(query) {}
 
 	async get(...path) {
 		let fullPath = [];

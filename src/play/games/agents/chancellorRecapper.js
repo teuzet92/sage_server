@@ -1,8 +1,8 @@
-module.exports = class extends getClass('shards/games/agents/agent') {
+module.exports = class extends getClass('play/games/agents/agent') {
 
 	async onTask(task) {
 		let chancellorChatId = assert(this.parent.values.chancellorChatId);
-		let chancellorChat = await this.project.get(`shards.chats.${chancellorChatId}`);
+		let chancellorChat = await this.project.get(`play.chats.${chancellorChatId}`);
 		let chancellorMessages = await chancellorChat.getMessages();
 		let currentTurn = this.parent.values.turn;
 		let turnName = this.parent.getTurnName(currentTurn);

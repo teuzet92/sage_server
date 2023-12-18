@@ -1,8 +1,8 @@
-module.exports = class extends getClass('shards/games/agents/agent') {
+module.exports = class extends getClass('play/games/agents/agent') {
 
 	async onTask(task) {
 		let chatId = this.parent.values.chancellorChatId;
-		let chatModel = await this.project.get(`shards.chats.${chatId}`);
+		let chatModel = await this.project.get(`play.chats.${chatId}`);
 		let chatMessages = await chatModel.getMessages();
 		let messages = [
 			{

@@ -13,7 +13,7 @@ module.exports = class extends getClass('storage/storage') {
 				scenarioId,
 			},
 		});
-		await game.start();
+		await game.save();
 		return game.saveData();
 	}
 

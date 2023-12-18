@@ -2,7 +2,7 @@ requiredModules:
   content: true
   mongo: true
   storage: true
-  shards: true
+  play: true
   llmProviders: true
   admin: true
   api: true
@@ -17,6 +17,6 @@ projects:
       main:
         id: main
         apiTokenKeyInEnv: TELEGRAM_API_TOKEN
-        handlerId: shards.gameChatTelegram
+        handlerId: play.gameChatTelegram
 httpServer:
   urlMask: '/*/api/*'

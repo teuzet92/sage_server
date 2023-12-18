@@ -1,4 +1,4 @@
-module.exports = class extends getClass('shards/games/agents/agent') {
+module.exports = class extends getClass('play/games/agents/agent') {
 
 	async collectGameChronicleAsMessages() {
 		let game = this.parent;

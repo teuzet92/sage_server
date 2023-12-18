@@ -1,4 +1,4 @@
-.shards:
+.play:
   .gameChronicles:
     class: storage/storage
     forceUuids: true
@@ -11,7 +11,7 @@
           title: Game ID
           type:
             name: link
-            storageId: shards.games
+            storageId: play.games
         type:
           code: type # record / event
           title: Type
@@ -27,13 +27,14 @@
           title: Content
           type:
             name: string
+            textArea: true
   .games:
     model:
       .chronicle:
-        class: shards/games/chronicle/chronicle
+        class: play/games/chronicle/chronicle
         forceUuids: true
         schema:
-          provider: shards.gameChronicles
+          provider: play.gameChronicles
         providerConfig:
           collection: chronicles
           

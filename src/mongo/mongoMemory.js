@@ -30,7 +30,7 @@ function checkQuery(object, query) {
 }
 
 function updateObject(object, updates) {
-	for (let [ stringPath, value ] of Object.entries) {
+	for (let [ stringPath, value ] of Object.entries(updates)) {
 		let path = stringPath.split('.');
 		objset(object, value, ...path);
 	}

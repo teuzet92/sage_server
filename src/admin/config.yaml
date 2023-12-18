@@ -29,7 +29,7 @@
         title: PlayerId
         type:
           name: link
-          storageId: shards.players
+          storageId: play.players
       session:
         code: session
         title: Session

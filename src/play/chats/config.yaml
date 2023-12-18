@@ -1,4 +1,4 @@
-.shards:
+.play:
   .chatMessages:
     class: storage/storage
     forceUuids: true
@@ -11,7 +11,7 @@
           title: Chat ID
           type:
             name: link
-            storageId: shards.chats
+            storageId: play.chats
         role:
           code: role
           title: Role
@@ -36,7 +36,7 @@
           type:
             name: string
     model:
-      class: shards/chats/chat
+      class: play/chats/chat
       apiActions:
         addMessage:
           description: Add message
@@ -53,7 +53,7 @@
                 name: string
       .messages:
         forceUuids: true
-        class: shards/chats/messages
+        class: play/chats/messages
         providerConfig:
           collection: chatMessages
         schema: 

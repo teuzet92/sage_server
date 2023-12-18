@@ -1,16 +1,20 @@
-.shards:
+.play:
   class: dweller
   .games:
     model:
       .chronist:
-        class: shards/games/agents/chronist
+        class: play/games/agents/chronist
         llmProvider: llmProviders.mistral
         scenarioAgentKey: chronistAgentId
+      .cityDescriptor:
+        class: play/games/agents/agent
+        llmProvider: llmProviders.mistral
+        scenarioAgentKey: cityDescriptorAgentId
       .chancellor:
-        class: shards/games/agents/chancellor
+        class: play/games/agents/chancellor
         llmProvider: llmProviders.chatGpt
         scenarioAgentKey: chancellorAgentId
       .chancellorRecapper:
-        class: shards/games/agents/chancellorRecapper
+        class: play/games/agents/chancellorRecapper
         llmProvider: llmProviders.chatGpt
         scenarioAgentKey: chancellorRecapperAgentId
