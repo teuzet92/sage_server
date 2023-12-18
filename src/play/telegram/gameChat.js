@@ -82,10 +82,10 @@ module.exports = class extends getClass('dweller') {
 
 	async setScenario({ gameModel, scenarioId }) {
 		let scenariosStorage = await this.project.get('content.templates.scenarios.objects');
-		let scenarios = await scenariosStorage.getAll({ id: scenarioId });
+		let scenarios = await scenariosStorage.getAll({ 'values.code': scenarioId });
 		let scenario = scenarios[0];
 		if (!scenario) {
-			return `Scenario with if '${scenarioId}' not found.`;
+			return `Scenario with code '${scenarioId}' not found.`;
 		} else {
 			gameModel.values.scenarioId = scenarioId;
 			await gameModel.save();
