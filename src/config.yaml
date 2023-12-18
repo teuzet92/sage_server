@@ -11,6 +11,8 @@ projects:
   test_project:
     .mongo:
       db: test_project
+    .mongoMemory:
+      db: test_project
     telegramServers:
       main:
         id: main

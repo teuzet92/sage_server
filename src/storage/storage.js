@@ -2,7 +2,7 @@ module.exports = class extends getClass('dweller') {
 	init(data) {
 		let defaultStorageConfig = this.project.config['storage'];
 		objmerge(this.config, defaultStorageConfig, 'target');
-		this.provider = data.project.get('mongo');
+		this.provider = data.project.get('mongoMemory');
 	}
 
 	async resolveChild(query) {
@@ -19,6 +19,7 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async getSchema() {
+		if (this.schema) return this.schema;
 		let schema = {};
 		objmerge(schema, this.config.schema);
 		if (schema.provider) {
@@ -26,6 +27,7 @@ module.exports = class extends getClass('dweller') {
 			let providerSchema = await schemaProvider.getSchema();
 			objmerge(schema, providerSchema)
 		}
+		this.schema = schema;
 		return schema;
 	}
 
