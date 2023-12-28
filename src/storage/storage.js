@@ -2,7 +2,8 @@ module.exports = class extends getClass('dweller') {
 	init(data) {
 		let defaultStorageConfig = this.project.config['storage'];
 		objmerge(this.config, defaultStorageConfig, 'target');
-		this.provider = data.project.get('mongoMemory');
+		let providerId = assert(this.config.provider, `Storage '${this.fullId}' has no provider`);
+		this.provider = data.project.get(providerId);
 	}
 
 	async resolveChild(query) {

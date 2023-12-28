@@ -31,3 +31,8 @@ requiredModules:
           title: Singleton
           type: 
             name: bool
+  .objects:
+    forceUuids: true
+    class: storage/storage
+    providerConfig:
+      collection: objects

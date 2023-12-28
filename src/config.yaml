@@ -9,14 +9,21 @@ requiredModules:
 
 projects:
   test_project:
-    .mongo:
-      db: test_project
-    .mongoMemory:
-      db: test_project
+    .storageProviders:
+      .mongo:
+        db: test_project
+      .mongoMemory:
+        db: test_project
     telegramServers:
       main:
         id: main
         apiTokenKeyInEnv: TELEGRAM_API_TOKEN
         handlerId: play.gameChatTelegram
+  cloudshire:
+    .storageProviders:
+        .mongo:
+          db: cloudshire
+        .mongoMemory:
+          db: cloudshire
 httpServer:
   urlMask: '/*/api/*'

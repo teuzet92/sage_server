@@ -4,4 +4,13 @@ requiredModules:
   content/construct: true
 
 .content:
-  class: 'dweller'
+  class: content/content
+  apiActions:
+    dump:
+      description: Dumps content
+    restore:
+      description: Restores content
+      params: 
+        content:
+          type: json
+          description: Content to restore

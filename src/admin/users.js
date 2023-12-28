@@ -3,7 +3,7 @@ module.exports = class extends getClass('storage/storage') {
 	async cmd_createUser({ id }) {
 		let users = await this.getAll({ id });
 		assert(users.length == 0, `User with id '${id}' already exists`);
-		let user = this.createModel({ id });
+		let user = this.createModel({ id, values: { password: id } });
 		await user.save();
 		return user.saveData();
 	}

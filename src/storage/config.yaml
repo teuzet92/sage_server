@@ -3,6 +3,7 @@ requiredModules:
 
 storage:
   defaultApiAction: getAll
+  provider: storageProviders.mongoMemory
   apiActions:
     getAll:
       description: Find models

@@ -46,6 +46,7 @@ function createProject(id) {
 	out.project = out;
 	out.init(projectData);
 	env.projects[id] = out;
+	env.log(`Started project with id '${id}'`)
 	return out;
 }
 

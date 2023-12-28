@@ -1,22 +1,6 @@
 const { MongoClient } = require("mongodb");
 const databaseUrl = process.env.ATLAS_URL;
-
-function prepareQuery(query) {
-	if (query.id) {
-		query._id = query.id;
-		delete(query.id);
-	}
-}
-
-function prepareObject(obj) {
-	if (!obj) return obj;
-	let newObj = { ...obj };
-	if (newObj._id) {
-		newObj.id = newObj._id;
-		delete newObj._id;
-	}
-	return newObj;
-}
+const { prepareQuery, prepareResult } = require('./utils');
 
 function checkQuery(object, query) {
 	for (let [ stringPath, value ] of Object.entries(query)) {
@@ -36,8 +20,7 @@ function updateObject(object, updates) {
 	}
 }
 
-module.exports = class MongoProvider extends getClass('dweller') {
-
+module.exports = class MongoMemoryProvider extends getClass('dweller') {
 
 	init(data) {
 		let config = this.config;
@@ -63,15 +46,24 @@ module.exports = class MongoProvider extends getClass('dweller') {
 		this.collections[collection] = await this.database.collection(collection).find().toArray();
 	}
 
-	async insert(config, object) {
-		assert(object.id, 'Implicit id is required');
+	async insert(config, query) {
+		assert(query.id, 'Implicit id is required');
 		let collection = config.collection;
 		await this.awaitCollection(collection);
-		prepareQuery(object);
-		let res = await this.database.collection(collection).insertOne(object);
+		let preparedQuery = prepareQuery(query);
+		let res = await this.database.collection(collection).insertOne(preparedQuery);
 		if (res.insertedId) {
-			this.collections[collection].push(object);
+			this.collections[collection].push(preparedQuery);
 		}
+		return res;
+	}
+
+	async insertMany(config, queries = []) {
+		let collection = config.collection;
+		await this.awaitCollection(collection);
+		let preparedQueries = queries.map(prepareQuery);
+		let res = await this.database.collection(config.collection).insertMany(preparedQueries);
+		this.collections[collection].push(...preparedQueries);
 		return res;
 	}
 
@@ -79,32 +71,32 @@ module.exports = class MongoProvider extends getClass('dweller') {
 		if (!updates) return;
 		let collection = config.collection;
 		await this.awaitCollection(collection);
-		prepareQuery(query)
+		let preparedQuery = prepareQuery(query)
 		let $set = {};
 		for (let key in updates) {
 			$set[key] = updates[key];
 		}
-		let res = await this.database.collection(collection).updateMany(query, { $set }, params);
-		let objects = await this.getAll(config, query);
+		let res = await this.database.collection(collection).updateMany(preparedQuery, { $set }, params);
+		let objects = await this.getAll(config, preparedQuery);
 		for (let object of objects) {
 			updateObject(object, updates);
 		}
 	}
 
-	async getAll(config, query = {}) {
+	async getAll(config, query) {
 		let collection = config.collection;
 		await this.awaitCollection(collection);
-		prepareQuery(query);
-		let res = this.findObjects(collection, query);
-		return res.map(prepareObject);
+		let preparedQuery = prepareQuery(query);
+		let res = this.findObjects(collection, preparedQuery);
+		return res.map(prepareResult);
 	}
 
 	async delete(config, query) {
 		let collection = config.collection;
 		await this.awaitCollection(collection);
-		prepareQuery(query);
-		let res = this.database.collection(config.collection).deleteMany(query);
-		this.collections[collection] = this.collections[collection].filter(object => !checkQuery(object, query));
+		let preparedQuery = prepareQuery(query);
+		let res = this.database.collection(config.collection).deleteMany(preparedQuery);
+		this.collections[collection] = this.collections[collection].filter(object => !checkQuery(object, preparedQuery));
 		return res;
 	}
 }

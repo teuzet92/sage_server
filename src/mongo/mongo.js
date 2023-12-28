@@ -1,21 +1,6 @@
 const { MongoClient } = require("mongodb");
 const databaseUrl = process.env.ATLAS_URL;
-
-function prepareQuery(query) {
-	if (query.id) {
-		query._id = query.id;
-		delete(query.id);
-	}
-}
-
-function prepareObject(obj) {
-	if (!obj) return obj;
-	if (obj._id) {
-		obj.id = obj._id;
-		delete obj._id;
-	}
-	return obj;
-}
+const { prepareQuery, prepareResult } = require('./utils');
 
 module.exports = class MongoProvider extends getClass('dweller') {
 
@@ -28,28 +13,33 @@ module.exports = class MongoProvider extends getClass('dweller') {
 
 	insert(config, query) {
 		assert(query.id, 'Implicit id is required');
-		prepareQuery(query);
-		return this.database.collection(config.collection).insertOne(query);
+		let preparedQuery = prepareQuery(prepareQuery);
+		return this.database.collection(config.collection).insertOne(preparedQuery);
+	}
+
+	insertMany(queries = []) {
+		let preparedQueries = queries.map(preparedQuery);
+		return this.database.collection(config.collection).insertMany(preparedQueries);
 	}
 
 	update(config, query, updates, params) {
 		if (!updates) return;
-		prepareQuery(query)
+		let preparedQuery = prepareQuery(query)
 		let $set = {};
 		for (let key in updates) {
 			$set[key] = updates[key];
 		}
-		return this.database.collection(config.collection).updateMany(query, { $set }, params);
+		return this.database.collection(config.collection).updateMany(preparedQuery, { $set }, params);
 	}
 
-	async getAll(config, query = {}) {
-		prepareQuery(query);
-		let res = await this.database.collection(config.collection).find(query).toArray();
-		return res.map(prepareObject);
+	async getAll(config, query) {
+		let preparedQuery = prepareQuery(query);
+		let res = await this.database.collection(config.collection).find(preparedQuery).toArray();
+		return res.map(prepareResult);
 	}
 
 	delete(config, query) {
-		prepareQuery(query);
-		return this.database.collection(config.collection).deleteMany(query);
+		let preparedQuery = prepareQuery(query);
+		return this.database.collection(config.collection).deleteMany(preparedQuery);
 	}
 }

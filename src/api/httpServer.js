@@ -6,6 +6,7 @@ const port = process.env.PORT ?? 5000;
 
 module.exports = class HttpServer { 
 	constructor(config) {
+		this.config = config;
 		const urlMask = assert(config.urlMask);
 		const app = express();
 		app.use(bodyParser.urlencoded({ limit: "1mb", extended: true }));
@@ -58,15 +59,17 @@ module.exports = class HttpServer {
 			env.error('API ERROR\n');
 			env.error(data);
 			env.error(error);
-			this.logRequest(project, {
-				source: 'api',
-				level: 'error',
-				dwellerId,
-				action,
-				session,
-				params,
-				response: out,
-			});
+			if (this.config.logErrors) {
+				this.logRequest(project, {
+					source: 'api',
+					level: 'error',
+					dwellerId,
+					action,
+					session,
+					params,
+					response: out,
+				});
+			}
 		} finally {
 			response.json(out);
 		}
