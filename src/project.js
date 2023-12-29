@@ -8,14 +8,15 @@ module.exports = class Project extends getClass('dweller') {
 		for (let telegramServerConfig of Object.values(telegramServers)) {
 			this.telegramServers[telegramServerConfig.id] = new TelegramServer(this, telegramServerConfig);
 		}
-		// this.reloadContent();
+		this.loaded = true;
+		this.loadContent();
 	}
 
-	async reloadContent() {
-		let constructedContentStorage = await this.get('content.constructed');
-		let contentData = await constructedContentStorage.findOne();
-		this.content = assert(contentData.values.content);
+	async loadContent() {
+		let latestContent = await this.get('content.constructed.latest').load();
+		this.content = latestContent.values.content;
 	}
+
 }
 
 

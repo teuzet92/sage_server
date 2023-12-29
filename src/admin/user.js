@@ -5,6 +5,6 @@ module.exports = class extends getClass('storage/model/model') {
 		let session = uuid();
 		this.values.session = session;
 		await this.save();
-		return this.saveData();
+		return this;
 	}
 }

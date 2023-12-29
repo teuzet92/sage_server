@@ -34,7 +34,7 @@ function loadConfig(modulePath) {
 	return out;
 }
 
-function createProject(id) {
+async function createProject(id) {
 	let config = { ...env.config };
 	let projectConfig = config.projects[id];
 	if (typeof projectConfig == 'object') {
@@ -46,6 +46,7 @@ function createProject(id) {
 	out.project = out;
 	out.init(projectData);
 	env.projects[id] = out;
+	await out.load();
 	env.log(`Started project with id '${id}'`)
 	return out;
 }
@@ -58,7 +59,7 @@ if (projects) {
 	}
 }
 
-let httpServerConfig = env.config.httpServer;
+let httpServerConfig = env.config.httpServer; //TODO: переместить в project.load
 if (httpServerConfig) {
 	const HttpServer = require('./api/httpServer');
 	const httpServer = new HttpServer(httpServerConfig);

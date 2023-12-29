@@ -6,17 +6,8 @@ module.exports = class extends getClass('dweller') {
 		this.provider = data.project.get(providerId);
 	}
 
-	async resolveChild(query) {
-		let providerQuery
-		if (typeof query == 'string') {
-			providerQuery = { id: query };
-		} else {
-			providerQuery = query;
-		}
-		let [ childData ] = await this.providerCall('getAll', providerQuery, { limit: 1 });
-		if (!childData) return;
-		childData.config = this.config.model;
-		return this.createChild(childData);
+	resolveChild(id) {
+		return this.createModel({ id });
 	}
 
 	async getSchema() {
@@ -48,8 +39,19 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async getAll(query) {
+		await this.load();
 		let rawData = await this.providerCall('getAll', query);
-		return rawData.map(modelData => this.createModel(modelData));
+		let res = [];
+		for (let modelData of rawData) {
+			let cached = this.cachedDwellers[modelData.id];
+			if (cached) {
+				cached.init({ ...modelData, loaded: true }); // Странный хак
+				res.push(cached);
+			} else {
+				res.push(this.createModel(modelData))
+			}
+		}
+		return res;
 	}
 
 	cmd_getSchema() {

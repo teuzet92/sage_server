@@ -8,15 +8,25 @@ module.exports = class Dweller {
 		this.project = data.project;
 		this.fullId = this.id;
 		this.config = data.config;
+		this.cachedDwellers = {};
 		if (this.parent != this.project) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
-		}
-		if (this.project) {
-			this.project.cachedDwellers[this.fullId] = this;
 		}
 	}
 
 	init(data) {}
+
+	async onLoad() {}
+
+	async load() {
+		if (this.loaded) return this;
+		if (this.parent && !this.parent.loaded) {
+			await this.parent.load();
+		}
+		await this.onLoad();
+		this.loaded = true;
+		return this;
+	}
 
 	createChild(data) {
 		let childClassname = data.config.class;
@@ -25,50 +35,37 @@ module.exports = class Dweller {
 		data.project = this.project;
 		let child = new childClass(data);
 		child.init(data)
+		this.cachedDwellers[data.id] = child;
 		return child;
 	}
 
 	resolveChild(query) {}
 
-	async get(...path) {
-		let fullPath = [];
-		let onlyString = true;
-		for (let pathNode of path) {
-			if (typeof pathNode == 'string') {
-				let splittedPath = pathNode.split('.');
-				fullPath = fullPath.concat(splittedPath);
-			} else {
-				onlyString = false;
-				fullPath.push(pathNode);
-			}
-		}
-		if (onlyString) {
-			let stringFullId = fullPath.join('.');
-			let cachedDweller = this.project.cachedDwellers[stringFullId];
-			if (cachedDweller) {
-				return cachedDweller;
-			}
-		}
+	get(fullId) {
+		let path = fullId.split('.');
 		let dweller = this;
-		while (fullPath.length > 0) {
-			let nextChildQuery = fullPath.shift();
-			let nextChildConfig
-			if (typeof nextChildQuery == 'string') {
-				nextChildConfig = dweller.config[`.${nextChildQuery}`];
+		while (path.length > 0) {
+			let nextChildId = path.shift();
+			let cached = dweller.cachedDwellers[nextChildId];
+			if (cached) {
+				dweller = cached;
+				continue;
 			}
+			let nextChildConfig = dweller.config[`.${nextChildId}`];
 			let nextDweller;
-			if (nextChildConfig) {
-				nextDweller = await dweller.createChild({ id: nextChildQuery, config: nextChildConfig });
+			if (nextChildConfig && nextChildConfig.class) {
+				nextDweller = dweller.createChild({ id: nextChildId, config: nextChildConfig });
 			} else {
-				nextDweller = await dweller.resolveChild(nextChildQuery);
+				nextDweller = dweller.resolveChild(nextChildId);
 			}
-			assert(nextDweller, `No child dweller with id '${nextChildQuery}' for dweller ${dweller.fullId}`);
+			assert(nextDweller, `No child dweller with id '${nextChildId}' for dweller ${dweller.fullId}`);
 			dweller = nextDweller;
 		}
 		return dweller;
 	}
 
-	runAction(action, rawParams = {}) {
+	async runAction(action, rawParams = {}) {
+		await this.load();
 		let apiActionConfig = this.config.apiActions[action];
 		assert(apiActionConfig);
 		let parsedParams = this.parseApiParams(apiActionConfig, rawParams);
@@ -102,4 +99,5 @@ module.exports = class Dweller {
 	}
 
 	help() {} // Возвращает список команд
+
 }

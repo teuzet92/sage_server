@@ -2,23 +2,26 @@ module.exports = class extends getClass('dweller') {
 
 	async cmd_dump() {
 		let result = {}
-		let templatesStorage = await this.get('templates');
-		let objectsStorage = await this.get('objects');
-		let templates = await templatesStorage.getAll();
-		let objects = await objectsStorage.getAll();
+		let templates = await this.get('templates').getAll();
+		let objects = await this.get('objects').getAll();
+		let templateParams = await this.get('templateParams').getAll();
 		return {
-			templates: templates.map(tpl => tpl.saveData()),
-			objects: objects.map(obj => obj.saveData()),
+			templates,
+			objects,
+			templateParams,
 		}
 	}
 
 	async cmd_restore({ content }) {
-		let { templates, objects } = content;
-		let templatesStorage = await this.get('templates');
-		let objectsStorage = await this.get('objects');
+		let { templates, objects, templateParams } = content;
+		let templatesStorage = this.get('templates');
+		let templateParamsStorage = this.get('templateParams');
+		let objectsStorage = this.get('objects');
 		await templatesStorage.providerCall('delete');
+		await templateParamsStorage.providerCall('delete');
 		await objectsStorage.providerCall('delete');
 		await templatesStorage.providerCall('insertMany', templates);
+		await templateParamsStorage.providerCall('insertMany', templateParams);
 		await objectsStorage.providerCall('insertMany', objects);
 	}
 }

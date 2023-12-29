@@ -9,7 +9,15 @@ module.exports = class extends getClass('dweller') {
 		this.createTime = data.createTime;
 		this.updateTime = data.updateTime;
 		this.values = data.values ?? {};
-		this.temlateId = data.templateId;
+		this.templateId = data.templateId;
+		this.loaded = data.loaded;
+	}
+
+	async onLoad() {
+		let [ data ] = await this.parent.providerCall('getAll', { id: this.id }, { limit: 1 });
+		assert(data, `Model with id '${this.id}' does not exist in storage '${this.parent.fullId}'`);
+		data.loaded = true;
+		this.init(data);
 	}
 
 	saveData() {
@@ -17,10 +25,15 @@ module.exports = class extends getClass('dweller') {
 			id: this.id,
 			createTime: this.createTime,
 			updateTime: this.updateTime,
-			templateId: this.temlateId, // Совсем костыль, но править долго
+			templateId: this.templateId, // TODO: Перенести в колбэк onSaveData
 			values: this.values,
 		};
 		return out;
+	}
+
+	toJSON() { // TODO: Вообще-то это хак. Возвращаем не json а объект.
+		let saveData = this.saveData();
+		return saveData;
 	}
 
 	save() {
@@ -40,7 +53,6 @@ module.exports = class extends getClass('dweller') {
 	cmd_delete() {
 		this.parent.providerCall('delete', { id: this.id });
 	}
-
 
 	cmd_load() {
 		return this.saveData();
