@@ -21,19 +21,6 @@ module.exports = class extends getClass('storage/model/model') {
 
 
 
-	getTurnName(turn) {
-		let year = Math.floor(turn / 4) + 1415; // TODO: константа из собранного контента
-		const seasonNames = [
-			'Spring',
-			'Summer',
-			'Autumn',
-			'Winter',
-		];
-		let seasonIndex = turn % 4;
-		let seasonName = seasonNames[seasonIndex];
-		return `Year ${year}, ${seasonName}`;
-	}
-
 	getNextRecordMessage() {
 		return `Produce a record for: ${this.getTurnName(this.values.turn + 1)}`;
 	}

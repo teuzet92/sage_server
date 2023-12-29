@@ -2,10 +2,11 @@ requiredModules:
   content: true
   mongo: true
   storage: true
-  play: true
+  worlds: true
   llmProviders: true
   admin: true
   api: true
+  chats: true
 
 projects:
   test_project:

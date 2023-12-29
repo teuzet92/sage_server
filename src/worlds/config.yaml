@@ -1,0 +1,33 @@
+requiredModules:
+  worlds/stories: true
+  # worlds/players: true
+  # worlds/chats: true
+
+.worlds:
+  class: storage/storage
+  forceUuids: true
+  providerConfig:
+    collection: worlds
+  schema:
+    fields:
+      title:
+        code: title
+        title: Title
+        type:
+          name: string
+      scenarioId:
+        code: scenarioId
+        title: Scenario Id
+        type:
+          name: link
+          storageId: content.templates.scenarios.objects
+      turn:
+        code: turn
+        title: Turn number
+        type:
+          name: number
+  model:
+    class: 'worlds/world'
+    apiActions:
+      nextTurn:
+        description: Jumps to next turn

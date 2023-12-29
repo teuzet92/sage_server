@@ -1,0 +1,36 @@
+# requiredModules:
+#   play/games/chronicle: true
+#   play/games/agents: true
+
+.worlds:
+  model:
+    .stories:
+      class: storage/storage
+      providerConfig:
+        collection: stories
+      forceUuids: true
+      schema:
+        fields:
+          started:
+            code: started
+            title: Started
+            type:
+              name: number # time
+          finished:
+            code: finished
+            title: Finished
+            type:
+              name: number # time
+          # chancellorChatId:
+          #   code: chancellorChatId
+          #   title: Chancellor chat
+          #   type: 
+          #     name: link
+          #     storageId: play.chats
+          playerId:
+            code: playerId
+            title: Player Id
+            type:
+              name: string
+      model:
+        class: worlds/stories/story

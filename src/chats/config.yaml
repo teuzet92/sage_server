@@ -1,0 +1,57 @@
+.chatMessages:
+  class: storage/storage
+  forceUuids: true
+  providerConfig:
+    collection: chatMessages
+  schema:
+    fields:
+      chatId:
+        code: chatId
+        title: Chat ID
+        type:
+          name: link
+          storageId: chats
+      role:
+        code: role
+        title: Role
+        type:
+          name: string
+      content:
+        code: content
+        title: Content
+        type:
+          name: string
+          textArea: true
+.chats:
+  class: storage/storage
+  forceUuids: true
+  providerConfig:
+    collection: chats
+  schema:
+    fields:
+      reason:
+        code: reason
+        title: Reason
+        type:
+          name: string
+  model:
+    class: chats/chat
+    apiActions:
+      say:
+        description: Say and get response
+        params:
+          text:
+            required: true
+            code: text
+            type:
+              name: string
+      continue:
+        description: Continues chat
+    .messages:
+      forceUuids: true
+      class: chats/messages
+      providerConfig:
+        collection: chatMessages
+      schema: 
+        provider: chatMessages
+      

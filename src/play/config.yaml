@@ -1,5 +1,0 @@
-requiredModules:
-  play/games: true
-  play/telegram: true
-  play/players: true
-  play/chats: true
