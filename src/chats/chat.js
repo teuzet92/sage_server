@@ -7,7 +7,15 @@ module.exports = class extends getClass('storage/model/model') {
 		}
 		let message = this.get('messages').createModel({ values });
 		await message.save();
-		return this.continue();
+		let response = await this.continue();
+		let responseMessage = this.get('messages').createModel({ 
+			values: {
+				role: 'assistant',
+				content: response,
+			}
+		});
+		await responseMessage.save();
+		return response;
 	}
 
 	cmd_continue() {

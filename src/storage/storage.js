@@ -22,6 +22,10 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async providerCall(method, query = {}, ...params) {
+		let forcedIdPath = this.config.forceMyParentIdInModels;
+		if (forcedIdPath) {
+			query[forcedIdPath] = this.parent.id;
+		}
 		let provider = await this.provider;
 		return provider[method](this.config.providerConfig, query, ...params);
 	}
@@ -32,6 +36,10 @@ module.exports = class extends getClass('dweller') {
 		}
 		// TODO: Проверять данные на соответствие схеме
 		assert(model.id, 'Id is required');
+		let forcedIdPath = this.config.forceMyParentIdInModels;
+		if (forcedIdPath) {
+			objset(model, this.parent.id, ...forcedIdPath.split('.'))
+		}
 		model.config = this.config.model;
 		return this.createChild(model);
 	}

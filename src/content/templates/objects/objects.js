@@ -21,15 +21,4 @@ module.exports = class extends getClass('storage/storage') {
 		}
 		return this.schema
 	}
-
-	createModel(model) {
-		model.templateId = this.parent.id;
-		return super.createModel(model);
-	}
-
-	providerCall(method, query = {}, ...params) {
-		query.templateId = this.parent.id;
-		return super.providerCall(method, query, ...params);
-	}
-
 }

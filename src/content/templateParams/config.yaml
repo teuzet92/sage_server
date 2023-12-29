@@ -30,8 +30,9 @@
   .templates:
     model:
       .params:
-        class: content/templateParams/templateParams
+        class: storage/storage
         forceUuids: true
+        forceMyParentIdInModels: values.templateId
         providerConfig:
           collection: templateParams
         schema:

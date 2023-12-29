@@ -5,6 +5,29 @@
 .worlds:
   model:
     .stories:
+      .variables:
+        class: storage/storage
+        forceUuids: true
+        providerConfig:
+          collection: storyVariables
+        schema:
+          fields:
+            worldId:
+              code: storyId
+              title: Story Id
+              type:
+                name: link
+                storageId: worlds.stories
+            name:
+              code: name
+              title: Name
+              type:
+                name: string
+            value:
+              code: value
+              title: Value
+              type:
+                name: string
       class: storage/storage
       providerConfig:
         collection: stories
@@ -34,3 +57,10 @@
               name: string
       model:
         class: worlds/stories/story
+        .variables:
+          class: storage/storage
+          forceUuids: true
+          providerConfig:
+            collection: storyVariables
+          schema:
+            provider: world.stories.variables
