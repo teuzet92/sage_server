@@ -14,16 +14,16 @@ requiredModules:
     providerConfig:
       collection: templates
     schema:
-      objectTitleField: title
+      objectTitle: '{title}'
       fields:
         title:
           code: title
           title: Title
           type:
             name: string
-        objectTitleField:
-          code: objectTitleField
-          title: Object title field
+        objectTitle:
+          code: objectTitle
+          title: Object title
           type:
             name: string
         singleton:
@@ -31,6 +31,12 @@ requiredModules:
           title: Singleton
           type: 
             name: bool
+        constructKeyField:
+          code: constructKeyField
+          title: Construct key field
+          type: 
+            name: link
+            storageId: content.templateParams
   .objects:
     forceUuids: true
     class: storage/storage

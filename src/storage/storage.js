@@ -11,7 +11,7 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async getSchema() {
-		if (this.schema) return this.schema;
+		if (this.schema) return this.schema; // Лишнее кэширование, когда-то надо убрать
 		let schema = {};
 		objmerge(schema, this.config.schema);
 		if (schema.provider) {

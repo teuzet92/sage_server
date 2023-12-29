@@ -5,7 +5,7 @@ module.exports = class extends getClass('storage/storage') {
 		let templateId = this.parent.id;
 		let templateParamsStorage = await this.project.get('content.templateParams');
 		let myParams = await templateParamsStorage.getAll({ 'values.templateId': templateId });
-		let objectTitleField = this.parent.values.objectTitleField
+		let objectTitle = this.parent.values.objectTitle
 		let fields = {};
 		for (let paramObject of myParams) {
 			let { code, title, type } = paramObject.values;
@@ -17,7 +17,7 @@ module.exports = class extends getClass('storage/storage') {
 		}
 		this.schema = {
 			fields,
-			objectTitleField: this.parent.values.objectTitleField,
+			objectTitle,
 		}
 		return this.schema
 	}
