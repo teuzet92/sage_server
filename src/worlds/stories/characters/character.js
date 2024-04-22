@@ -73,9 +73,9 @@ module.exports = class extends getClass('storage/model/model') {
 		let messages = await messageStorage.getAll();
 		for (let message of messages) {
 			if (message.values.role == 'assistant') {
-				text += `${this.values.name}: ${message.values.content}`;
+				text += `${this.values.name}: ${message.values.content}\n`;
 			} else if (message.values.role == 'user') {
-				text += `His Majesty: ${message.values.content}`
+				text += `His Majesty: ${message.values.content}\n`
 			}
 		}
 		delete this.values.chatId;
