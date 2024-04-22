@@ -8,7 +8,8 @@ requiredModules:
       createTemplate:
         params:
           templateId:
-            type: string
+            type: 
+              name: string
             description: New template ID
       create: false
     providerConfig:

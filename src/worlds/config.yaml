@@ -10,8 +10,7 @@ requiredModules:
       title:
         code: title
         title: Title
-        type:
-          name: string
+        type: string
       scenarioId:
         code: scenarioId
         title: Scenario Id
@@ -21,8 +20,7 @@ requiredModules:
       turn:
         code: turn
         title: Turn number
-        type:
-          name: number
+        type: number
   model:
     class: 'worlds/world'
     apiActions:
