@@ -1,32 +1,6 @@
 requiredModules:
   worlds/stories: true
-  # worlds/players: true
-  # worlds/chats: true
-
 .worlds:
-  .variables:
-    class: storage/storage
-    forceUuids: true
-    providerConfig:
-      collection: worldVariables
-    schema:
-      fields:
-        worldId:
-          code: worldId
-          title: World Id
-          type:
-            name: link
-            storageId: worlds
-        name:
-          code: name
-          title: Name
-          type:
-            name: string
-        value:
-          code: value
-          title: Value
-          type:
-            name: string
   class: storage/storage
   forceUuids: true
   providerConfig:
@@ -54,10 +28,3 @@ requiredModules:
     apiActions:
       nextTurn:
         description: Jumps to next turn
-    .variables:
-      class: storage/storage
-      forceUuids: true
-      providerConfig:
-        collection: worldVariables
-      schema:
-        provider: worlds.variables

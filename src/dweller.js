@@ -9,6 +9,10 @@ module.exports = class Dweller {
 		this.fullId = this.id;
 		this.config = data.config;
 		this.cachedDwellers = {};
+		if (this.project) {
+			let defaultDwellerConfig = this.project.config['dweller'];
+			objmerge(this.config, defaultDwellerConfig, 'target');
+		}
 		if (this.parent != this.project) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
 		}
@@ -67,9 +71,9 @@ module.exports = class Dweller {
 	async runAction(action, rawParams = {}) {
 		await this.load();
 		let apiActionConfig = this.config.apiActions[action];
-		assert(apiActionConfig);
+		assert(apiActionConfig, `No config for action ${action}`);
 		let parsedParams = this.parseApiParams(apiActionConfig, rawParams);
-		let methodName = `cmd_${action}`;
+		let methodName = apiActionConfig.interfaceMethodName || `cmd_${action}`; // TODO: прямой доступ
 		assert(this[methodName], `${this.fullId} does not implement API action ${action}`);
 		return this[methodName](parsedParams);
 	}
@@ -98,6 +102,19 @@ module.exports = class Dweller {
 		return out;
 	}
 
-	help() {} // Возвращает список команд
+	cmd_help() {
+		return this.help();
+	}
+	help() {
+		return 'Help';
+	} // Возвращает список команд
+
+	cmd_getConfig() {
+		return this.getConfig();
+	}
+
+	getConfig() {
+		return this.config;
+	}
 
 }

@@ -55,7 +55,7 @@ module.exports = class HttpServer {
 			out.data = await dweller.runAction(action, params);
 		} catch (error) {
 			out.status = false;
-			out.error = error.message;
+			out.error = error.stack;
 			env.error('API ERROR\n');
 			env.error(data);
 			env.error(error);

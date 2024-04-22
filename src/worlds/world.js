@@ -1,26 +1,20 @@
 module.exports = class extends getClass('storage/model/model') {
 
-	getTurnName(turn) {
-		let year = Math.floor(turn / 4) + 1415; // TODO: константа из собранного контента
-		const seasonNames = [
-			'Spring',
-			'Summer',
-			'Autumn',
-			'Winter',
-		];
-		let seasonIndex = turn % 4;
-		let seasonName = seasonNames[seasonIndex];
-		return `Year ${year}, ${seasonName}`;
-	}
-
 	cmd_nextTurn() {
-
+		return this.nextTurn()
 	}
 
 	async nextTurn() {
-		this.values.turn = this.values.turn + 1;
-		
+		let newTurn = this.values.turn + 1;
+		this.values.turn = newTurn;
+		let storiesStorage = await this.get('stories');
+		let activeStories = await storiesStorage.getAll({ 
+			'values.started': { '$exists': true },
+			'values.finished': { '$exists': false },
+		});
 		await this.save();
+		for (let story of activeStories) {
+			await story.generateTurn(newTurn);
+		}
 	}
-
 }

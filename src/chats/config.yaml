@@ -11,6 +11,11 @@
         type:
           name: link
           storageId: chats
+      time: 
+        code: time
+        Title: time
+        type:
+          name: number # time
       role:
         code: role
         title: Role

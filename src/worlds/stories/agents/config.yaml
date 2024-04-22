@@ -1,20 +1,7 @@
-.play:
-  class: dweller
-  .games:
-    model:
-      .chronist:
-        class: play/games/agents/chronist
-        llmProvider: llmProviders.mistral
-        scenarioAgentKey: chronistAgentId
-      .cityDescriptor:
-        class: play/games/agents/agent
-        llmProvider: llmProviders.mistral
-        scenarioAgentKey: cityDescriptorAgentId
-      .chancellor:
-        class: play/games/agents/chancellor
-        llmProvider: llmProviders.chatGpt
-        scenarioAgentKey: chancellorAgentId
-      .chancellorRecapper:
-        class: play/games/agents/chancellorRecapper
-        llmProvider: llmProviders.chatGpt
-        scenarioAgentKey: chancellorRecapperAgentId
+.worlds:
+  model:
+    .stories:
+      model:
+        .storyteller:
+          class: worlds/stories/agents/storyteller
+          llmProvider: llmProviders.chatGpt

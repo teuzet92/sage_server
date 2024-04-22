@@ -1,21 +1,11 @@
 module.exports = class extends getClass('storage/model/model') {
 
-	async cmd_say({ text }) {
-		let values = {
-			role: 'user',
-			content: text,
+	async pushMessages(messages) {
+		let messageStorage = await this.get('messages');
+		for (let message of messages) {
+			let messageModel = messageStorage.createModel({ values: message });
+			await messageModel.save();
 		}
-		let message = this.get('messages').createModel({ values });
-		await message.save();
-		let response = await this.continue();
-		let responseMessage = this.get('messages').createModel({ 
-			values: {
-				role: 'assistant',
-				content: response,
-			}
-		});
-		await responseMessage.save();
-		return response;
 	}
 
 	cmd_continue() {
@@ -23,23 +13,37 @@ module.exports = class extends getClass('storage/model/model') {
 	}
 
 	async continue() {
-		let messageModels = await this.get('messages').getAll();
-		let chat = [];
+		let messageStorage = await this.get('messages');
+		let messageModels = await messageStorage.getAll();
+		let messages = [];
 		for (let messageModel of messageModels) {
-			chat.push({
+			messages.push({
 				role: messageModel.values.role,
 				content: messageModel.values.content,
 			})
-		}
-		let provider = this.project.get('llmProviders.chatGpt'); // TODO: Добавить провайдеров
-		return provider.answer(chat);
+		};
+		let llmProvider = await this.project.get('llmProviders.chatGpt');
+		let answer = await llmProvider.answer(messages);
+		await this.pushMessages([
+			{
+				time: this.time(),
+				role: 'assistant',
+				content: answer,
+			}
+		]);
+		return answer;
 	}
 
-	async addMessages(messages) {
-		let messageStorage = await this.get('messages');
-		for (let message of messages) {
-			let messageModel = messageStorage.createModel({ values: message });
-		}
+	cmd_say({text}) {
+		return this.say(text);
 	}
 
+	async say(text) {
+		await this.pushMessages([{
+			time: this.time(),
+			role: 'user',
+			content: text,
+		}])
+		return this.continue();
+	}
 }

@@ -1,0 +1,32 @@
+.worlds:
+  model:
+    .stories:
+      model:
+        .records:
+          class: worlds/stories/records/records
+          forceUuids: true
+          providerConfig:
+            collection: records
+          schema:
+            fields:
+              storyId:
+                code: storyId
+                title: Story ID
+                type:
+                  name: string
+              type:
+                code: type # chronicle / event
+                title: Type
+                type:
+                  name: string
+              turn:
+                code: turn
+                title: Turn
+                type: 
+                  name: number
+              content:
+                code: content
+                title: Content
+                type:
+                  name: string
+                  textArea: true

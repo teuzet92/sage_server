@@ -7,7 +7,7 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	resolveChild(id) {
-		return this.createModel({ id });
+		return this.createModel({ id, values: {} });
 	}
 
 	async getSchema() {

@@ -2,12 +2,29 @@ const { MongoClient } = require("mongodb");
 const databaseUrl = process.env.ATLAS_URL;
 const { prepareQuery, prepareResult } = require('./utils');
 
+function checkOperator(operator, operatorQuery, value) {
+	if (operator == '$exists') {
+		return (value == undefined) != operatorQuery;
+	}
+	if (operator == '$ne') {
+		return (value != operatorQuery);
+	} 
+}
+
 function checkQuery(object, query) {
-	for (let [ stringPath, value ] of Object.entries(query)) {
+	for (let [ stringPath, targetValue ] of Object.entries(query)) {
 		let path = stringPath.split('.');
 		let objectValue = objget(object, ...path);
-		if (objectValue != value) {
-			return false;
+		if (typeof targetValue == 'object') {
+			for (let [ operator, operatorQuery ] of Object.entries(targetValue)) {
+				if (!checkOperator(operator, operatorQuery, objectValue)) {
+					return false
+				}
+			}
+		} else {
+			if (objectValue != targetValue) {
+				return false;
+			}
 		}
 	}
 	return true;

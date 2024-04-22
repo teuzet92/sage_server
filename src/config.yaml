@@ -22,9 +22,15 @@ projects:
         handlerId: play.gameChatTelegram
   cloudshire:
     .storageProviders:
-        .mongo:
-          db: cloudshire
-        .mongoMemory:
-          db: cloudshire
+      .mongo:
+        db: cloudshire
+      .mongoMemory:
+        db: cloudshire
 httpServer:
   urlMask: '/*/api/*'
+dweller:
+  apiActions:
+    help:
+      description: Shows help
+    getConfig:
+      description: Shows config

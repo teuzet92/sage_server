@@ -1,66 +1,64 @@
-# requiredModules:
-#   play/games/chronicle: true
-#   play/games/agents: true
+requiredModules:
+  worlds/stories/records: true
+  worlds/stories/storyteller: true
+  worlds/stories/characters: true
 
+.stories:
+  class: storage/storage
+  providerConfig:
+    collection: stories
+  forceUuids: true
+  schema:
+    fields:
+      started:
+        code: started
+        title: Started
+        type:
+          name: number # time
+      finished:
+        code: finished
+        title: Finished
+        type:
+          name: number # time
+      playerId:
+        code: playerId
+        title: Player Id
+        type:
+          name: string
+      worldId:
+        code: worldId
+        title: World
+        type: 
+          name: link
+          storageId: worlds
+      turn:
+        code: turn
+        title: Turn
+        type:
+          name: number
+      name:
+        code: name
+        title: Name
+        type:
+          name: string
+      seed:
+        code: seed
+        title: Seed
+        type:
+          name: string
+          textArea: true
 .worlds:
   model:
     .stories:
-      .variables:
-        class: storage/storage
-        forceUuids: true
-        providerConfig:
-          collection: storyVariables
-        schema:
-          fields:
-            worldId:
-              code: storyId
-              title: Story Id
-              type:
-                name: link
-                storageId: worlds.stories
-            name:
-              code: name
-              title: Name
-              type:
-                name: string
-            value:
-              code: value
-              title: Value
-              type:
-                name: string
       class: storage/storage
       providerConfig:
         collection: stories
       forceUuids: true
+      forceMyParentIdInModels: values.worldId
       schema:
-        fields:
-          started:
-            code: started
-            title: Started
-            type:
-              name: number # time
-          finished:
-            code: finished
-            title: Finished
-            type:
-              name: number # time
-          # chancellorChatId:
-          #   code: chancellorChatId
-          #   title: Chancellor chat
-          #   type: 
-          #     name: link
-          #     storageId: play.chats
-          playerId:
-            code: playerId
-            title: Player Id
-            type:
-              name: string
+        provider: stories
       model:
         class: worlds/stories/story
-        .variables:
-          class: storage/storage
-          forceUuids: true
-          providerConfig:
-            collection: storyVariables
-          schema:
-            provider: world.stories.variables
+        apiActions:
+          start:
+            description: Starts the game
