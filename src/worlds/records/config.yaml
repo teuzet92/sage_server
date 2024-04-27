@@ -1,0 +1,40 @@
+.records:
+  class: storage/storage
+  forceUuids: true
+  providerConfig:
+    collection: records
+  schema:
+    fields:
+      confluxId:
+        code: confluxId
+        title: Conflux ID
+        type:
+          name: string
+      storyId:
+        code: storyId
+        title: Story ID
+        type:
+          name: string
+      characterId:
+        code: charactedId
+        title: Character ID
+        type:
+          name: string
+      type:
+        code: type # chronicle / event / convo / convoRecap
+        title: Type
+        type:
+          name: string
+      turn:
+        code: turn
+        title: Turn
+        type: 
+          name: number
+      content:
+        code: content
+        title: Content
+        type:
+          name: string
+          textArea: true
+  model:
+    class: worlds/records/record

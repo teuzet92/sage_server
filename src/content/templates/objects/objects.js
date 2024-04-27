@@ -3,7 +3,7 @@ module.exports = class extends getClass('storage/storage') {
 	async getSchema() {
 		if (this.schema) return this.schema;
 		let templateId = this.parent.id;
-		let templateParamsStorage = await this.project.get('content.templateParams');
+		let templateParamsStorage = await engine.get('content.templateParams');
 		let myParams = await templateParamsStorage.getAll({ 'values.templateId': templateId });
 		let objectTitle = this.parent.values.objectTitle
 		let fields = {};

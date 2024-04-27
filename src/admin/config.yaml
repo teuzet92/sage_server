@@ -24,12 +24,6 @@
         title: Password
         type:
           name: string
-      playerId:
-        code: playerId
-        title: PlayerId
-        type:
-          name: link
-          storageId: play.players
       session:
         code: session
         title: Session

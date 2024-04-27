@@ -1,3 +1,6 @@
+.httpServer:
+  class: api/httpServer
+  urlMask: '/api/*'
 .apiLogs:
   class: storage/storage
   forceUuids: true

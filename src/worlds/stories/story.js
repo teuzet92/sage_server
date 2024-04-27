@@ -13,14 +13,13 @@ module.exports = class extends getClass('storage/model/model') {
 
 	async generateTurn(turn) {
 		let storyteller = await this.get('storyteller');
-		
-		let records = this.get('records');
+		let recordStorage = this.get('records');
 		let characterStorage = await this.get('characters');
 		let characters = await characterStorage.getAll();
 		for (let character of characters) {
 			if (character.values.chatId) {
 				let conversation = await character.exportConversation();
-				await records.createModel({
+				await recordStorage.createModel({
 					values: {
 						turn: this.values.turn,
 						type: 'conversation',
@@ -30,7 +29,7 @@ module.exports = class extends getClass('storage/model/model') {
 			}
 		}
 		let newRecord = await storyteller.run(turn);
-		await records.createModel({
+		await recordStorage.createModel({
 			values: {
 				turn,
 				type: 'chronicle',
@@ -41,9 +40,40 @@ module.exports = class extends getClass('storage/model/model') {
 		await this.save();
 	}
 
+	async addEvent(text) {
+		let recordStorage = await this.get('records');
+		await recordStorage.createModel({
+			values: {
+				turn: this.values.turn,
+				type: 'event',
+				content: text,
+			},
+		}).save();
+	}
+
+	// Возвращает все записи истории и конфлюкса по определенным кверикам
+	async getRecords(query) { 
+		let out = [];
+		let recordsStorage = await this.get('records');
+		let ownRecords = await recordsStorage.getAll(query);
+		for (let record of ownRecords) {
+			out.push({
+				turn: record.values.turn,
+				type: record.values.type,
+				content: record.values.content,
+			});
+		}
+		let confluxId = this.values.confluxId;
+		if (!confluxId) return ownRecords;
+		let world = this.parent.parent;
+		let confluxRecordStorage = await world.get(`confluxes.${confluxId}.records`);
+		let confluxRecords = await confluxRecordStorage.getAll(query);
+		return ownRecords.concat(confluxRecords);
+	}
+
 	async exportRecordsAsMessages() {
 		let world = this.parent.parent;
-		let content = this.project.content;
+		let content = engine.content;
 		let scenarioTpl = content.scenarios[world.values.scenarioId];
 		let messages = [];
 		messages.push({
@@ -59,10 +89,24 @@ module.exports = class extends getClass('storage/model/model') {
 		for (let record of activeRecords) {
 			messages.push({
 				role: 'system',
-				content: record.values.content,
+				// content: record.values.content,
+				content: `${this.values.name}. ${world.getTurnName(record.values.turn)}.\n${record.values.content}`,
 			});
+		}
+		let confluxId = this.values.confluxId;
+		if (confluxId) {
+			let conflux = await world.get(`confluxes.${confluxId}`);
+			let confluxRecordStorage = await conflux.get('records');
+			let confluxRecords = await confluxRecordStorage.getAll();
+			for (let record of confluxRecords) {
+				messages.push({
+					role: 'system',
+					content: `${this.values.name}. ${world.getTurnName(record.values.turn)}.\n${record.values.content}`,
+				});
+			}
 		}
 		return messages;
 	}
+
 }
 

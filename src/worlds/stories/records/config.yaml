@@ -9,9 +9,19 @@
             collection: records
           schema:
             fields:
+              confluxId:
+                code: confluxId
+                title: Conflux ID
+                type:
+                  name: string
               storyId:
                 code: storyId
                 title: Story ID
+                type:
+                  name: string
+              characterId:
+                code: charactedId
+                title: Character ID
                 type:
                   name: string
               type:

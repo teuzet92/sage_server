@@ -2,14 +2,14 @@ module.exports = class extends getClass('dweller') {
 
 	async constuctContent() {
 		let content = {};
-		let templatesStorage = await this.project.get('content.templates');
+		let templatesStorage = await engine.get('content.templates');
 		let templates = await templatesStorage.getAll();
 		for (let templateData of templates) {
 			content[templateData.id] = await this.constructTemplate(templateData);
 		}
 		let constructedContentStorage = await this.parent.get('constructed');
 		let res = await constructedContentStorage.providerCall('update', { id: 'latest' }, { content }, { upsert: true });
-		this.project.content = content;
+		engine.content = content;
 		return content;
 	}
 
@@ -25,7 +25,7 @@ module.exports = class extends getClass('dweller') {
 
 	async constructTemplate(templateData) {
 		let templateId = templateData.id;
-		let templateModel = await this.project.get(`content.templates.${templateId}`);
+		let templateModel = await engine.get(`content.templates.${templateId}`);
 		let objectsStorage = await templateModel.get('objects');
 		let objects = await objectsStorage.getAll();
 		let schema = await objectsStorage.getSchema();

@@ -22,7 +22,7 @@ module.exports = class extends getClass('storage/model/model') {
 				content: messageModel.values.content,
 			})
 		};
-		let llmProvider = await this.project.get('llmProviders.chatGpt');
+		let llmProvider = await engine.get('llmProviders.chatGpt');
 		let answer = await llmProvider.answer(messages);
 		await this.pushMessages([
 			{

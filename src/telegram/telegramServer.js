@@ -2,7 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 
 module.exports = class TelegramServer {
 	constructor(project, config) {
-		this.project = project;
+		engine = project;
 		const token = assert(process.env[config.apiTokenKeyInEnv]);
 		this.handlerId = assert(config.handlerId);
 		this.bot = new TelegramBot(token, { polling: true });
@@ -18,7 +18,7 @@ module.exports = class TelegramServer {
 	}
 
 	async logRequest(values) {
-		let apiLogStorage = await this.project.get('apiLogs');
+		let apiLogStorage = await engine.get('apiLogs');
 		apiLogStorage.createModel({ values }).save();
 	}
 
@@ -27,7 +27,7 @@ module.exports = class TelegramServer {
 		let userId = message.chat.id;
 		let username = message.chat.username;
 		try {
-			let handler = await this.project.get(this.handlerId);
+			let handler = await engine.get(this.handlerId);
 			let response = await handler.onMessage({ userId, username}, message);
 			this.bot.sendMessage(userId, response);
 		} catch (error) {

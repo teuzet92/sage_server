@@ -7,7 +7,7 @@ module.exports = class extends getClass('dweller') {
 
 	async onMessage(userData, message) {
 		let { userId, username } = userData;
-		let playersStorage = await this.project.get('play.players');
+		let playersStorage = await engine.get('play.players');
 		let playerModels = await playersStorage.getAll({ id: userId });
 		let playerModel;
 		if (playerModels.length == 0) {
@@ -25,7 +25,7 @@ module.exports = class extends getClass('dweller') {
 		params.playerModel = playerModel;
 		let gameId = playerModel.values.gameId;
 		if (gameId) {
-			params.gameModel = await this.project.get(`play.games.${gameId}`);
+			params.gameModel = await engine.get(`play.games.${gameId}`);
 		}
 		let { command, body } = slashCommand(message.text);
 		if (command) {
@@ -81,7 +81,7 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async setScenario({ gameModel, scenarioId }) {
-		let scenariosStorage = await this.project.get('content.templates.scenarios.objects');
+		let scenariosStorage = await engine.get('content.templates.scenarios.objects');
 		let scenarios = await scenariosStorage.getAll({ 'values.code': scenarioId });
 		let scenario = scenarios[0];
 		if (!scenario) {
@@ -94,7 +94,7 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async cmd_new_game({ playerModel }) {
-		let gamesStorage = await this.project.get('play.games');
+		let gamesStorage = await engine.get('play.games');
 		let gameModel = await gamesStorage.newGame({
 			scenarioId: 'J24fe1KFQH',
 			playerId: playerModel.id,
@@ -108,7 +108,7 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async cmd_new_scenario({ playerModel }) {
-		let gamesStorage = await this.project.get('play.games');
+		let gamesStorage = await engine.get('play.games');
 		let gameModel = await gamesStorage.newGame({
 			playerId: playerModel.id,
 		})

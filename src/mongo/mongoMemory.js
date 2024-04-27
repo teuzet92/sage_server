@@ -8,6 +8,12 @@ function checkOperator(operator, operatorQuery, value) {
 	}
 	if (operator == '$ne') {
 		return (value != operatorQuery);
+	}
+	if (operator == '$in') {
+		for (let v of operatorQuery) {
+			if (value == v) return true;
+		}
+		return false;
 	} 
 }
 

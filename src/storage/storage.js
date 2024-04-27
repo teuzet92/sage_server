@@ -1,9 +1,9 @@
 module.exports = class extends getClass('dweller') {
 	init(data) {
-		let defaultStorageConfig = this.project.config['storage'];
+		let defaultStorageConfig = engine.config['storage'];
 		objmerge(this.config, defaultStorageConfig, 'target');
 		let providerId = assert(this.config.provider, `Storage '${this.fullId}' has no provider`);
-		this.provider = data.project.get(providerId);
+		this.provider = engine.get(providerId);
 	}
 
 	resolveChild(id) {
@@ -14,7 +14,7 @@ module.exports = class extends getClass('dweller') {
 		let schema = {};
 		objmerge(schema, this.config.schema);
 		if (schema.provider) {
-			let schemaProvider = await this.project.get(schema.provider);
+			let schemaProvider = await engine.get(schema.provider);
 			let providerSchema = await schemaProvider.getSchema();
 			objmerge(schema, providerSchema)
 		}

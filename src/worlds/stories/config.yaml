@@ -2,6 +2,7 @@ requiredModules:
   worlds/stories/records: true
   worlds/stories/storyteller: true
   worlds/stories/characters: true
+  worlds/stories/confluxes: true
 
 .stories:
   class: storage/storage
@@ -31,6 +32,12 @@ requiredModules:
         type: 
           name: link
           storageId: worlds
+      confluxId:
+        code: confluxId
+        title: Conflux
+        type:
+          name: link
+          storageId: confluxes
       turn:
         code: turn
         title: Turn

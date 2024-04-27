@@ -2,10 +2,8 @@ process.chdir('./src/');
 const YAML = require('yaml');
 const fs = require('fs');
 
-require('./core/util/util');
+require('./core/util');
 require('./core/env');
-
-env.projects = {};
 
 global.getClass = function(path) {
 	return require(`./${path}`);
@@ -34,33 +32,7 @@ function loadConfig(modulePath) {
 	return out;
 }
 
-async function createProject(id) {
-	let config = { ...env.config };
-	let projectConfig = config.projects[id];
-	if (typeof projectConfig == 'object') {
-		objmerge(config, projectConfig);
-	}
-	let projectClass = getClass('project');
-	let projectData = { id, config };
-	let out = new projectClass(projectData);
-	out.project = out;
-	out.init(projectData);
-	env.projects[id] = out;
-	await out.load();
-	env.log(`Started project with id '${id}'`)
-	return out;
-}
-
-env.config = loadConfig('.');
-let projects = env.config.projects;
-if (projects) {
-	for (let projectName of Object.keys(projects)) {
-		createProject(projectName);
-	}
-}
-
-let httpServerConfig = env.config.httpServer; //TODO: переместить в project.load
-if (httpServerConfig) {
-	const HttpServer = require('./api/httpServer');
-	const httpServer = new HttpServer(httpServerConfig);
-}
+let config = loadConfig('.');
+let Engine = getClass('engine');
+global.engine = new Engine({ id: 'main', config });
+engine.get('httpServer');

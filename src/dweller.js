@@ -5,15 +5,14 @@ module.exports = class Dweller {
 		assert(data.config);
 		this.id = data.id;
 		this.parent = data.parent;
-		this.project = data.project;
-		this.fullId = this.id;
 		this.config = data.config;
 		this.cachedDwellers = {};
-		if (this.project) {
-			let defaultDwellerConfig = this.project.config['dweller'];
+		if (global.engine) {
+			let defaultDwellerConfig = engine.config['dweller'];
 			objmerge(this.config, defaultDwellerConfig, 'target');
 		}
-		if (this.parent != this.project) {
+		this.fullId = this.id;
+		if (this.parent && this.parent.fullId) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
 		}
 	}
@@ -36,7 +35,6 @@ module.exports = class Dweller {
 		let childClassname = data.config.class;
 		let childClass = getClass(childClassname);
 		data.parent = this;
-		data.project = this.project;
 		let child = new childClass(data);
 		child.init(data)
 		this.cachedDwellers[data.id] = child;

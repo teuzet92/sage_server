@@ -2,7 +2,7 @@ module.exports = class extends getClass('play/games/agents/agent') {
 
 	async onTask(task) {
 		let chatId = this.parent.values.chancellorChatId;
-		let chatModel = await this.project.get(`play.chats.${chatId}`);
+		let chatModel = await engine.get(`play.chats.${chatId}`);
 		let chatMessages = await chatModel.getMessages();
 		let messages = [
 			{

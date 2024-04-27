@@ -42,7 +42,7 @@ module.exports = class extends getClass('storage/model/model') {
 			llmProviderId = 'llmProviders.mistral';
 			temperature = Math.min(1, Math.max(0, temperature));
 		} 
-		let llmProvider = await this.project.get(llmProviderId);
+		let llmProvider = await engine.get(llmProviderId);
 		return await llmProvider.answer(messages, temperature);
 	}
 }

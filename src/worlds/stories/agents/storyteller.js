@@ -16,7 +16,7 @@ module.exports = class extends getClass('worlds/stories/agents/agent') {
 	async run(turn) {
 		let story = this.parent;
 		let world = story.parent.parent;
-		let content = this.project.content;
+		let content = engine.content;
 		let messages = [];
 		let scenarioTpl = content.scenarios[world.values.scenarioId];
 		let storytellerTpl = content.storytellers[scenarioTpl.storytellerId];
@@ -44,7 +44,7 @@ module.exports = class extends getClass('worlds/stories/agents/agent') {
 			role: 'user',
 			content: `Produce a record for: ${this.getTurnName(turn)}`,
 		});
-		let llmProvider = await this.project.get(this.config.llmProvider);
+		let llmProvider = await engine.get(this.config.llmProvider);
 		return await llmProvider.answer(messages); // TODO: Добавить температуру
 	}
 

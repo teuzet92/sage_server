@@ -1,22 +1,9 @@
-module.exports = class extends getClass('worlds/stories/agents/agent') {
-
-	getTurnName(turn) {
-		let year = Math.floor(turn / 4) + 1415; // TODO: константа из собранного контента
-		const seasonNames = [
-			'Spring',
-			'Summer',
-			'Autumn',
-			'Winter',
-		];
-		let seasonIndex = turn % 4;
-		let seasonName = seasonNames[seasonIndex];
-		return `Year ${year}, ${seasonName}`;
-	}
+module.exports = class extends getClass('dweller') {
 
 	async run(turn) {
 		let story = this.parent;
 		let world = story.parent.parent;
-		let content = this.project.content;
+		let content = engine.content;
 		let messages = [];
 		let scenarioTpl = content.scenarios[world.values.scenarioId];
 		let storytellerTpl = content.storytellers[scenarioTpl.storytellerId];
@@ -28,9 +15,9 @@ module.exports = class extends getClass('worlds/stories/agents/agent') {
 		messages = messages.concat(records);
 		messages.push({
 			role: 'user',
-			content: `Produce a record for: ${this.getTurnName(turn)}`,
+			content: `Produce a record for: ${world.getTurnName(turn)}`,
 		});
-		let llmProvider = await this.project.get('llmProviders.chatGpt');
+		let llmProvider = await engine.get('llmProviders.chatGpt');
 		return await llmProvider.answer(messages); // TODO: Добавить температуру
 	}
 
