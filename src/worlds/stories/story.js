@@ -11,33 +11,37 @@ module.exports = class extends getClass('storage/model/model') {
 		await this.save();
 	}
 
-	async generateTurn(turn) {
-		let storyteller = await this.get('storyteller');
-		let recordStorage = this.get('records');
+	async finalizeCharacters() {
 		let characterStorage = await this.get('characters');
 		let characters = await characterStorage.getAll();
 		for (let character of characters) {
 			if (character.values.chatId) {
-				let conversation = await character.exportConversation();
-				await recordStorage.createModel({
-					values: {
-						turn: this.values.turn,
-						type: 'conversation',
-						content: conversation,
-					}
-				}).save();
+				await character.finalize();
 			}
 		}
+	}
+
+	async cmd_testTurn() {
+		this.generateTurn(this.values.turn + 1);
+	}
+
+	async generateTurn(turn) {
+		let storyteller = await this.get('storyteller');
+		let recordStorage = this.get('records');
+		await this.finalizeCharacters();
 		let newRecord = await storyteller.run(turn);
-		await recordStorage.createModel({
-			values: {
-				turn,
-				type: 'chronicle',
-				content: newRecord,
-			},
-		}).save();
-		this.values.turn = turn;
-		await this.save();
+		env.log(newRecord)
+		env.log(newRecord.choices[0].message)
+		env.log(JSON.stringify(newRecord.choices[0].message))
+		// await recordStorage.createModel({
+		// 	values: {
+		// 		turn,
+		// 		type: 'chronicle',
+		// 		content: newRecord,
+		// 	},
+		// }).save();
+		// this.values.turn = turn;
+		// await this.save();
 	}
 
 	async addEvent(text) {

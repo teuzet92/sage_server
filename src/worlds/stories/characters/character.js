@@ -16,11 +16,11 @@ module.exports = class extends getClass('storage/model/model') {
 		});
 		messages.push({
 			role: 'system',
-			content: world.getLore();
+			content: world.getLore(),
 		});
 		messages.push({
 			role: 'system',
-			content: story.values.seed;
+			content: story.values.seed,
 		});
 		let records = await story.getRecords();
 		for (let record of records) {
@@ -30,17 +30,13 @@ module.exports = class extends getClass('storage/model/model') {
 			});
 		}
 		let recordsStorage = await story.get('records');
-		let activeRecords = await recordsStorage.getAll({ 'values.recapped': { '$exists': false } });
+		let activeRecords = await recordsStorage.getAll();
 		for (let record of activeRecords) {
 			messages.push({
 				role: 'system',
-				// content: record.values.content,
 				content: `${this.values.name}. ${world.getTurnName(record.values.turn)}.\n${record.values.content}`,
 			});
 		}
-
-		let records = await story.exportRecordsAsMessages();
-		messages = messages.concat(records);
 		let chatsStorage = engine.get('chats');
 		let reason = `Chat with ${this.values.name} of ${story.values.name} at turn ${story.values.turn}`;
 		let chat = chatsStorage.createModel({
@@ -68,14 +64,58 @@ module.exports = class extends getClass('storage/model/model') {
 		return await chat.say(message);
 	}
 
+	async cmd_finalize() {
+		return this.finalize();
+	}
+
 	// Финализирует разговор, внося в базу его и рекап.
 	async finalize() {
+		let chatId = assert(this.values.chatId, `No chat`);
+		let story = this.parent.parent;
+		let world = story.parent.parent;
+		let content = engine.content;
+		let turn = story.values.turn;
+		let turnName = world.getTurnName(story.values.turn);
+		let exportedConversationText = await this.exportConversation();
+		let storyRecordStorage = await story.get('records');
+		await storyRecordStorage.createModel({
+			values: {
+				turn,
+				type: 'conversation',
+				content: exportedConversationText,
+			}
+		}).save();
 
+		let characterTypeTpl = assert(content.characterTypes[this.values.characterTypeId]);
+		let finalizer = characterTypeTpl.finalizer;
+		if (finalizer) {
+			let messages = [];
+			messages.push({
+				role: 'system',
+				content: finalizer,
+			});
+			messages.push({
+				role: 'system',
+				content: exportedConversationText,
+			});
+			let llmProvider = await engine.get('llmProviders.chatGpt');
+			let conversationResult = await llmProvider.answer(messages);
+			await storyRecordStorage.createModel({
+				values: {
+					turn,
+					type: 'action',
+					content: conversationResult,
+				}
+			}).save();
+		}
+		delete this.values.chatId;
+		this.save();
 	}
 
 	async exportConversation() {
 		let story = this.parent.parent;
 		let world = story.parent.parent;
+		let turn = story.values.turn;
 		let turnName = world.getTurnName(story.values.turn);
 		let text = `This conversation took place in ${turnName} between His Majesty and ${this.values.name}\n\n`;
 		let chatId = this.values.chatId;
@@ -91,8 +131,6 @@ module.exports = class extends getClass('storage/model/model') {
 				text += `His Majesty: ${message.values.content}\n`
 			}
 		}
-		delete this.values.chatId;
-		await this.save();
 		return text;
 	}
 }

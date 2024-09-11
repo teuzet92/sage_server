@@ -1,0 +1,9 @@
+traits:
+  apiProvider:
+    src: core/api/apiProvider
+    dwellerConfig:
+      urlMask: '/api/*'
+
+.httpServer:
+  requiredTraits:
+    apiProvider: true

@@ -1,0 +1,24 @@
+traits:
+  model:
+    src: storage/model
+    dwellerConfig:
+      dbCollection: dwellers
+      apiActions:
+        get: 
+          description: Returns the model
+        getSchema: 
+          description: Returns the schema
+      defaultApiAction: load
+      requiredTraits:
+        mongoConsumer: true
+
+  storage:
+    src: storage/storage 
+    dwellerConfig:
+      model:
+        requiredTraits:
+          model: true
+          # schema: 
+          #   dwellerConfig:
+          #     schema:
+          #       providedByParent: true

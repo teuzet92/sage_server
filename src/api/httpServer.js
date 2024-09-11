@@ -39,8 +39,6 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async onHttpRequest(data, response) {
-		env.log('onHttpRequest');
-		env.log(data);
 		let out = {
 			status: true,
 		};

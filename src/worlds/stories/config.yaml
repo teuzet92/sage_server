@@ -69,3 +69,5 @@ requiredModules:
         apiActions:
           start:
             description: Starts the game
+          testTurn:
+            description: Tests next turn

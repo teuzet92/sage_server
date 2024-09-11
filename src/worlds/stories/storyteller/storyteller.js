@@ -13,12 +13,44 @@ module.exports = class extends getClass('dweller') {
 		});
 		let records = await story.exportRecordsAsMessages();
 		messages = messages.concat(records);
+		let newEntryPrompt = storytellerTpl.prompt;
+		newEntryPrompt = newEntryPrompt.replace('%turnName', world.getTurnName(turn))
 		messages.push({
 			role: 'user',
-			content: `Produce a record for: ${world.getTurnName(turn)}`,
+			content: newEntryPrompt,
 		});
+		env.log(messages);
 		let llmProvider = await engine.get('llmProviders.chatGpt');
-		return await llmProvider.answer(messages); // TODO: Добавить температуру
+		let functions = [
+			{
+				name: 'add_chronicle_event',
+				description: 'Adds new set of events to the city chronicle',
+				parameters: {
+					type: 'object',
+					properties: {
+						events: {
+							type: 'array',
+							description: 'The array of events in the chronicle record',
+							items: {
+								type: 'object',
+								properties: {
+									date: {
+										type: 'string',
+										description: 'The date of the event',
+									},
+									content: {
+										type: 'string',
+										description: 'What happened during the event'
+									},
+								}
+							}
+						},
+					},
+					required: [ 'events' ],
+				},
+			}
+		];
+		return await llmProvider.answer(messages, functions); // TODO: Добавить температуру
 	}
 
 }

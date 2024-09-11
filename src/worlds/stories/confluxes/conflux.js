@@ -1,7 +1,7 @@
 module.exports = class extends getClass('storage/model/model') {
 
 	cmd_start() {
-		return this.generateTurn();
+		return this.start();
 	}
 
 	async start() {
@@ -34,13 +34,18 @@ module.exports = class extends getClass('storage/model/model') {
 	}
 
 	cmd_run() {
-		return 'NO!'
+		let world = this.parent.parent;
+		let turn = world.values.turn + 1;
+		this.generateTurn(turn);
+		return 'DONE'
 	}
 
 	async generateTurn(turn) {
 		let world = this.parent.parent;
 		let content = engine.content;
 		let confluxTypeTpl = content.confluxTypes[this.values.confluxTypeId];
+		let storyStorage = await world.get('stories');
+		let stories = await storyStorage.getAll({ 'values.confluxId': this.id });
 
 		let messages = [];
 		messages.push({
@@ -52,68 +57,60 @@ module.exports = class extends getClass('storage/model/model') {
 			role: 'system',
 			content: scenarioTpl.lore,
 		});
-		let storyStorage = await world.get('stories');
-		let stories = await storyStorage.getAll({ 'values.confluxId': this.id });
+
+		let story1 = stories[0];
+		let story2 = stories[1];
+		for (let story of stories) {
+			await story.finalizeCharacters();
+		}
+
 		messages.push({
 			role: 'system',
-			content: stories[0].values.seed,
+			content: story1.values.seed,
 		});
 		messages.push({
 			role: 'system',
-			content: stories[1].values.seed,
+			content: story2.values.seed,
 		});
 
 		let unitedRecords = [];
-		for (let story of stories) {
-			let storyRecordStorage = await story.get('records');
-			let activeRecords = await storyRecordStorage.getAll({ 'values.recapped': { '$exists': false } });
-			unitedRecords = unitedRecords.concat(activeRecords);
-		}
+		let story1RecordStorage = await story1.get('records');
+		let activeRecords = await story1RecordStorage.getAll({ 
+			'values.type': { '$in': [ 'action', 'event', 'chronicle', 'conflux' ]},
+		});
+		unitedRecords = unitedRecords.concat(activeRecords);
+		let story2RecordStorage = await story2.get('records');
+		activeRecords = await story2RecordStorage.getAll({ 
+			'values.type': { '$in': [ 'action', 'event', 'chronicle', 'conflux' ]},
+		});
+		unitedRecords = unitedRecords.concat(activeRecords);
+
+		let recordOrderByType = {
+			'chronicle': 1,
+			'conflux': 2,
+			'event': 3,
+			'action': 4,
+		};
+
 		unitedRecords.sort((a, b) => {
-			if (a.values.turn == b.values.turn) {
-				return a.values.storyId.localeCompare(b.values.storyId);
+			if (a.values.turn != b.values.turn) {
+				return a.values.turn - b.values.turn;
 			}
-			return a.values.turn - b.values.turn;
+			if (a.values.type != b.values.type) {
+				return recordOrderByType[a.values.type] - recordOrderByType[b.values.type];
+			}
+			return a.values.storyId.localeCompare(b.values.storyId);
 		})
 		for (let record of unitedRecords) {
-			let story = record.parent.parent;
-			messages.push({
-				role: 'system',
-				content: `${story.values.name}. ${world.getTurnName(record.values.turn)}.\n${record.values.content}`,
-			});
-		}
-		let confluxRecordStorage = await this.get('records');
-		let confluxRecords = await confluxRecordStorage.getAll();
-		for (let record of confluxRecords) {
-			messages.push({
-				role: 'system',
-				content: `${stories[0].values.name} and ${stories[1].values.name}. ${world.getTurnName(record.values.turn)}.\n${record.values.content}`,
-			});
-		}
-
-		for (let story of stories) {
-			let storyRecordStorage = await story.get('records');
-			let storyCharacterStorage = await story.get('characters');
-			let characters = await storyCharacterStorage.getAll();
-			for (let character of characters) {
-				if (character.values.chatId) {
-					let conversation = await character.exportConversation();
-					let conversationRecord = storyRecordStorage.createModel({
-						values: {
-							turn: story.values.turn,
-							type: 'conversation',
-							content: conversation,
-						}
-					});
-					messages.push({
-						role: 'system',
-						content: conversation,
-					})
-					await conversationRecord.save();
-				}
+			let recordName = record.parent.parent.values.name;
+			if (record.values.type == 'conflux') {
+				recordName = `${story1.values.name} and ${story2.values.name}`;
 			}
+			messages.push({
+				role: 'system',
+				content: `${recordName}. ${world.getTurnName(record.values.turn)}.\n${record.values.content}`,
+			});
 		}
-
 		messages.push({
 			role: 'user',
 			content: `Produce an united record for both cities for: ${world.getTurnName(world.values.turn + 1)}\nRemember to move plot forward`,
@@ -121,19 +118,28 @@ module.exports = class extends getClass('storage/model/model') {
 		env.log(messages);
 		let llmProvider = await engine.get('llmProviders.chatGpt');
 		let answer =  await llmProvider.answer(messages);
-		await confluxRecordStorage.createModel({
+		
+		await story1RecordStorage.createModel({
 			values: {
 				turn,
-				type: 'chronicle',
+				type: 'conflux',
+				content: answer,
+			},
+		}).save();
+		await story2RecordStorage.createModel({
+			values: {
+				turn,
+				type: 'conflux',
 				content: answer,
 			},
 		}).save();
 
-		stories[0].values.turn = turn;
-		stories[1].values.turn = turn;
-		await stories[0].save();
-		await stories[1].save();
+		story1.values.turn = turn;
+		story2.values.turn = turn;
+		await story1.save();
+		await story2.save();
 		await this.save();
+
 		env.log(answer);
 
 

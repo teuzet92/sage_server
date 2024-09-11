@@ -56,3 +56,5 @@
                     type: 
                       name: string
                     description: Phrase to say
+              finalize:
+                description: Finalize the conversation
