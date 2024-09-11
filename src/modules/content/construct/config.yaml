@@ -1,0 +1,11 @@
+.content:
+  .construct:
+    class: content/construct/construct
+    defaultApiAction: run
+    apiActions:
+      run:
+        description: 'Constructs content'
+  .constructed:
+    class: core/storage/storage
+    providerConfig:
+      collection: constructedContent

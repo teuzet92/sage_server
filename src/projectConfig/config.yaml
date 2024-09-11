@@ -1,6 +1,0 @@
-.projectConfig:
-  class: projectConfig/projectConfig
-  defaultApiAction: 'run'
-  apiActions:
-    run:
-      description: Returns project config

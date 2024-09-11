@@ -1,0 +1,34 @@
+storage:
+  class: core/storage
+  defaultApiAction: getAll
+  provider: storageProviders.mongoMemory
+  apiActions:
+    getAll:
+      description: Find models
+      params: 
+        query:
+          type: json
+          description: Query
+    create:
+      description: New model
+      params: 
+        values:
+          type: json
+          description: Fields
+    getSchema:
+      description: Get storage schema
+  model:
+    class: core/storage/model
+    defaultApiAction: load
+    apiActions:
+      load:
+        description: Get model data
+      update:
+        description: Update model
+        params:
+          values:
+            type: json
+            description: Update model
+      delete:
+        description: Delete model
+

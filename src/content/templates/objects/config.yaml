@@ -1,9 +1,0 @@
-.content:
-  .templates:
-    model:
-      .objects:
-        forceUuids: true
-        class: content/templates/objects/objects
-        forceMyParentIdInModels: templateId
-        providerConfig:
-          collection: objects

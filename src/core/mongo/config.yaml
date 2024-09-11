@@ -1,0 +1,7 @@
+.storageProviders:
+  class: dweller
+  .mongo:
+    class: core/mongo/mongo
+  .mongoMemory:
+    class: core/mongo/mongoMemory
+

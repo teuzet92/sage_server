@@ -1,0 +1,52 @@
+.httpServer:
+  class: core/api/httpServer
+  urlMask: '/api/*'
+.apiLogs:
+  class: core/storage/storage
+  forceUuids: true
+  provider: storageProviders.mongo
+  providerConfig:
+    collection: logs
+  schema:
+    fields:
+      source:
+        code: source
+        title: Source
+        type:
+          name: string
+      level: 
+        code: level
+        title: Level
+        type:
+          name: string
+      session:
+        code: session
+        title: session
+        type:
+          name: string
+      playerId:
+        code: playerId
+        title: playerId
+        type:
+          name: link
+          storageId: play.players
+      action:
+        code: action
+        title: Action
+        type:
+          name: string
+      dwellerId:
+        code: dwellerId
+        title: Dweller Id
+        type:
+          name: string
+      params:
+        code: params
+        title: Params
+        type:
+          name: json
+      response:
+        code: response
+        title: Response
+        type:
+          name: json

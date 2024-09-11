@@ -1,7 +1,0 @@
-.worlds:
-  model:
-    .stories:
-      model:
-        .storyteller:
-          class: worlds/stories/agents/storyteller
-          llmProvider: llmProviders.chatGpt

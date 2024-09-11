@@ -1,0 +1,47 @@
+.users:
+  class: core/admin/users
+  apiActions:
+    validateSession:
+      params:
+        session:
+          description: 'Session'
+          required: true
+          type:
+            name: string
+    createUser:
+      params:
+        id:
+          description: 'Id'
+          required: true
+          type:
+            name: string
+  providerConfig:
+    collection: users
+  schema:
+    fields:
+      password:
+        code: password
+        title: Password
+        type:
+          name: string
+      session:
+        code: session
+        title: Session
+        type:
+          name: string
+      access:
+        code: access
+        title: Access
+        type:
+          name: string
+          textArea: true
+  model:
+    class: core/admin/user
+    apiActions:
+      login:
+        params:
+          password:
+            description: 'Password'
+            required: true
+            type:
+              name: string

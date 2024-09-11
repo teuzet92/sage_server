@@ -1,13 +1,9 @@
 requiredModules:
-  content: true
-  mongo: true
-  storage: true
-  worlds: true
-  llmProviders: true
-  admin: true
-  api: true
-  chats: true
-  projectConfig: true
+  modules/content: true
+  core/mongo: true
+  core/storage: true
+  core/admin: true
+  core/api: true
 
 .storageProviders:
   .mongo:
@@ -15,9 +11,6 @@ requiredModules:
   .mongoMemory:
     db: test_project
 
-httpServer:
-  urlMask: '/*/api/*'
-  
 dweller:
   apiActions:
     help:
