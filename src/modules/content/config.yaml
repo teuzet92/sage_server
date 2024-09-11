@@ -84,6 +84,12 @@
           provider: content.templateParams
       .objects:
         forceUuids: true
-        class: core/storage/storage
+        class: modules/content/objects
+        forceMyParentIdInModels: templateId
         providerConfig:
           collection: objects
+  .objects:
+    forceUuids: true
+    class: core/storage/storage
+    providerConfig:
+      collection: objects

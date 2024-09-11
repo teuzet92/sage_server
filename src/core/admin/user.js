@@ -1,4 +1,4 @@
-module.exports = class extends getClass('storage/model/model') {
+module.exports = class extends getClass('core/storage/model') {
 
 	async cmd_login({ password }) {
 		assert(password == this.values.password, 'Wrong password');
