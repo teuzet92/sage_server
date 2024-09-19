@@ -1,4 +1,5 @@
 storage:
+  forceUuids: true
   class: core/storage
   defaultApiAction: getAll
   provider: storageProviders.mongoMemory

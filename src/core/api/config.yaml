@@ -3,7 +3,6 @@
   urlMask: '/api/*'
 .apiLogs:
   class: core/storage/storage
-  forceUuids: true
   provider: storageProviders.mongo
   providerConfig:
     collection: logs
