@@ -19,6 +19,7 @@
               name: string
             description: New template ID
       create: false
+      clone: false
     providerConfig:
       collection: templates
     schema:
@@ -35,6 +36,8 @@
           type:
             name: string
     model:
+      apiActions:
+        delete: false
       .params:
         class: core/storage/storage
         forceMyParentIdInModels: templateId
@@ -59,7 +62,7 @@
               type:
                 name: typedef
       .objects:
-        class: modules/content/objects
+        class: core/storage/model
         forceMyParentIdInModels: templateId
         providerConfig:
           collection: objects
