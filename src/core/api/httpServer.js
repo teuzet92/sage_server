@@ -48,10 +48,12 @@ module.exports = class extends getClass('dweller') {
 			status: true,
 		};
 		try {
+
 			var params = data.params ?? {};
 			var dwellerId = data.dwellerId;
 			let dweller = await engine.getAsync(dwellerId);
 			assert(dweller, `Dweller with id '${data.dwellerId}' not found`);
+			assert(!dweller.config.prohibitApiAccess, 'Not an API-adressable dweller');
 			var action = params.action ?? dweller.config.defaultApiAction;
 			assert(action, `No action specified, and '${data.dwellerId}' has no default action`);
 			let actionConfig = assert(dweller.config.apiActions[action]);
