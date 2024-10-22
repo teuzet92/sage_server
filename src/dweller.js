@@ -105,7 +105,7 @@ module.exports = class Dweller {
 	}
 	help() {
 		return 'Help';
-	} // Возвращает список команд
+	}
 
 	cmd_getConfig() {
 		return this.getConfig();
