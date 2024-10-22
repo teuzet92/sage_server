@@ -21,12 +21,11 @@ module.exports = class extends getClass('core/storage/storage') {
 	}
 
 	async getUserBySession(sessionId) {
-		let session = await engine.get(`sessions.${sessionId}`);
+		let session = await engine.getAsync(`sessions.${sessionId}`);
 		assert(session, `No session with id '${sessionId}'`);
 		let userId = session.values.userId;
-		let user = await engine.get(`users.${userId}`);
+		let user = await engine.getAsync(`users.${userId}`);
 		assert(user, `No user with id '${userId}'`);
 		return user;
 	}
-
 }

@@ -2,6 +2,7 @@
   class: core/admin/users
   apiActions:
     validateSession:
+      public: true
       params:
         session:
           description: 'Session'

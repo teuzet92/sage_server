@@ -2,5 +2,6 @@
   class: core/projectConfig/projectConfig
   defaultApiAction: 'run'
   apiActions:
+    public: true
     run:
       description: Returns project config
