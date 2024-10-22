@@ -96,6 +96,7 @@ module.exports = class MongoMemoryProvider extends getClass('dweller') {
 		await this.awaitCollection(collection);
 		let preparedQuery = prepareQuery(query)
 		let $set = {};
+		delete updates.id;
 		for (let key in updates) {
 			$set[key] = updates[key];
 		}
