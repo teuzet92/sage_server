@@ -36,6 +36,11 @@
         type:
           name: string
           textArea: true
+      developerMode:
+        code: developerMode
+        title: Developer mode
+        type:
+          name: bool
   model:
     class: core/admin/user
     apiActions:
