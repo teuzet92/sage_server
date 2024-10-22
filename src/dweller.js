@@ -12,7 +12,7 @@ module.exports = class Dweller {
 			objmerge(this.config, defaultDwellerConfig, 'target');
 		}
 		this.fullId = this.id;
-		if (this.parent && this.parent.fullId) {
+		if (this.parent && this.parent != engine && this.parent.fullId) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
 		}
 	}

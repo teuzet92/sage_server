@@ -34,5 +34,5 @@ function loadConfig(modulePath) {
 
 let config = loadConfig('.');
 let Engine = getClass('engine');
-global.engine = new Engine({ id: 'main', config });
+global.engine = new Engine({ id: 'engine', config });
 engine.get('httpServer');
