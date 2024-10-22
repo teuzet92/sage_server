@@ -6,8 +6,10 @@ module.exports = class extends getClass('dweller') {
 		this.provider = engine.get(providerId);
 	}
 
-	resolveChild(id) {
-		return this.createModel({ id, values: {} });
+	async resolveChild(id) {
+		let children = await this.providerCall('getAll', { id });
+		assert(children.length > 0, `Storage ${this.fullId} has no model with id '${id}'`);
+		return this.createModel(children[0]); // TODO: стоит ли проверять, что ровно один?
 	}
 
 	async getSchema() {
@@ -32,7 +34,7 @@ module.exports = class extends getClass('dweller') {
 
 	createModel(model) {
 		if (this.config.forceUuids && !model.id) {
-			model.id = uuid();
+			model.id = uuid(); // А если не передали id, но forceUuids не включен?
 		}
 		// TODO: Проверять данные на соответствие схеме
 		assert(model.id, 'Id is required');
