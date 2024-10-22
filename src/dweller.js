@@ -58,7 +58,30 @@ module.exports = class Dweller {
 			if (nextChildConfig && nextChildConfig.class) {
 				nextDweller = dweller.createChild({ id: nextChildId, config: nextChildConfig });
 			} else {
-				nextDweller = dweller.resolveChild(nextChildId);
+				assert('Unable to use .get for dynamic dwellers. Use .getAsync method.');
+			}
+			assert(nextDweller, `No child dweller with id '${nextChildId}' for dweller ${dweller.fullId}`);
+			dweller = nextDweller;
+		}
+		return dweller;
+	}
+
+	async getAsync(fullId) { // TODO: Как-то усреднить с get
+		let path = fullId.split('.');
+		let dweller = this;
+		while (path.length > 0) {
+			let nextChildId = path.shift();
+			let cached = dweller.cachedDwellers[nextChildId];
+			if (cached) {
+				dweller = cached;
+				continue;
+			}
+			let nextChildConfig = dweller.config[`.${nextChildId}`];
+			let nextDweller;
+			if (nextChildConfig && nextChildConfig.class) {
+				nextDweller = dweller.createChild({ id: nextChildId, config: nextChildConfig });
+			} else {
+				nextDweller = await dweller.resolveChild(nextChildId);
 			}
 			assert(nextDweller, `No child dweller with id '${nextChildId}' for dweller ${dweller.fullId}`);
 			dweller = nextDweller;
