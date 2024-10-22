@@ -1,7 +1,9 @@
 module.exports = class extends getClass('dweller') {
 	init(data) {
 		let defaultStorageConfig = engine.config['storage'];
-		objmerge(this.config, defaultStorageConfig, 'target');
+		objmerge(this.config, defaultStorageConfig, 'target'); // TODO: Тут происходит странное
+		// На первом создании двеллера модифицируется конфиг в памяти
+		// Надо придумать что с этим делать. Пока вроде нет последствий
 		let providerId = assert(this.config.provider, `Storage '${this.fullId}' has no provider`);
 		this.provider = engine.get(providerId);
 	}
