@@ -34,7 +34,7 @@ module.exports = class extends getClass('dweller') {
 
 
 	async logRequest(values) {
-		let apiLogStorage = await engine.get('apiLogs');
+		let apiLogStorage = engine.get('apiLogs');
 		apiLogStorage.createModel({ values }).save();
 	}
 
@@ -43,10 +43,14 @@ module.exports = class extends getClass('dweller') {
 			status: true,
 		};
 		try {
-			var dwellerId = data.dwellerId;
-			let dweller = await engine.get(dwellerId);
 			var params = data.params ?? {};
+			var dwellerId = data.dwellerId;
 			var session = params.session;
+			if (session) { // Для отладки
+				let usersStorage = engine.get('users');
+				let user = await usersStorage.getUserBySession(session);
+			}
+			let dweller = await engine.get(dwellerId);
 			assert(dweller, `Dweller with id '${data.dwellerId}' not found`);
 			var action = params.action ?? dweller.config.defaultApiAction;
 			assert(action, `No action specified, and '${data.dwellerId}' has no default action`);
@@ -71,5 +75,9 @@ module.exports = class extends getClass('dweller') {
 		} finally {
 			response.json(out);
 		}
+	}
+
+	checkAccess() {
+
 	}
 }

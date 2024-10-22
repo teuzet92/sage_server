@@ -8,9 +8,9 @@ requiredModules:
 
 .storageProviders:
   .mongo:
-    db: test_project
+    db: overlord_test
   .mongoMemory:
-    db: test_project
+    db: overlord_test
 
 dweller:
   apiActions:

@@ -45,3 +45,22 @@
             required: true
             type:
               name: string
+
+.sessions:
+  class: core/storage/storage
+  providerConfig:
+    collection: sessions
+  schema:
+    fields:
+      sessionId:
+        code: sessionId
+        title: SessionID
+        type:
+          name: string
+      userId:
+        code: userId
+        title: User Id
+        type:
+          name: link
+          storage: users
+

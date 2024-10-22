@@ -16,10 +16,17 @@ module.exports = class extends getClass('core/storage/storage') {
 	}
 
 	async cmd_validateSession({ session }) {
-		let users = await this.getAll({ 'values.session': session });
-		// TODO: add session removal
-		assert(users.length == 1, 'Unkown or expired session');
-		return users[0].saveData();
+		let user = await this.getUserBySession(session)
+		return user.saveData();
+	}
+
+	async getUserBySession(sessionId) {
+		let session = await engine.get(`sessions.${sessionId}`);
+		assert(session, `No session with id '${sessionId}'`);
+		let userId = session.values.userId;
+		let user = await engine.get(`users.${userId}`);
+		assert(user, `No user with id '${userId}'`);
+		return user;
 	}
 
 }
