@@ -1,5 +1,6 @@
 .content:
   class: modules/content/content
+  apiAccess: true
   apiActions:
     dump:
       description: Dumps content
@@ -10,6 +11,7 @@
           type: json
           description: Content to restore
   .templates:
+    apiAccess: true
     class: modules/content/templates
     apiActions:
       createTemplate:
@@ -35,9 +37,11 @@
           type:
             name: string
     model:
+      apiAccess: true
       apiActions:
         delete: false
       .params:
+        apiAccess: true
         class: core/storage/storage
         forceMyParentIdInModels: templateId
         providerConfig:
@@ -61,6 +65,7 @@
               type:
                 name: typedef
       .objects:
+        apiAccess: true
         class: modules/content/objects
         forceMyParentIdInModels: templateId
         providerConfig:

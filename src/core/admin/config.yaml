@@ -1,5 +1,6 @@
 .users:
   class: core/admin/users
+  apiAccess: true
   apiActions:
     validateSession:
       public: true
@@ -44,6 +45,7 @@
           name: bool
   model:
     class: core/admin/user
+    apiAccess: true
     apiActions:
       login:
         params:

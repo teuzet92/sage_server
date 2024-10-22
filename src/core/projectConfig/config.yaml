@@ -1,5 +1,6 @@
 .projectConfig:
   class: core/projectConfig/projectConfig
+  apiAccess: true
   defaultApiAction: 'run'
   apiActions:
     run:
