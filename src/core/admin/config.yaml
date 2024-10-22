@@ -15,6 +15,11 @@
           required: true
           type:
             name: string
+        password:
+          description: 'Password MD5 hash'
+          required: true
+          type:
+            name: string
   providerConfig:
     collection: users
   schema:
@@ -22,11 +27,6 @@
       password:
         code: password
         title: Password
-        type:
-          name: string
-      session:
-        code: session
-        title: Session
         type:
           name: string
       access:
@@ -41,7 +41,7 @@
       login:
         params:
           password:
-            description: 'Password'
+            description: 'Password MD5 hash'
             required: true
             type:
               name: string

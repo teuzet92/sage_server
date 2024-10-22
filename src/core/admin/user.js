@@ -1,3 +1,4 @@
+
 module.exports = class extends getClass('core/storage/model') {
 
 	async cmd_login({ password }) {
@@ -7,4 +8,6 @@ module.exports = class extends getClass('core/storage/model') {
 		await this.save();
 		return this;
 	}
+
+	// TODO: change password cmd
 }
