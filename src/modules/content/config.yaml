@@ -19,7 +19,6 @@
               name: string
             description: New template ID
       create: false
-      clone: false
     providerConfig:
       collection: templates
     schema:
