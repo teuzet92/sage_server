@@ -23,7 +23,6 @@ module.exports = class MongoProvider extends getClass('dweller') {
 	}
 
 	update(config, query, updates, params) {
-		console.log(query, updates)
 		if (!updates) return;
 		let preparedQuery = prepareQuery(query)
 		let $set = {};
