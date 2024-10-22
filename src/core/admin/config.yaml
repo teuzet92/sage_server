@@ -34,8 +34,9 @@
         code: access
         title: Access
         type:
-          name: string
-          textArea: true
+          name: array
+          valueType:
+            name: string
       developerMode:
         code: developerMode
         title: Developer mode

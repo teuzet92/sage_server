@@ -63,9 +63,8 @@ module.exports = class extends getClass('dweller') {
 					let actionConfig
 					let usersStorage = engine.get('users');
 					let user = await usersStorage.getUserBySession(session);
-					let accessMasksString = user.values.access;
-					if (accessMasksString) {
-						let accessMasks = accessMasksString.split(/\r?\n|\r|\n/g);
+					let accessMasks = user.values.access;
+					if (accessMasks) {
 						let accessGranted = this.checkAccess(accessMasks, dwellerId, action);
 						assert(accessGranted, 'No access');
 					}
