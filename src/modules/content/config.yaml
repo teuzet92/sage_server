@@ -62,9 +62,9 @@
               type:
                 name: typedef
       .objects:
-        class: core/storage/model
+        class: modules/content/objects
         forceMyParentIdInModels: templateId
         providerConfig:
           collection: objects
         model:
-          class: modules/content/object
+          class: core/storage/model
