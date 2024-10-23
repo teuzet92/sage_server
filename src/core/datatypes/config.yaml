@@ -1,0 +1,59 @@
+datatypes:
+  typedef:
+    title: Type definition
+    params:
+      allowedTypes:
+        title: Allowed types
+        type:
+          name: array
+          valueType:
+            name: string
+  bool:
+    title: Boolean
+  number:
+    title: Number
+    params:
+      integer:
+        title: Integer
+        type:
+          name: bool
+  string:
+    title: String
+    params:
+      textArea:
+        title: Multiline
+        type:
+          name: bool
+      translated:
+        title: Translated
+        type:
+          name: bool
+  link:
+    title: Storage link
+    params:
+      storageId:
+        title: Storage Id
+        type:
+          name: string
+  json:
+    title: JSON
+  array:
+    title: Array
+    params:
+      valueType:
+        title: Value type
+        required: true
+        type:
+          name: typedef
+          allowedTypes:
+            - number
+            - link
+            - string
+            - json
+  select:
+    title: Select
+    params:
+      options:
+        title: Options
+        type:
+          name: array

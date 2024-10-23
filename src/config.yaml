@@ -1,4 +1,5 @@
 requiredModules:
+  core/datatypes: true
   modules/content: true
   core/mongo: true
   core/storage: true
