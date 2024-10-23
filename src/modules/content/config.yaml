@@ -27,15 +27,15 @@ requiredModules:
     providerConfig:
       collection: templates
     schema:
-      objectTitle: '{title}'
+      modelTitle: '{title}'
       fields:
         title:
           code: title
           title: Title
           type:
             name: string
-        objectTitle:
-          code: objectTitle
+        modelTitle:
+          code: modelTitle
           title: Object title
           type:
             name: string

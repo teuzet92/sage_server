@@ -6,6 +6,7 @@
     providerConfig:
       collection: contentTargets
     schema:
+      modelTitle: '{title}'
       fields:
         title:
           title: Title
