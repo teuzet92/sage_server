@@ -8,7 +8,6 @@ const getModelTitle = (model, schema) => {
 	return modelTitle.replace(/\{[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*\}/g, getFieldValue);
 }
 
-
 module.exports = class extends getClass('dweller') {
 	init(data) {
 		let defaultStorageConfig = engine.config['storage'];

@@ -76,6 +76,7 @@ requiredModules:
         providerConfig:
           collection: objects
         model:
+          apiAccess: true
           class: core/storage/model
 
 datatypes:
