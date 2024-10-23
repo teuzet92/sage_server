@@ -1,3 +1,18 @@
+const getModelTitle = (model, schema) => {
+	env.log('getModelTitle', model.saveData(), schema)
+	function getFieldValue(match) {
+		env.log('getFieldValue', match)
+		let fieldName = match.substring(1, match.length - 1);
+		let fieldPath = fieldName.split('.');
+		env.log(fieldPath);
+		return objget(model, ...fieldPath);
+	}
+	let modelTitle = schema.modelTitle ?? '[{id}]';
+	env.log('Result model title', modelTitle);
+	return modelTitle.replace(/\{[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*\}/g, getFieldValue);
+}
+
+
 module.exports = class extends getClass('dweller') {
 	init(data) {
 		let defaultStorageConfig = engine.config['storage'];
@@ -15,14 +30,17 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async getSchema() {
-		let schema = {};
-		objmerge(schema, this.config.schema);
-		if (schema.provider) {
-			let schemaProvider = await engine.get(schema.provider);
-			let providerSchema = await schemaProvider.getSchema();
-			objmerge(schema, providerSchema)
+		if (!this.schema) {
+			let schema = {};
+			objmerge(schema, this.config.schema);
+			if (schema.provider) {
+				let schemaProvider = await engine.get(schema.provider);
+				let providerSchema = await schemaProvider.getSchema();
+				objmerge(schema, providerSchema)
+			}
+			this.schema = schema;
 		}
-		return schema;
+		return this.schema;
 	}
 
 	async providerCall(method, query = {}, ...params) {
@@ -77,5 +95,18 @@ module.exports = class extends getClass('dweller') {
 	async cmd_getAll({ query }) { 
 		let models = await this.getAll(query);
 		return models.map(model => model.saveData());
+	}
+
+	async cmd_getModelTitles() {
+		if (!this.modelTitles) {
+			let schema = await this.getSchema();
+			let models = await this.getAll();
+			let modelTitles = {};
+			for (let model of models) {
+				modelTitles[model.id] = getModelTitle(model, schema);
+			}
+			this.modelTitles = modelTitles;
+		}
+		return this.modelTitles;
 	}
 }

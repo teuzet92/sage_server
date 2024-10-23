@@ -27,7 +27,7 @@ requiredModules:
     providerConfig:
       collection: templates
     schema:
-      modelTitle: '{title}'
+      modelTitle: '{values.title}'
       fields:
         title:
           code: title

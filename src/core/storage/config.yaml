@@ -18,6 +18,9 @@ storage:
           description: Fields
     getSchema:
       description: Get storage schema
+    getModelTitles:
+      public: true
+      description: Returns all model titles
   model:
     class: core/storage/model
     defaultApiAction: load
