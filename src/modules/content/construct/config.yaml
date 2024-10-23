@@ -1,4 +1,22 @@
 .content:
+  .targets:
+    title: Content targets
+    apiAccess: true
+    class: core/storage/storage
+    providerConfig:
+      collection: contentTargets
+    schema:
+      fields:
+        title:
+          title: Name
+          type:
+            name: string
+    model:
+      class: modules/content/construct/target
+      apiAccess: true
+      apiActions:
+        construct:
+          description: 'Returns constructed content for the target'
   .construct:
     apiAccess: true
     class: content/construct/construct

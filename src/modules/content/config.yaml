@@ -1,3 +1,6 @@
+requiredModules:
+  modules/content/construct: true
+
 .content:
   class: modules/content/content
   apiAccess: true
