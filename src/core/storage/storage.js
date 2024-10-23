@@ -1,14 +1,10 @@
 const getModelTitle = (model, schema) => {
-	env.log('getModelTitle', model.saveData(), schema)
 	function getFieldValue(match) {
-		env.log('getFieldValue', match)
 		let fieldName = match.substring(1, match.length - 1);
 		let fieldPath = fieldName.split('.');
-		env.log(fieldPath);
 		return objget(model, ...fieldPath);
 	}
-	let modelTitle = schema.modelTitle ?? '[{id}]';
-	env.log('Result model title', modelTitle);
+	let modelTitle = schema.modelTitle ?? '{id}';
 	return modelTitle.replace(/\{[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*\}/g, getFieldValue);
 }
 
