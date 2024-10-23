@@ -18,15 +18,18 @@
       apiActions:
         construct:
           description: 'Returns constructed content for the target'
-  .construct:
-    apiAccess: true
-    class: content/construct/construct
-    defaultApiAction: run
-    apiActions:
-      run:
-        description: 'Constructs content'
-  .constructed:
-    apiAccess: true
-    class: core/storage/storage
-    providerConfig:
-      collection: constructedContent
+  .templates:
+    model:
+      .params:
+        schema:
+          fields:
+            targets:
+              title: Construct targets
+              code: targets
+              type:
+                name: array
+                valueType:
+                  name: link
+                  storageId: content.targets
+
+
