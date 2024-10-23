@@ -48,6 +48,7 @@
     apiAccess: true
     apiActions:
       login:
+        public: true
         params:
           password:
             description: 'Password MD5 hash'
