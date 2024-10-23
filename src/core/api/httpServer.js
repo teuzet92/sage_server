@@ -55,7 +55,6 @@ module.exports = class extends getClass('dweller') {
 			assert(dweller.config.apiAccess, 'Not an API-adressable dweller');
 			var action = params.action ?? dweller.config.defaultApiAction;
 			assert(action, `No action specified, and '${data.dwellerId}' has no default action`);
-			env.log(dwellerId, action, params)
 			let actionConfig = assert(dweller.config.apiActions[action]);
 			if (!actionConfig.public) {
 				var session = params.session;
@@ -91,7 +90,6 @@ module.exports = class extends getClass('dweller') {
 				});
 			}
 		} finally {
-			env.log(JSON.stringify(out, null, 2))
 			response.json(out);
 		}
 	}
