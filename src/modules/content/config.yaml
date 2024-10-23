@@ -42,6 +42,8 @@
         delete: false
       .params:
         apiAccess: true
+        model:
+          apiAccess: true
         class: core/storage/storage
         forceMyParentIdInModels: templateId
         providerConfig:
@@ -72,3 +74,29 @@
           collection: objects
         model:
           class: core/storage/model
+
+datatypes:
+  number:
+    allowInContent: true
+  bool:
+    allowInContent: true
+  link:
+    allowInContent: true
+  json:
+    allowInContent: true
+  array:
+    allowInContent: true
+  string:
+    allowInContent: true
+
+  contentLink:
+    title: Content Link
+    allowInContent: true
+    params:
+      templateId:
+        title: Template
+        required: true
+        type:
+          name: link
+          storageId: content.templates
+
