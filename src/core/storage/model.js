@@ -36,6 +36,8 @@ module.exports = class extends getClass('dweller') {
 		return saveData;
 	}
 
+	async onSave() {}
+
 	save() {
 		if (!this.createTime) {
 			this.createTime = this.time();
@@ -43,15 +45,19 @@ module.exports = class extends getClass('dweller') {
 		}
 		let saveData = this.saveData();
 		if (creation) {
-			return this.parent.providerCall('insert', saveData);
+			var res = this.parent.providerCall('insert', saveData);
 		} else {
 			saveData.updateTime = this.time();
-			return this.parent.providerCall('update', { id: this.id }, saveData);
+			var res = this.parent.providerCall('update', { id: this.id }, saveData);
 		}
+		res.then(() => this.onSave());
+		return res;
 	}
 
 	cmd_delete() {
-		this.parent.providerCall('delete', { id: this.id });
+		let res = this.parent.providerCall('delete', { id: this.id });
+		res.then(() => this.parent.onModelDeleted());
+		return res;
 	}
 
 	cmd_load() {

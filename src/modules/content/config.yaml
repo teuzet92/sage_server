@@ -46,8 +46,9 @@ requiredModules:
       .params:
         apiAccess: true
         model:
+          class: modules/content/templateParam
           apiAccess: true
-        class: core/storage/storage
+        class: modules/content/templateParams
         forceMyParentIdInModels: templateId
         providerConfig:
           collection: templateParams

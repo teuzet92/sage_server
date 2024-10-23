@@ -1,7 +1,6 @@
 module.exports = class extends getClass('core/storage/storage') {
 
-	async getSchema() {
-		if (this.schema) return this.schema;
+	async recalcSchema() {
 		let templateId = this.parent.id;
 		let paramsStorage = this.parent.get('params');
 		let myParams = await paramsStorage.getAll();
@@ -19,6 +18,12 @@ module.exports = class extends getClass('core/storage/storage') {
 			fields,
 			modelTitle,
 		};
+	}
+
+	async getSchema() {
+		if (!this.schema) {
+			await this.recalcSchema();
+		}
 		return this.schema;
 	}
 }

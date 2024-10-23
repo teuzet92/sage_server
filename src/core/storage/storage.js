@@ -18,6 +18,8 @@ module.exports = class extends getClass('dweller') {
 		this.provider = engine.get(providerId);
 	}
 
+	async onModelDeleted() {}
+
 	async resolveChild(id) {
 		let children = await this.providerCall('getAll', { id });
 		assert(children.length > 0, `Storage ${this.fullId} has no model with id '${id}'`);
@@ -27,6 +29,7 @@ module.exports = class extends getClass('dweller') {
 	async getSchema() {
 		if (!this.schema) {
 			let schema = {};
+			// TODO: Видоизменяем конфиг на первом обращении. Плохих последствий вроде пока нет
 			objmerge(schema, this.config.schema);
 			if (schema.provider) {
 				let schemaProvider = await engine.get(schema.provider);
@@ -44,7 +47,8 @@ module.exports = class extends getClass('dweller') {
 			query[forcedIdPath] = this.parent.id;
 		}
 		let provider = await this.provider;
-		return provider[method](this.config.providerConfig, query, ...params);
+		let res = provider[method](this.config.providerConfig, query, ...params);
+		return res;
 	}
 
 	createModel(model) {
