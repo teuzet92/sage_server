@@ -21,14 +21,6 @@
           description: 'Returns constructed content for the target'
   .templates:
     model:
-      targets:
-        title: Construct targets
-        code: targets
-        type:
-          name: array
-          valueType:
-            name: link
-            storageId: content.targets
       .params:
         schema:
           fields:
@@ -40,5 +32,3 @@
                 valueType:
                   name: link
                   storageId: content.targets
-
-
