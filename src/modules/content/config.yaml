@@ -3,7 +3,6 @@ requiredModules:
 
 .content:
   class: modules/content/content
-  apiAccess: true
   apiActions:
     dump:
       description: Dumps content
@@ -15,6 +14,7 @@ requiredModules:
           description: Content to restore
   .templates:
     apiAccess: true
+    title: Content templates
     class: modules/content/templates
     apiActions:
       createTemplate:

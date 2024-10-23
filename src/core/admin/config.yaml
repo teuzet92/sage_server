@@ -1,6 +1,7 @@
 .users:
-  class: core/admin/users
+  title: Admin users
   apiAccess: true
+  class: core/admin/users
   apiActions:
     validateSession:
       public: true
