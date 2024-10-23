@@ -8,7 +8,8 @@
     schema:
       fields:
         title:
-          title: Name
+          title: Title
+          code: title
           type:
             name: string
     model:
