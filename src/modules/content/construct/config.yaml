@@ -1,24 +1,42 @@
 .content:
-  .targets:
-    title: Content targets
+  .construct:
+    title: Content constuct
+    class: modules/content/construct/construct
+    defaultValueConstructor: base
     apiAccess: true
-    class: core/storage/storage
-    providerConfig:
-      collection: contentTargets
-    schema:
-      modelTitle: '{values.title}'
-      fields:
-        title:
-          title: Title
-          code: title
-          type:
-            name: string
-    model:
-      class: modules/content/construct/target
+    apiActions:
+      run:
+        description: Constructs content for a given target
+        params:
+          targetId:
+            title: Target Id
+            code: targetId
+            type:
+              name: link
+              storageId: content.construct.targets
+    .targets:
       apiAccess: true
-      apiActions:
-        construct:
-          description: 'Returns constructed content for the target'
+      title: Content targets
+      class: core/storage/storage
+      providerConfig:
+        collection: contentTargets
+      schema:
+        modelTitle: '{values.title}'
+        fields:
+          title:
+            title: Title
+            code: title
+            type:
+              name: string
+      models:
+        apiAccess: true
+    .constructors:
+      class: dweller
+      .link:
+        class: modules/content/construct/datatypes/link
+      .base:
+        class: modules/content/construct/datatypes/base
+
   .templates:
     model:
       .params:
@@ -31,4 +49,8 @@
                 name: array
                 valueType:
                   name: link
-                  storageId: content.targets
+                  storageId: content.construct.targets
+
+datatypes:
+  link:
+    valueConstructor: link
