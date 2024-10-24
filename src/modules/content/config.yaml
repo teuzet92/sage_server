@@ -85,8 +85,6 @@ datatypes:
     allowInContent: true
   bool:
     allowInContent: true
-  link:
-    allowInContent: true
   json:
     allowInContent: true
   array:
@@ -94,7 +92,7 @@ datatypes:
   string:
     allowInContent: true
 
-  contentLink:
+  clink:
     title: Content Link
     allowInContent: true
     params:

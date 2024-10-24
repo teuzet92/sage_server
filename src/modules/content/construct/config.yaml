@@ -52,5 +52,5 @@
                   storageId: content.construct.targets
 
 datatypes:
-  link:
-    valueConstructor: link
+  clink:
+    valueConstructor: clink
