@@ -7,13 +7,23 @@ module.exports = class Dweller {
 		this.parent = data.parent;
 		this.config = data.config;
 		this.cachedDwellers = {};
-		if (global.engine) {
+		if (global.engine) { // Если движок уже создан
 			let defaultDwellerConfig = engine.config['dweller'];
 			objmerge(this.config, defaultDwellerConfig, 'target');
 		}
 		this.fullId = this.id;
 		if (this.parent && this.parent != engine && this.parent.fullId) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
+		}
+	}
+
+	execTraitCallbacks(callbackName, ...args) {
+		let traitConfigs = this.config.traits;
+		if (!traitConfigs) return;
+		for (let traitName of Object.keys(traitConfigs)) {
+			let callback = getTraitCallback(traitName, callbackName);
+			if (!callback) continue;
+			callback.call(this, ...args);
 		}
 	}
 

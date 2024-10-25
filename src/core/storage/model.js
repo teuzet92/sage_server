@@ -24,30 +24,29 @@ module.exports = class extends getClass('dweller') {
 		return out;
 	}
 
-	async onSave() {}
-
 	save() {
 		if (!this.createTime) {
 			this.createTime = this.time();
 			var creation = true;
 		}
-		let saveData = this.saveData();
+		let newSaveData = this.saveData();
 		if (creation) {
-			var res = this.parent.providerCall('insert', saveData);
+			var res = this.parent.providerCall('insert', newSaveData);
 		} else {
-			saveData.updateTime = this.time();
-			var res = this.parent.providerCall('update', { id: this.id }, saveData);
+			newSaveData.updateTime = this.time();
+			var res = this.parent.providerCall('update', { id: this.id }, newSaveData);
 		}
+		let oldSaveData = this.lastSaveData;
 		res.then(async () => {
-			await this.onSave(saveData, creation);
-			this.lastSaveData = saveData;
+			this.execTraitCallbacks('onSave', { newSaveData, oldSaveData, creation });
+			this.lastSaveData = newSaveData;
 		});
 		return res;
 	}
 
 	cmd_delete() {
 		let res = this.parent.providerCall('delete', { id: this.id });
-		res.then(() => this.parent.onModelDeleted());
+		res.then(() => this.parent.execTraitCallbacks('onModelDeleted'));
 		return res;
 	}
 

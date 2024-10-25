@@ -10,10 +10,11 @@
     extract:
       description: Extracts translation from content objects
   model:
-    class: modules/translations/translation
     apiAccess: true
     apiActions:
       delete: false
+    traits:
+      translationModel: true
   schema:
     fields:
       source:
@@ -40,3 +41,16 @@ translations:
       code: orig
     en:
       code: en
+
+.content:
+  .templates:
+    model:
+      .objects:
+        model:
+          traits:
+            translatedModel: true
+traits:
+  translatedModel:
+    src: modules/translations/trait_translatedModel
+  translationModel:
+    src: modules/translations/trait_translationModel

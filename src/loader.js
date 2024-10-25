@@ -9,6 +9,15 @@ global.getClass = function(path) {
 	return require(`./${path}`);
 }
 
+global.getTraitCallback = function(traitName, callbackName) {
+	let traitConfig = engine.config.traits[traitName];
+	assert(traitConfig, `No config for trait '${traitName}'`);
+	let trait = require(`./${traitConfig.src}`);
+	let callback = trait[callbackName];
+	assert(callback, `Trait '${traitName}' does not implement callback '${callbackName}`);
+	return callback;
+}
+
 function parseConfig(configPath) {
 	const configYaml = fs.readFileSync(configPath, 'utf8');
 	const config = YAML.parse(configYaml);

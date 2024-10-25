@@ -18,8 +18,6 @@ module.exports = class extends getClass('dweller') {
 		this.provider = engine.get(providerId);
 	}
 
-	async onModelDeleted() {}
-
 	async resolveChild(id) {
 		let children = await this.providerCall('getAll', { id });
 		assert(children.length > 0, `Storage ${this.fullId} has no model with id '${id}'`);
