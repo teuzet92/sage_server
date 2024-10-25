@@ -4,11 +4,13 @@
     class: modules/content/construct/construct
     defaultValueConstructor: base
     apiAccess: true
+    defaultApiAction: run
     apiActions:
       run:
         description: Constructs content for a given target
         params:
           targetId:
+            required: true
             title: Target Id
             code: targetId
             type:
