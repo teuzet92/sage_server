@@ -1,11 +1,13 @@
 requiredModules:
   core/datatypes: true
-  modules/content: true
   core/mongo: true
   core/storage: true
   core/admin: true
   core/api: true
   core/projectConfig: true
+
+  modules/content: true
+  modules/translations: true
 
 .storageProviders:
   .mongo:

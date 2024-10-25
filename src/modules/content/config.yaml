@@ -78,7 +78,7 @@ requiredModules:
           collection: objects
         model:
           apiAccess: true
-          class: core/storage/model
+          class: modules/content/object
 
 datatypes:
   number:
@@ -91,7 +91,6 @@ datatypes:
     allowInContent: true
   string:
     allowInContent: true
-
   clink:
     title: Content Link
     allowInContent: true
@@ -102,4 +101,6 @@ datatypes:
         type:
           name: link
           storageId: content.templates
+  contentValueSource:
+    title: Source
 

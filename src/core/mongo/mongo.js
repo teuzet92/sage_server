@@ -13,7 +13,7 @@ module.exports = class MongoProvider extends getClass('dweller') {
 
 	insert(config, query) {
 		assert(query.id, 'Implicit id is required');
-		let preparedQuery = prepareQuery(prepareQuery);
+		let preparedQuery = prepareQuery(query);
 		return this.database.collection(config.collection).insertOne(preparedQuery);
 	}
 

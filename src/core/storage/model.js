@@ -39,7 +39,7 @@ module.exports = class extends getClass('dweller') {
 			var res = this.parent.providerCall('update', { id: this.id }, saveData);
 		}
 		res.then(async () => {
-			await this.onSave(saveData);
+			await this.onSave(saveData, creation);
 			this.lastSaveData = saveData;
 		});
 		return res;

@@ -1,0 +1,42 @@
+.translations:
+  title: Translations
+  apiAccess: true
+  class: modules/translations/translations
+  provider: storageProviders.mongo
+  providerConfig:
+    collection: translations
+  apiActions:
+    create: false
+    extract:
+      description: Extracts translation from content objects
+  model:
+    class: modules/translations/translation
+    apiAccess: true
+    apiActions:
+      delete: false
+  schema:
+    fields:
+      source:
+        readonly: true
+        title: Source
+        code: source
+        type:
+          name: contentValueSource
+      orig:
+        title: Original
+        code: orig
+        type:
+          name: string
+      en:
+        title: EN
+        code: en
+        type:
+          name: string
+      # Добавить динамическую схему?
+translations:
+  langs:
+    defaultLang: orig
+    orig:
+      code: orig
+    en:
+      code: en
