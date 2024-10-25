@@ -46,9 +46,7 @@ module.exports = class extends getClass('dweller') {
 			let constructor = this.getConstructorForParam(param);
 			let rawValue = objectData.values[param.values.code];
 			if (rawValue) { // TODO: Проверка получше? Или утащить в сборщик?
-				res[param.values.code] = constructor.construct()
-			} else {
-				env.log(`Skipping value ${rawValue}`);
+				res[param.values.code] = constructor.construct(rawValue)
 			}
 		}
 		return res;
