@@ -47,8 +47,7 @@ module.exports = class extends getClass('dweller') {
 			query[forcedIdPath] = this.parent.id;
 		}
 		let provider = await this.provider;
-		let res = provider[method](this.config.providerConfig, query, ...params);
-		return res;
+		return provider[method](this.config.providerConfig, query, ...params);
 	}
 
 	createModel(model) {
@@ -66,13 +65,11 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async getAll(query) {
-		await this.load();
 		let rawData = await this.providerCall('getAll', query);
 		let res = [];
 		for (let modelData of rawData) {
 			let cached = this.cachedDwellers[modelData.id];
 			if (cached) {
-				cached.init({ ...modelData, loaded: true }); // Странный хак
 				res.push(cached);
 			} else {
 				res.push(this.createModel(modelData))
