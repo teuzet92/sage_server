@@ -19,18 +19,6 @@ module.exports = class Dweller {
 
 	init(data) {}
 
-	async onLoad() {}
-
-	async load() {
-		if (this.loaded) return this;
-		if (this.parent && !this.parent.loaded) {
-			await this.parent.load();
-		}
-		await this.onLoad();
-		this.loaded = true;
-		return this;
-	}
-
 	createChild(data) {
 		let childClassname = data.config.class;
 		let childClass = getClass(childClassname);
@@ -90,7 +78,6 @@ module.exports = class Dweller {
 	}
 
 	async runAction(action, rawParams = {}) {
-		await this.load();
 		let apiActionConfig = this.config.apiActions[action];
 		assert(apiActionConfig, `No config for action ${action}`);
 		let parsedParams = this.parseApiParams(apiActionConfig, rawParams);
