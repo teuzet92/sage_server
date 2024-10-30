@@ -4,6 +4,7 @@ requiredModules:
   core/storage: true
   core/admin: true
   core/api: true
+  core/vars: true
   core/projectConfig: true
 
   modules/content: true

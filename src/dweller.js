@@ -29,12 +29,19 @@ module.exports = class Dweller {
 
 	init(data) {}
 
+	addMethod(func) { // Для примешивания методов трейтами через onInit
+		let functionName = func.name;
+		assert(!this[functionName], `Dweller '${this.fullId}' already has method '${functionName}'`);
+		this[functionName] = func;
+	}
+
 	createChild(data) {
 		let childClassname = data.config.class;
 		let childClass = getClass(childClassname);
 		data.parent = this;
 		let child = new childClass(data);
 		child.init(data)
+		child.execTraitCallbacks('onInit', data);
 		this.cachedDwellers[data.id] = child;
 		return child;
 	}

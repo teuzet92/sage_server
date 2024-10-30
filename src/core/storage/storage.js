@@ -39,6 +39,10 @@ module.exports = class extends getClass('dweller') {
 		return this.schema;
 	}
 
+	generateModelId() {
+		return uuid();
+	}
+
 	async providerCall(method, query = {}, ...params) {
 		let forcedIdPath = this.config.forceMyParentIdInModels;
 		if (forcedIdPath) {
@@ -49,8 +53,8 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	createModel(model) {
-		if (this.config.forceUuids && !model.id) {
-			model.id = uuid(); // А если не передали id, но forceUuids не включен?
+		if (!model.id) {
+			model.id = this.generateModelId();
 		}
 		// TODO: Проверять данные на соответствие схеме
 		assert(model.id, 'Id is required');

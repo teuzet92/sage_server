@@ -1,5 +1,5 @@
 storage:
-  forceUuids: true
+  apiAccess: true
   class: core/storage
   defaultApiAction: getAll
   provider: storageProviders.mongoMemory
@@ -19,9 +19,9 @@ storage:
     getSchema:
       description: Get storage schema
     getModelTitles:
-      public: true
       description: Returns all model titles
   model:
+    apiAccess: true
     class: core/storage/model
     defaultApiAction: load
     apiActions:

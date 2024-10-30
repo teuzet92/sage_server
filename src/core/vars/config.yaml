@@ -1,0 +1,23 @@
+.vars:
+  apiAccess: true
+  title: Dweller vars
+  class: core/storage/storage
+  provider: storageProviders.mongo # На mongoMemory не реализован upsert
+  providerConfig:
+    collection: vars
+  schema:
+    fields:
+      varName:
+        title: Var name
+        code: varName
+        type:
+          name: string
+      value:
+        title: Value
+        code: value
+        type:
+          name: number
+
+traits:
+  vars:
+    src: core/vars/trait_vars

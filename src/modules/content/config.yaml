@@ -82,6 +82,8 @@ requiredModules:
           collection: objects
         model:
           apiAccess: true
+        traits:
+          vars: true
 
 traits:
   templateParam:
