@@ -64,6 +64,7 @@ module.exports = class extends getClass('dweller') {
 		let constructionCtx = this.constructionCtx;
 		constructionCtx.res = res;
 		delete this.constructionCtx;
+		this.execCallbacks('onContentConstructed', constructionCtx);
 		return constructionCtx
 
 		return
@@ -71,8 +72,8 @@ module.exports = class extends getClass('dweller') {
 
 	async constructObject(objectId) {
 		let constructionCtx = this.constructionCtx;
-		let objectModel = assert(constructionCtx.objects[objectId], `No object '${objectId}' in construction context`);
-		let templateId = objectModel.templateId;
+		let objectData = assert(constructionCtx.objects[objectId], `No object '${objectId}' in construction context`);
+		let templateId = objectData.templateId;
 		let templateCtx = constructionCtx.templates[templateId];
 		let alreadyConstructed = templateCtx.constructed[objectId];
 		if (alreadyConstructed) return alreadyConstructed;
@@ -81,9 +82,9 @@ module.exports = class extends getClass('dweller') {
 		};
 		for (let param of Object.values(templateCtx.params)) {
 			let constructor = this.getConstructorForParam(param);
-			let rawValue = objectModel.values[param.values.code];
+			let rawValue = objectData.values[param.values.code];
 			if (rawValue) { // TODO: Проверка получше? Или утащить в сборщик?
-				res[param.values.code] = await constructor.construct(rawValue, param)
+				res[param.values.code] = await constructor.construct(rawValue, param, objectData)
 			}
 		}
 		templateCtx.constructed[objectId] = res;
