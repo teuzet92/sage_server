@@ -1,6 +1,13 @@
 module.exports = class extends getClass('dweller') {
 
-	construct(value) {
-		return this.parent.parent.getObjectId(value);
+	async construct(value, param) {
+		if (param.values.type.inline) {
+			let constructDweller = this.parent.parent;
+			let constructedObject = await constructDweller.constructObject(value);
+			constructedObject = { ...constructedObject };
+			delete constructedObject.id;
+			return constructedObject;
+		}
+		return value;
 	}
 }

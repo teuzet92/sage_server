@@ -1,8 +1,9 @@
 module.exports = class extends getClass('core/storage/storage') {
 
 	generateModelId() {
-		let lastId = this.getVar('lastObjectId');
-		this.setVar('lastObjectId', lastId + 1);
+		let content = engine.get('content');
+		let lastId = content.getVar('lastObjectId');
+		content.setVar('lastObjectId', lastId + 1);
 		return lastId + 1;
 	}
 

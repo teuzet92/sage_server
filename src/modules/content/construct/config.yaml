@@ -40,8 +40,8 @@
         apiAccess: true
     .constructors:
       class: dweller
-      .link:
-        class: modules/content/construct/datatypes/link
+      .clink:
+        class: modules/content/construct/datatypes/clink
       .base:
         class: modules/content/construct/datatypes/base
 

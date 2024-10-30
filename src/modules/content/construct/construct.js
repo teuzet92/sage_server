@@ -79,7 +79,7 @@ module.exports = class extends getClass('dweller') {
 			let constructor = this.getConstructorForParam(param);
 			let rawValue = objectModel.values[param.values.code];
 			if (rawValue) { // TODO: Проверка получше? Или утащить в сборщик?
-				res[param.values.code] = constructor.construct(rawValue, param)
+				res[param.values.code] = await constructor.construct(rawValue, param)
 			}
 		}
 		templateCtx.constructed[objectId] = res;

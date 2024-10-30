@@ -12,6 +12,8 @@ requiredModules:
         content:
           type: json
           description: Content to restore
+  traits:
+    vars: true
   .templates:
     apiAccess: true
     title: Content templates
@@ -82,8 +84,6 @@ requiredModules:
           collection: objects
         model:
           apiAccess: true
-        traits:
-          vars: true
 
 traits:
   templateParam:
