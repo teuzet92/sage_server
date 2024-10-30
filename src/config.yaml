@@ -10,6 +10,8 @@ requiredModules:
   modules/content: true
   modules/translations: true
 
+  modules/overlord: true
+
 .storageProviders:
   .mongo:
     db: overlord_test
