@@ -47,7 +47,4 @@ translations:
       .objects:
         model:
           traits:
-            translatedModel: true
-traits:
-  translatedModel:
-    src: modules/translations/trait_translatedModel
+            modules/translations/traits/translatedModel: true

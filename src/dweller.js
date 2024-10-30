@@ -24,8 +24,8 @@ module.exports = class Dweller {
 	initTraits() {
 		let traitConfigs = this.config.traits;
 		if (!traitConfigs) return;
-		for (let traitName of Object.keys(traitConfigs)) {
-			let trait = getTrait(traitName);
+		for (let traitPath of Object.keys(traitConfigs)) {
+			let trait = getClass(traitPath);
 			let traitCallbacks = trait.callbacks;
 			if (traitCallbacks) {
 				for (let [ eventName, callback ] of Object.entries(traitCallbacks)) {
@@ -34,27 +34,26 @@ module.exports = class Dweller {
 			}
 			let traitMethods = trait.methods;
 			if (traitMethods) {
-				for (let method of Object.values(traitMethods)) {
-					this.addMethod(method);
+				for (let [ methodName, method ] of Object.entries(traitMethods)) {
+					this.addMethod(methodName, method);
 				}
 			}
 		}
 	}
 
-	execCallbacks(eventName, ...args) {
+	async execCallbacks(eventName, ...args) {
 		let callbacks = this.callbacks[eventName];
 		if (!callbacks) return;
 		for (let callback of callbacks) {
-			callback.call(this, ...args);
+			await callback.call(this, ...args);
 		}
 	}
 
 	init(data) {}
 
-	addMethod(func) { // Для примешивания методов трейтами через onInit
-		let functionName = func.name;
-		assert(!this[functionName], `Dweller '${this.fullId}' already has method '${functionName}'`);
-		this[functionName] = func;
+	addMethod(methodName, method) { // Для примешивания методов трейтами через onInit
+		assert(!this[methodName], `Dweller '${this.fullId}' already has method '${methodName}'`);
+		this[methodName] = method;
 	}
 
 	addCallback(eventName, func) {

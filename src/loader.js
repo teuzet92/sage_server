@@ -5,14 +5,8 @@ const fs = require('fs');
 require('./core/util');
 require('./core/env');
 
-global.getClass = function(path) {
+global.getClass = function(path) { // Трейты используют этот же метод
 	return require(`./${path}`);
-}
-
-global.getTrait = function(traitName) {
-	let traitConfig = engine.config.traits[traitName];
-	assert(traitConfig, `No config for trait '${traitName}'`);
-	return require(`./${traitConfig.src}`);
 }
 
 function parseConfig(configPath) {

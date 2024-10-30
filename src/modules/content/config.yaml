@@ -13,7 +13,7 @@ requiredModules:
           type: json
           description: Content to restore
   traits:
-    vars: true
+    core/vars/trait: true
   .templates:
     apiAccess: true
     title: Content templates

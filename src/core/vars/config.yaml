@@ -17,7 +17,3 @@
         code: value
         type:
           name: number
-
-traits:
-  vars:
-    src: core/vars/trait_vars

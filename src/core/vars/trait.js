@@ -19,9 +19,15 @@ onInit = async function () {
 	for (let varModel of varModels) {
 		vars[varModel.values.varName] = varModel.values.value;
 	}
-	this.addMethod(getVar);
-	this.addMethod(setVar);
 	this.vars = vars;
 }
 
-module.exports = { onInit }
+module.exports = {
+	callbacks: {
+		onInit,
+	},
+	methods: {
+		getVar,
+		setVar,
+	}
+}
