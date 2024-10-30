@@ -8,4 +8,11 @@
     apiActions:
       run:
         description: Constructs content and pushes it to repo
+        params:
+          adminMessage:
+            title: Message
+            code: adminMessage
+            type:
+              name: string
+              textArea: true
     contentDir: ../content

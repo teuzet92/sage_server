@@ -19,7 +19,7 @@
           type:
             name: string
         password:
-          description: 'Password MD5 hash'
+          description: 'Password'
           required: true
           type:
             name: string
@@ -39,6 +39,11 @@
           name: array
           valueType:
             name: string
+      email:
+        code: email
+        title: E-mail
+        type:
+          name: string
       developerMode:
         code: developerMode
         title: Developer mode

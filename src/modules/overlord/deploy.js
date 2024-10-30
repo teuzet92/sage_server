@@ -19,7 +19,7 @@ module.exports = class extends getClass('dweller') {
 		fs.writeFileSync(`${this.config.contentDir}/${filename}`, json);
 	}
 
-	async run(apiActionUser) {
+	async run(apiActionUser, adminMessage) {
 		let contentDir = this.config.contentDir;
 		await this.initGitRepo();
 		// Хак. Реинициализируем гит в новой папке, а то он путается, будучи внутри репы
@@ -38,14 +38,20 @@ module.exports = class extends getClass('dweller') {
 			this.writeObjectToContent(translation, `loc/${lang}.json`);
 		}
 		let status = await git.status();
-		if (status.modified.length == 0) return; // Нет изменений в контенте
+		let modified = status.modified;
+		if (modified.length == 0) return; // Нет изменений в контенте
 		await git.add('./');
-		await git.commit(`Automated commit from Overlord CMS. Admin user: ${apiActionUser.id}`);
+		let commitMessage = `Content update from Overlord Admin.`;
+		if (adminMessage) {
+			commitMessage = [ commitMessage, adminMessage ];
+		};
+		let commitAuthor =  `${apiActionUser.id} <${apiActionUser.values.email}>`;
+		await git.commit(commitMessage, modified, { '--author': commitAuthor });
 		await git.push();
 		return 'Successfully pushed to content repo!';
 	}
 
-	cmd_run({ apiActionUser }) {
-		return this.run(apiActionUser);
+	cmd_run({ apiActionUser, adminMessage }) {
+		return this.run(apiActionUser, adminMessage);
 	}
 }
