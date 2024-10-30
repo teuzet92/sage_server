@@ -49,7 +49,7 @@ module.exports = class extends getClass('dweller') {
 				templateCtx.constructed[objectId] = await this.constructObject(objectId);
 			}
 		}
-		let res = {};
+		let content = {};
 		for (let templateCtx of Object.values(this.constructionCtx.templates)) {
 			let template = templateCtx.template;
 			let templateTargets = template.values.targets;
@@ -58,11 +58,11 @@ module.exports = class extends getClass('dweller') {
 				if (targetModel.values.templatesAsArray) {
 					constructed = Object.values(constructed);
 				}
-				res[template.id] = constructed;
+				content[template.id] = constructed;
 			}
 		}
 		let constructionCtx = this.constructionCtx;
-		constructionCtx.res = res;
+		constructionCtx.result = { content };
 		delete this.constructionCtx;
 		this.execCallbacks('onContentConstructed', constructionCtx);
 		return constructionCtx
