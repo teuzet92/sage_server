@@ -1,15 +1,5 @@
 module.exports = class extends getClass('dweller') {
 
-	getObjectId(contentId) {
-		let objectIds = this.objectIds;
-		let numericId = objectIds[contentId];
-		if (!numericId) {
-			numericId = this.nextObjectId++;
-			objectIds[contentId] = numericId;
-		}
-		return numericId;
-	}
-
 	getConstructorForParam(param) {
 		let paramType = param.values.type.name;
 		let constructorName = engine.config.datatypes[paramType].valueConstructor;
@@ -19,59 +9,80 @@ module.exports = class extends getClass('dweller') {
 		return this.get(`constructors.${constructorName}`);
 	}
 
-	isConstructionLocked() {
-		return this.constructionLock;
-	}
-
 	async run(targetId) {
-		assert(!this.isConstructionLocked(), 'Construction is locked');
-		this.nextObjectId = 1;
-		this.objectIds = {};
-		this.constructionLock = true;
-		let content = {};
-		let templatesStorage = await engine.get('content.templates');
+		assert(!this.constructionCtx, 'Construction is in progress');
+		this.constructionCtx = { // Фиксируем контекст сборки
+			templates: {},
+			objects: {},
+			// TODO: translations, resources, scripts
+		};
+		let targetModel = await this.getAsync(`targets.${targetId}`);
+		assert(targetModel, `Unknown content target '${targetId}'`);
+		let templatesStorage = engine.get('content.templates');
 		let templateModels = await templatesStorage.getAll();
 		for (let templateModel of templateModels) {
-			content[templateModel.id] = await this.constructTemplate(templateModel, targetId);
+			let paramsStorage = templateModel.get('params');
+			let rawParams = await paramsStorage.getAll();
+			let params = []; // Собираем только параметры, которые положено собирать
+			for (let param of rawParams) {
+				let paramTargets = param.values.targets;
+				if (paramTargets && paramTargets.find(target => targetId)) {
+					params.push(param.saveData());
+				}
+			}
+			let objectsStorage = templateModel.get('objects');
+			let templateObjects = await objectsStorage.getAll();
+			let objectIds = [];
+			for (let objectModel of templateObjects) {
+				objectIds.push(objectModel.id);
+				this.constructionCtx.objects[objectModel.id] = objectModel.saveData();
+			}
+			this.constructionCtx.templates[templateModel.id] = {
+				template: templateModel.saveData(),
+				params,
+				objectIds,
+				constructed: {},
+			};
 		}
-		delete this.constructionLock;
-		return content;
-	}
-
-	constructObject(objectData, params) {
-		let res = {
-			id: this.getObjectId(objectData.id),
-		};
-		for (let param of Object.values(params)) {
-			let constructor = this.getConstructorForParam(param);
-			let rawValue = objectData.values[param.values.code];
-			if (rawValue) { // TODO: Проверка получше? Или утащить в сборщик?
-				res[param.values.code] = constructor.construct(rawValue)
+		for (let templateCtx of Object.values(this.constructionCtx.templates)) {
+			for (let objectId of templateCtx.objectIds) {
+				templateCtx.constructed[objectId] = await this.constructObject(objectId);
 			}
 		}
+		let res = {};
+		for (let templateCtx of Object.values(this.constructionCtx.templates)) {
+			let template = templateCtx.template;
+			let templateTargets = template.values.targets;
+			if (templateTargets && templateTargets.find(target => targetId)) {
+				let constructed = templateCtx.constructed;
+				if (targetModel.values.templatesAsArray) {
+					constructed = Object.values(constructed);
+				}
+				res[template.id] = constructed;
+			}
+		}
+		delete this.constructionCtx;
 		return res;
 	}
 
-	async constructTemplate(templateModel, targetId) {
-		let templateId = templateModel.id;
-		let objectsStorage = templateModel.get('objects');
-		let paramsStorage = templateModel.get('params');
-		let params = await paramsStorage.getAll();
-		let objects = await objectsStorage.getAll();
-		let constructedParams = [];
-		for (let param of params) {
-			let paramTargets = param.values.targets;
-			if (paramTargets && paramTargets.find(target => targetId)) {
-				constructedParams.push(param);
+	async constructObject(objectId) {
+		let constructionCtx = this.constructionCtx;
+		let objectModel = assert(constructionCtx.objects[objectId], `No object '${objectId}' in construction context`);
+		let templateId = objectModel.templateId;
+		let templateCtx = constructionCtx.templates[templateId];
+		let alreadyConstructed = templateCtx.constructed[objectId];
+		if (alreadyConstructed) return alreadyConstructed;
+		let res = {
+			id: objectId,
+		};
+		for (let param of Object.values(templateCtx.params)) {
+			let constructor = this.getConstructorForParam(param);
+			let rawValue = objectModel.values[param.values.code];
+			if (rawValue) { // TODO: Проверка получше? Или утащить в сборщик?
+				res[param.values.code] = constructor.construct(rawValue, param)
 			}
 		}
-		if (constructedParams.length == 0) return;
-		let res = {};
-		for (let objectModel of objects) {
-			let objectId = this.getObjectId(objectModel.id);
-			let constructedObject = this.constructObject(objectModel, constructedParams);
-			res[objectId] = constructedObject;
-		}
+		templateCtx.constructed[objectId] = res;
 		return res;
 	}
 

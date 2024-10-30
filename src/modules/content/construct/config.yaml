@@ -30,6 +30,12 @@
             code: title
             type:
               name: string
+          templatesAsArray:
+            title: Construct templates as array
+            code: templatesAsArray
+            type:
+              name: bool
+
       models:
         apiAccess: true
     .constructors:
@@ -40,6 +46,16 @@
         class: modules/content/construct/datatypes/base
 
   .templates:
+    schema:
+      fields:
+        targets:
+          title: Construct targets
+          code: targets
+          type:
+            name: array
+            valueType:
+              name: link
+              storageId: content.construct.targets
     model:
       .params:
         schema:
@@ -56,3 +72,8 @@
 datatypes:
   clink:
     valueConstructor: clink
+    params:
+      inline:
+        title: Inline
+        type:
+          name: bool

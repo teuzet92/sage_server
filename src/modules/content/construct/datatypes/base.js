@@ -1,6 +1,6 @@
 module.exports = class extends getClass('dweller') {
 
-	construct(value) {
+	construct(value, param) {
 		return value;
 	}
 }
