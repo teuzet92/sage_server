@@ -10,4 +10,4 @@ node_modules/
 src/projects
 
 # Game content
-content/
+/content/
