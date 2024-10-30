@@ -9,4 +9,9 @@ const onSave = async function ({ newSaveData, oldSaveData, creation }) {
 	}
 }
 
-module.exports = { onSave }
+module.exports = class extends getClass('core/storage/model') {
+	init(data) {
+		super.init(data);
+		this.addCallback('onSave', onSave);
+	}
+}

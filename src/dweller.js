@@ -7,6 +7,7 @@ module.exports = class Dweller {
 		this.parent = data.parent;
 		this.config = data.config;
 		this.cachedDwellers = {};
+		this.callbacks = {};
 		if (global.engine) { // Если движок уже создан
 			let defaultDwellerConfig = engine.config['dweller'];
 			objmerge(this.config, defaultDwellerConfig, 'target');
@@ -15,14 +16,35 @@ module.exports = class Dweller {
 		if (this.parent && this.parent != engine && this.parent.fullId) {
 			this.fullId = `${this.parent.fullId}.${this.fullId}`;
 		}
+		if (global.engine) { // Считаем, что engine пока не имеет trait'ов
+			this.initTraits();
+		}
 	}
 
-	execTraitCallbacks(callbackName, ...args) {
+	initTraits() {
 		let traitConfigs = this.config.traits;
 		if (!traitConfigs) return;
 		for (let traitName of Object.keys(traitConfigs)) {
-			let callback = getTraitCallback(traitName, callbackName);
-			if (!callback) continue;
+			let trait = getTrait(traitName);
+			let traitCallbacks = trait.callbacks;
+			if (traitCallbacks) {
+				for (let [ eventName, callback ] of Object.entries(traitCallbacks)) {
+					this.addCallback(eventName, callback);
+				}
+			}
+			let traitMethods = trait.methods;
+			if (traitMethods) {
+				for (let method of Object.values(traitMethods)) {
+					this.addMethod(method);
+				}
+			}
+		}
+	}
+
+	execCallbacks(eventName, ...args) {
+		let callbacks = this.callbacks[eventName];
+		if (!callbacks) return;
+		for (let callback of callbacks) {
 			callback.call(this, ...args);
 		}
 	}
@@ -35,13 +57,17 @@ module.exports = class Dweller {
 		this[functionName] = func;
 	}
 
+	addCallback(eventName, func) {
+		objinsert(this.callbacks, func, eventName);
+	}
+
 	createChild(data) {
 		let childClassname = data.config.class;
 		let childClass = getClass(childClassname);
 		data.parent = this;
 		let child = new childClass(data);
 		child.init(data)
-		child.execTraitCallbacks('onInit', data);
+		child.execCallbacks('onInit', data);
 		this.cachedDwellers[data.id] = child;
 		return child;
 	}

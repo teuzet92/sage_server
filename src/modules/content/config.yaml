@@ -47,14 +47,10 @@ requiredModules:
         delete: false
       .params:
         apiAccess: true
-        class: core/storage/storage
+        class: modules/content/templateParams
         model:
-          class: core/storage/model
-          traits:
-            templateParam: true
+          class: modules/content/templateParam
           apiAccess: true
-        traits:
-          templateParams: true
         forceMyParentIdInModels: templateId
         providerConfig:
           collection: templateParams
@@ -84,12 +80,6 @@ requiredModules:
           collection: objects
         model:
           apiAccess: true
-
-traits:
-  templateParam:
-    src: modules/content/trait_templateParam
-  templateParams:
-    src: modules/content/trait_templateParams
 
 datatypes:
   number:

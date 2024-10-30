@@ -38,7 +38,7 @@ module.exports = class extends getClass('dweller') {
 		}
 		let oldSaveData = this.lastSaveData;
 		res.then(async () => {
-			this.execTraitCallbacks('onSave', { newSaveData, oldSaveData, creation });
+			this.execCallbacks('onSave', { newSaveData, oldSaveData, creation });
 			this.lastSaveData = newSaveData;
 		});
 		return res;
@@ -46,7 +46,7 @@ module.exports = class extends getClass('dweller') {
 
 	cmd_delete() {
 		let res = this.parent.providerCall('delete', { id: this.id });
-		res.then(() => this.parent.execTraitCallbacks('onModelDeleted'));
+		res.then(() => this.parent.execCallbacks('onModelDeleted'));
 		return res;
 	}
 

@@ -1,4 +1,3 @@
-
 const onSave = async function ({ newSaveData, oldSaveData, creation }) {
 	let schema = await this.parent.getSchema();
 	for (let field of Object.values(schema.fields)) {
@@ -17,4 +16,8 @@ const onSave = async function ({ newSaveData, oldSaveData, creation }) {
 	}
 }
 
-module.exports = { onSave }
+module.exports = {
+	callbacks: {
+		onSave,
+	}
+}

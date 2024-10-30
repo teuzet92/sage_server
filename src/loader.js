@@ -9,11 +9,10 @@ global.getClass = function(path) {
 	return require(`./${path}`);
 }
 
-global.getTraitCallback = function(traitName, callbackName) {
+global.getTrait = function(traitName) {
 	let traitConfig = engine.config.traits[traitName];
 	assert(traitConfig, `No config for trait '${traitName}'`);
-	let trait = require(`./${traitConfig.src}`);
-	return trait[callbackName];
+	return require(`./${traitConfig.src}`);
 }
 
 function parseConfig(configPath) {

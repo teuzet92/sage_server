@@ -11,10 +11,9 @@
       description: Extracts translation from content objects
   model:
     apiAccess: true
+    class: modules/translations/translation
     apiActions:
       delete: false
-    traits:
-      translationModel: true
   schema:
     fields:
       source:
@@ -52,5 +51,3 @@ translations:
 traits:
   translatedModel:
     src: modules/translations/trait_translatedModel
-  translationModel:
-    src: modules/translations/trait_translationModel
