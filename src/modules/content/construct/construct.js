@@ -64,10 +64,8 @@ module.exports = class extends getClass('dweller') {
 		let constructionCtx = this.constructionCtx;
 		constructionCtx.result = { content };
 		delete this.constructionCtx;
-		this.execCallbacks('onContentConstructed', constructionCtx);
+		await this.execCallbacks('onContentConstructed', constructionCtx);
 		return constructionCtx
-
-		return
 	}
 
 	async constructObject(objectId) {
@@ -93,6 +91,6 @@ module.exports = class extends getClass('dweller') {
 
 	async cmd_run({ targetId }) {
 		let ctx = await this.run(targetId);
-		return ctx.res;
+		return ctx.result;
 	}
 }

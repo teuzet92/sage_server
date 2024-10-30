@@ -22,29 +22,35 @@
         code: source
         type:
           name: contentValueSource
-      orig:
-        title: Original
-        code: orig
-        type:
-          name: string
-      en:
-        title: EN
-        code: en
-        type:
-          name: string
       # Добавить динамическую схему?
-translations:
-  langs:
-    defaultLang: orig
-    orig:
-      code: orig
+translation:
+  defaultLanguage: tech
+  languages:
+    tech:
+      title: Original (tech)
+      code: tech
+      skip: true
     en:
+      title: English
       code: en
+    ru:
+      title: Russian
+      code: ru
 
 .content:
+  .construct:
+    traits:
+      modules/translations/traits/contentConstruct: true
+    .constructors:
+      .string:
+        class: modules/translations/stringConstructor
   .templates:
     model:
       .objects:
         model:
           traits:
             modules/translations/traits/translatedModel: true
+
+datatypes:
+  string:
+    valueConstructor: string
