@@ -61,8 +61,12 @@ module.exports = class extends getClass('dweller') {
 				res[template.id] = constructed;
 			}
 		}
+		let constructionCtx = this.constructionCtx;
+		constructionCtx.res = res;
 		delete this.constructionCtx;
-		return res;
+		return constructionCtx
+
+		return
 	}
 
 	async constructObject(objectId) {
@@ -86,7 +90,8 @@ module.exports = class extends getClass('dweller') {
 		return res;
 	}
 
-	cmd_run({ targetId }) {
-		return this.run(targetId);
+	async cmd_run({ targetId }) {
+		let ctx = await this.run(targetId);
+		return ctx.res;
 	}
 }
