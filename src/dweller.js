@@ -123,6 +123,7 @@ module.exports = class Dweller {
 		let apiActionConfig = this.config.apiActions[action];
 		assert(apiActionConfig, `No config for action ${action}`);
 		let parsedParams = this.parseApiParams(apiActionConfig, rawParams);
+		parsedParams.apiActionUser = rawParams.apiActionUser;
 		let methodName = apiActionConfig.interfaceMethodName || `cmd_${action}`; // TODO: прямой доступ
 		assert(this[methodName], `${this.fullId} does not implement API action ${action}`);
 		return this[methodName](parsedParams);

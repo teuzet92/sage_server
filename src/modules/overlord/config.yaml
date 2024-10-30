@@ -8,3 +8,4 @@
     apiActions:
       run:
         description: Constructs content and pushes it to repo
+    contentDir: ../content

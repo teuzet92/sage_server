@@ -67,6 +67,7 @@ module.exports = class extends getClass('dweller') {
 						let accessGranted = this.checkAccess(accessMasks, dwellerId, action);
 						assert(accessGranted, 'No access');
 					}
+					params.apiActionUser = user;
 				} else {
 					error('Action is not public. Provide a session token.')
 				}
