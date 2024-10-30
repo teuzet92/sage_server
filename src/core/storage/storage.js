@@ -95,13 +95,16 @@ module.exports = class extends getClass('dweller') {
 		return models.map(model => model.saveData());
 	}
 
-	async cmd_getModelTitles() {
+	async cmd_getModelTitles() { // TODO: Обновлять на сохранении модели
 		if (!this.modelTitles) {
 			let schema = await this.getSchema();
 			let models = await this.getAll();
-			let modelTitles = {};
+			let modelTitles = [];
 			for (let model of models) {
-				modelTitles[model.id] = getModelTitle(model, schema);
+				modelTitles.push({
+					id: model.id,
+					title: getModelTitle(model, schema),
+				});
 			}
 			this.modelTitles = modelTitles;
 		}
