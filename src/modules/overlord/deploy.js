@@ -48,7 +48,7 @@ module.exports = class extends getClass('dweller') {
 
 		let newGit = simpleGit('../content');
 		env.log(newGit.status());
-		env.log(git.status());
+		env.log(git.diffSummary());
 		git.add('./');
 		env.log(git.status());
 		git.commit('Test automated commit');
