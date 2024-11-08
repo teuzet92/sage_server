@@ -16,6 +16,14 @@ storage:
         values:
           type: json
           description: Fields
+    bulkUpdate:
+      description: Updates several models
+      params:
+        models:
+          type:
+            name: array
+            valueType:
+              name: json
     getSchema:
       description: Get storage schema
     getModelTitles:

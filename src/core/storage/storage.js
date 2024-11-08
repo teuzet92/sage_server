@@ -110,4 +110,13 @@ module.exports = class extends getClass('dweller') {
 		}
 		return this.modelTitles;
 	}
+
+	async cmd_bulkUpdate({ models }) {
+		// TODO: Выполняем очень неэффективно
+		for (let { modelId, update } of models) {
+			env.log(modelId, update)
+			let model = await this.getAsync(`${modelId}`);
+			await model.update(update);
+		}
+	}
 }

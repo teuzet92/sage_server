@@ -54,10 +54,14 @@ module.exports = class extends getClass('dweller') {
 		return this.saveData();
 	}
 
-	cmd_update({ values }) {
+	update(values) {
 		for (let key in values) {
 			this.values[key] = values[key];
 		}
-		return this.save();	
+		return this.save();
+	}
+
+	cmd_update({ values }) {
+		return this.update(values);
 	}
 }
