@@ -49,6 +49,7 @@ module.exports = class extends getClass('dweller') {
 		await git.commit(commitMessage, modified, { '--author': commitAuthor });
 		await git.push();
 		return 'Successfully pushed to content repo!';
+		fs.rmSync(`${contentDir}`, { recursive: true, force: true });
 	}
 
 	cmd_run({ apiActionUser, adminMessage }) {
