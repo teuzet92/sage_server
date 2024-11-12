@@ -16,56 +16,63 @@ module.exports = class extends getClass('dweller') {
 			objects: {},
 			// TODO: translations, resources, scripts
 		};
-		let targetModel = await this.getAsync(`targets.${targetId}`);
-		assert(targetModel, `Unknown content target '${targetId}'`);
-		let templatesStorage = engine.get('content.templates');
-		let templateModels = await templatesStorage.getAll();
-		for (let templateModel of templateModels) {
-			let paramsStorage = templateModel.get('params');
-			let rawParams = await paramsStorage.getAll();
-			let params = []; // Собираем только параметры, которые положено собирать
-			for (let param of rawParams) {
-				let paramTargets = param.values.targets;
-				if (paramTargets && paramTargets.find(target => targetId)) {
-					params.push(param.saveData());
+		try {
+			let targetModel = await this.getAsync(`targets.${targetId}`);
+			assert(targetModel, `Unknown content target '${targetId}'`);
+			let templatesStorage = engine.get('content.templates');
+			let templateModels = await templatesStorage.getAll();
+			for (let templateModel of templateModels) {
+				let paramsStorage = templateModel.get('params');
+				let rawParams = await paramsStorage.getAll();
+				let params = []; // Собираем только параметры, которые положено собирать
+				for (let param of rawParams) {
+					let paramTargets = param.values.targets;
+					if (paramTargets && paramTargets.find(target => targetId)) {
+						params.push(param.saveData());
+					}
+				}
+				let objectsStorage = templateModel.get('objects');
+				let templateObjects = await objectsStorage.getAll();
+				let objectIds = [];
+				for (let objectModel of templateObjects) {
+					objectIds.push(objectModel.id);
+					this.constructionCtx.objects[objectModel.id] = objectModel.saveData();
+				}
+				this.constructionCtx.templates[templateModel.id] = {
+					template: templateModel.saveData(),
+					params,
+					objectIds,
+					constructed: {},
+				};
+			}
+			for (let templateCtx of Object.values(this.constructionCtx.templates)) {
+				for (let objectId of templateCtx.objectIds) {
+					templateCtx.constructed[objectId] = await this.constructObject(objectId);
 				}
 			}
-			let objectsStorage = templateModel.get('objects');
-			let templateObjects = await objectsStorage.getAll();
-			let objectIds = [];
-			for (let objectModel of templateObjects) {
-				objectIds.push(objectModel.id);
-				this.constructionCtx.objects[objectModel.id] = objectModel.saveData();
-			}
-			this.constructionCtx.templates[templateModel.id] = {
-				template: templateModel.saveData(),
-				params,
-				objectIds,
-				constructed: {},
-			};
-		}
-		for (let templateCtx of Object.values(this.constructionCtx.templates)) {
-			for (let objectId of templateCtx.objectIds) {
-				templateCtx.constructed[objectId] = await this.constructObject(objectId);
-			}
-		}
-		let content = {};
-		for (let templateCtx of Object.values(this.constructionCtx.templates)) {
-			let template = templateCtx.template;
-			let templateTargets = template.values.targets;
-			if (templateTargets && templateTargets.find(target => targetId)) {
-				let constructed = templateCtx.constructed;
-				if (targetModel.values.templatesAsArray) {
-					constructed = Object.values(constructed);
+			let content = {};
+			for (let templateCtx of Object.values(this.constructionCtx.templates)) {
+				let template = templateCtx.template;
+				let templateTargets = template.values.targets;
+				if (templateTargets && templateTargets.find(target => targetId)) {
+					let constructed = templateCtx.constructed;
+					if (targetModel.values.templatesAsArray) {
+						constructed = Object.values(constructed);
+					}
+					content[template.id] = constructed;
 				}
-				content[template.id] = constructed;
+			}
+			var constructionCtx = this.constructionCtx;
+			constructionCtx.result = { content };
+			await this.execCallbacks('onContentConstructed', constructionCtx);
+		} catch (e) {
+			throw e;
+		} finally {
+			delete this.constructionCtx;
+			if (constructionCtx) {
+				return constructionCtx.result
 			}
 		}
-		let constructionCtx = this.constructionCtx;
-		constructionCtx.result = { content };
-		delete this.constructionCtx;
-		await this.execCallbacks('onContentConstructed', constructionCtx);
-		return constructionCtx.result
 	}
 
 	async constructObject(objectId) {
