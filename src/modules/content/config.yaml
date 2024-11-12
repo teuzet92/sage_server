@@ -73,6 +73,9 @@ requiredModules:
               type:
                 name: typedef
       .objects:
+        idType:
+          name: number
+          integer: true
         apiAccess: true
         class: modules/content/objects
         forceMyParentIdInModels: templateId

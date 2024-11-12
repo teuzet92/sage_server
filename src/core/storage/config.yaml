@@ -3,6 +3,8 @@ storage:
   class: core/storage
   defaultApiAction: getAll
   provider: storageProviders.mongoMemory
+  idType:
+    name: string
   apiActions:
     getAll:
       description: Find models
@@ -39,8 +41,13 @@ storage:
         description: Update model
         params:
           values:
-            type: json
+            type:
+              name: json
             description: Update model
+          updateTime:
+            description: Last update time of current model
+            type:
+              name: number
       delete:
         description: Delete model
 
