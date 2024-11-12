@@ -1,11 +1,25 @@
-const getModelTitle = (model, schema) => {
+const getModelTitle = (modelSaveData, schema) => {
 	function getFieldValue(match) {
 		let fieldName = match.substring(1, match.length - 1);
 		let fieldPath = fieldName.split('.');
-		return objget(model, ...fieldPath);
+		return objget(modelSaveData, ...fieldPath);
 	}
 	let modelTitle = schema.modelTitle ?? '{id}';
 	return modelTitle.replace(/\{[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*\}/g, getFieldValue);
+}
+
+const onModelSave = async function({ newSaveData }) {
+	await this.ensureModelTitles();
+	let schema = await this.getSchema();
+	this.modelTitles[newSaveData.id] = {
+		id: newSaveData.id,
+		title: getModelTitle(newSaveData, schema),
+	};
+}
+
+const onModelDeleted = async function (model) {
+	await this.ensureModelTitles();
+	delete this.modelTitles[model.id];
 }
 
 module.exports = class extends getClass('dweller') {
@@ -16,6 +30,8 @@ module.exports = class extends getClass('dweller') {
 		// Надо придумать что с этим делать. Пока вроде нет последствий
 		let providerId = assert(this.config.provider, `Storage '${this.fullId}' has no provider`);
 		this.provider = engine.get(providerId);
+		this.addCallback('onModelSave', onModelSave);
+		this.addCallback('onModelDeleted', onModelDeleted);
 	}
 
 	async resolveChild(id) {
@@ -95,20 +111,23 @@ module.exports = class extends getClass('dweller') {
 		return models.map(model => model.saveData());
 	}
 
-	async cmd_getModelTitles() { // TODO: Обновлять на сохранении модели
-		if (!this.modelTitles) {
-			let schema = await this.getSchema();
-			let models = await this.getAll();
-			let modelTitles = [];
-			for (let model of models) {
-				modelTitles.push({
-					id: model.id,
-					title: getModelTitle(model, schema),
-				});
-			}
-			this.modelTitles = modelTitles;
+	async ensureModelTitles() {
+		if (this.modelTitles) return;
+		let schema = await this.getSchema();
+		let models = await this.getAll();
+		let modelTitles = {};
+		for (let model of models) {
+			modelTitles[model.id] = {
+				id: model.id,
+				title: getModelTitle(model, schema),
+			};
 		}
-		return this.modelTitles;
+		this.modelTitles = modelTitles;
+	}
+
+	async cmd_getModelTitles() {
+		await this.ensureModelTitles();
+		return Object.values(this.modelTitles);
 	}
 
 	async cmd_bulkUpdate({ models }) {

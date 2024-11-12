@@ -63,6 +63,7 @@
               name: string
 
 .sessions:
+  apiAccess: false
   class: core/storage/storage
   providerConfig:
     collection: sessions
