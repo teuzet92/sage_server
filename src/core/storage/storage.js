@@ -113,10 +113,17 @@ module.exports = class extends getClass('dweller') {
 
 	async cmd_bulkUpdate({ models }) {
 		// TODO: Выполняем очень неэффективно
-		for (let { modelId, update } of models) {
-			env.log(modelId, update)
+		let modelDwellers = {};
+		for (let { modelId, update, updateTime } of models) {
+			// Проверяем все updateTime
 			let model = await this.getAsync(`${modelId}`);
-			await model.update(update);
+			assert(model.updateTime == updateTime, `Model ${modelId} has wrong updateTime. Expected: ${model.updateTime}, received: ${updateTime}`);
+			modelDwellers[modelId] = model;
+		}
+		for (let { modelId, update, updateTime } of models) {
+			// Применяем изменения
+			let model = modelDwellers[modelId];
+			await model.update(update, updateTime);
 		}
 	}
 }

@@ -28,6 +28,8 @@ module.exports = class extends getClass('dweller') {
 		if (!this.createTime) {
 			this.createTime = this.time();
 			var creation = true;
+		} else {
+			this.updateTime = this.time();
 		}
 		let newSaveData = this.saveData();
 		if (creation) {
@@ -54,14 +56,15 @@ module.exports = class extends getClass('dweller') {
 		return this.saveData();
 	}
 
-	update(values) {
+	update(values, updateTime) {
+		assert(this.updateTime == updateTime, `Wrong 'updateTime' for model`);
 		for (let key in values) {
 			this.values[key] = values[key];
 		}
 		return this.save();
 	}
 
-	cmd_update({ values }) {
-		return this.update(values);
+	cmd_update({ values, updateTime }) {
+		return this.update(values, updateTime);
 	}
 }
