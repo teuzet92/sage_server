@@ -3,6 +3,7 @@
   apiAccess: true
   class: core/admin/users
   apiActions:
+    create: false
     validateSession:
       public: true
       params:
