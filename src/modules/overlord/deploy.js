@@ -31,16 +31,28 @@ module.exports = class extends getClass('dweller') {
 
 		let contentConstruct = engine.get('content.construct');
 		let contentRaw = await contentConstruct.run('3zt4Lxm0RT'); // TODO
-		await fs.promises.mkdir(`${contentDir}/loc`, { recursive: true });
 		let content = contentRaw.content;
 		this.writeObjectToContent(contentRaw.content, 'content.json');
-		for (let [ lang, translation ] of Object.entries(contentRaw.loc)) {
-			this.writeObjectToContent(translation, `loc/${lang}.json`);
+		if (contentRaw.loc) {
+			await fs.promises.mkdir(`${contentDir}/loc`, { recursive: true });
+			for (let [ lang, translation ] of Object.entries(contentRaw.loc)) {
+				this.writeObjectToContent(translation, `loc/${lang}.json`);
+			}
+		}
+		if (contentRaw.rhaiScripts) {
+			console.log('THERE ARE SCRIPTS')
+			await fs.promises.mkdir(`${contentDir}/scripts`, { recursive: true });
+			for (let [ scriptId, script ] of Object.entries(contentRaw.rhaiScripts)) {
+				console.log('writing script', scriptId, script)
+				fs.writeFileSync(`${contentDir}/scripts/${scriptId}`, script);
+			}
 		}
 		let status = await git.status();
+		console.log(status)
+		let added = status.not_added;
 		let modified = status.modified;
-		if (modified.length == 0) return; // Нет изменений в контенте
-		await git.add('./');
+		if (modified.length == 0 && added.length == 0) return; // Нет изменений в контенте
+		await git.add('./*');
 		let commitMessage = `Content update from Overlord Admin.`;
 		if (adminMessage) {
 			commitMessage = [ commitMessage, adminMessage ];
@@ -49,7 +61,7 @@ module.exports = class extends getClass('dweller') {
 		await git.commit(commitMessage, modified, { '--author': commitAuthor });
 		await git.push();
 		return 'Successfully pushed to content repo!';
-		fs.rmSync(`${contentDir}`, { recursive: true, force: true });
+		// fs.rmSync(`${contentDir}`, { recursive: true, force: true });
 	}
 
 	cmd_run({ apiActionUser, adminMessage }) {

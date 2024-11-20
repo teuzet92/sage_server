@@ -1,3 +1,6 @@
+requiredModules:
+  modules/overlord/rhai: true
+
 .overlord:
   class: dweller
   .deploy:

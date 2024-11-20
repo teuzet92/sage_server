@@ -1,0 +1,13 @@
+datatypes:
+  rhai:
+    title: RHAI Script
+    allowInContent: true
+    valueConstructor: rhai
+
+.content:
+  .construct:
+    traits:
+      modules/overlord/rhai/traits/contentConstruct: true
+    .constructors:
+      .rhai:
+        class:  modules/overlord/rhai/rhaiConstructor

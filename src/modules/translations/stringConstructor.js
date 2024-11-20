@@ -6,7 +6,7 @@ module.exports = class extends getClass('dweller') {
 		}
 		let constructDweller = this.parent.parent;
 		let sourceId = `content.templates.${objectSaveData.templateId}.objects.${objectSaveData.id}:${param.values.code}`;
-		objset(constructDweller, true, 'constructionCtx', 'translatedStrings', sourceId);
+		objset(constructDweller.constructionCtx, true, 'translatedStrings', sourceId);
 		return sourceId;
 	}
 }
