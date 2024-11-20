@@ -130,7 +130,7 @@ module.exports = class Dweller {
 	}
 
 	time() {
-		return Date.now();
+		return Math.floor(Date.now() / 1000);
 	}
 
 	parseApiParams(config, rawParams) {
