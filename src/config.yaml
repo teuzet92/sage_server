@@ -10,13 +10,14 @@ requiredModules:
   modules/content: true
   modules/translations: true
 
-  modules/overlord: true
+  # modules/overlord: true
+  modules/adventure: true
 
 .storageProviders:
   .mongo:
-    db: overlord_test
+    db: adventure_test
   .mongoMemory:
-    db: overlord_test
+    db: adventure_test
 
 dweller:
   apiActions:

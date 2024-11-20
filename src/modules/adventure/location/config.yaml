@@ -1,0 +1,61 @@
+.worldLocations:
+  title: All locations
+  class: core/storage/storage
+  apiAccess: true
+  providerConfig:
+    collection: locations
+  schema:
+    modelTitle: '{values.title}'
+    fields:
+      title:
+        title: Title
+        code: title
+        type:
+          name: string
+      description:
+        title: Description
+        code: description
+        type:
+          name: string
+          textArea: true
+      worldId:
+        title: World
+        code: worldId
+        type:
+          name: link
+          storageId: worlds
+.worlds:
+  model:
+    .locations:
+      forceMyParentIdInModels: values.worldId
+      title: Locations
+      class: core/storage/storage
+      apiAccess: true
+      providerConfig:
+        collection: locations
+      schema:
+        provider: worldLocations
+      model:
+        class: modules/adventure/location/location
+        .events:
+          class: core/storage/storage
+          apiAccess: true
+          providerConfig:
+            collection: locationEvents
+          forceMyParentIdInModels: locationId
+          schema:
+            fields:
+              time:
+                title: Time
+                code: time
+                type:
+                  name: time
+                  format: 'MMMM D, YYYY h:mm:ss A'
+              text:
+                title: Text
+                code: text
+                type:
+                  name: string
+                  textArea: true
+
+

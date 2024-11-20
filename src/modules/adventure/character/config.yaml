@@ -1,0 +1,68 @@
+.worlds:
+  model:
+    .characters:
+      forceMyParentIdInModels: worldId
+      title: Characters
+      class: core/storage/storage
+      apiAccess: true
+      providerConfig:
+        collection: characters
+      schema:
+        fields:
+          name:
+            title: Name
+            code: name
+            type: 
+              name: string
+          description:
+            title: Description
+            code: description
+            type:
+              name: string
+              textArea: true
+          worldId:
+            title: World
+            code: worldId
+            type:
+              name: link
+              storageId: worlds
+          locationId:
+            title: Location
+            code: locationId
+            type:
+              name: link
+              storageId: worldLocations
+          actionDescription:
+            title: Action description
+            code: actionDescription
+            type:
+              name: string
+              textArea: true
+          actionSuccessChance:
+            title: Action success chance
+            code: actionSuccessChance
+            type:
+              name: number
+          actionTime:
+            title: Action time
+            code: actionTime
+            type:
+              name: time
+              format: 'MMMM D, YYYY h:mm:ss A'
+          actionDuration:
+            title: Action duration (seconds)
+            code: actionDuration
+            type:
+              name: number
+      model:
+        class: modules/adventure/character/character
+        apiAccess: true
+        apiActions:
+          enterLocation:
+            params:
+              locationId:
+                title: Location
+                code: locationId
+                type:
+                  name: link
+                  storageId: worldLocations

@@ -1,0 +1,24 @@
+requiredModules:
+  modules/adventure/location: true
+  modules/adventure/character: true
+
+.worlds:
+  title: Worlds
+  class: core/storage/storage
+  apiAccess: true
+  providerConfig:
+    collection: worlds
+  schema:
+    modelTitle: '{values.title}'
+    fields:
+      title:
+        title: Title
+        code: title
+        type:
+          name: string
+      lore:
+        title: Lore
+        code: lore
+        type:
+          name: string
+          textArea: true
