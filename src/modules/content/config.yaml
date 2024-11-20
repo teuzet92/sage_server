@@ -95,6 +95,8 @@ datatypes:
     allowInContent: true
   string:
     allowInContent: true
+  script:
+    allowInContent: true
   clink:
     title: Content Link
     allowInContent: true

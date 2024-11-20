@@ -1,9 +1,3 @@
-datatypes:
-  rhai:
-    title: RHAI Script
-    allowInContent: true
-    valueConstructor: rhai
-
 .content:
   .construct:
     traits:

@@ -57,3 +57,10 @@ datatypes:
         title: Options
         type:
           name: array
+  script:
+    title: Script
+    params:
+      language:
+        title: Language
+        type:
+          name: string
