@@ -64,3 +64,25 @@ datatypes:
         title: Language
         type:
           name: string
+  struct:
+    title: Struct
+    params:
+      fields:
+        title: Fields
+        type:
+          name: array
+          valueType:
+            name: struct
+            fields:
+              - code: code
+                title: Code
+                type:
+                  name: string
+              - code: title
+                title: Title
+                type:
+                  name: string
+              - code: type
+                title: Type
+                type:
+                  name: typedef

@@ -10,8 +10,8 @@ requiredModules:
   modules/content: true
   modules/translations: true
 
-  # modules/overlord: true
-  modules/adventure: true
+  modules/overlord: true
+  # modules/adventure: true
 
 .storageProviders:
   .mongo:

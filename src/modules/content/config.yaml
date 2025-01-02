@@ -85,6 +85,8 @@ requiredModules:
           apiAccess: true
 
 datatypes:
+  struct:
+    allowInContent: true
   number:
     allowInContent: true
   bool:
