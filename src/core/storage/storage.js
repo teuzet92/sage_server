@@ -145,4 +145,12 @@ module.exports = class extends getClass('dweller') {
 			await model.update(update, updateTime);
 		}
 	}
+
+	async cmd_bulkCreate({ models }) {
+		for (let { values } of models) {
+			let model = this.createModel({ values });
+			await model.save();
+		}
+		return true; // TODO: Вернуть saveData?
+	}
 }

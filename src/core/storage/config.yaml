@@ -26,6 +26,14 @@ storage:
             name: array
             valueType:
               name: json
+    bulkCreate:
+      description: Creates several models
+      params:
+        models:
+          type:
+            name: array
+            valueType:
+              name: json
     getSchema:
       description: Get storage schema
     getModelTitles:
