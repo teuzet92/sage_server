@@ -1,5 +1,4 @@
 function getNodeByDefinition(schema, stringAddress) {
-	console.log(stringAddress, schema)
 	let address = stringAddress.split('/');
 	address.shift(); // В начале всегда идет решетка
 	return objget(schema, ...address);
@@ -100,7 +99,6 @@ function typedefFromSchema(schema) {
 }
 
 function templateFromSchema(schema) {
-	console.log(schema)
 	if (schema.type != 'object' && schema.type != 'array') { // Игнорируем все странное
 		return;
 	}
@@ -190,10 +188,8 @@ module.exports = class extends getClass('dweller') {
 		for (let [templateCode, templateData ] of Object.entries(res)) {
 			let templateStorage = engine.get('content.templates');
 			let templateModels = await templateStorage.getAll({ id: templateCode });
-			env.log(templateModels)
 			var templateModel = templateModels[0];
 			if (!templateModel) {
-				env.log(`Creating template ${templateCode}`)
 				templateModel = templateStorage.createModel({
 					id: templateCode,
 					values: {
