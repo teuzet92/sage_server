@@ -36,11 +36,22 @@ requiredModules:
           title: Title
           type:
             name: string
+        description:
+          code: description
+          title: Description
+          type:
+            name: string
+            textArea: true
         modelTitle:
           code: modelTitle
           title: Object title
           type:
             name: string
+        singleton:
+          code: singleton
+          title: Singleton
+          type:
+            name: bool
     model:
       apiAccess: true
       apiActions:
@@ -61,6 +72,12 @@ requiredModules:
               title: Title
               type:
                 name: string
+            description:
+              code: description
+              title: Description
+              type:
+                name: string
+                textArea: true
             code:
               code: code
               title: Code

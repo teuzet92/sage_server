@@ -19,3 +19,17 @@ requiredModules:
               name: string
               textArea: true
     contentDir: ../content
+.content:
+  .parseOverlordSchema:
+    class: modules/overlord/parseOverlordSchema
+    apiAccess: true
+    defaultApiAction: run
+    apiActions:
+      run:
+        description: Create templates according to overlord schema
+        params:
+          schema:
+            title: Schema
+            code: schema
+            type:
+              name: json
