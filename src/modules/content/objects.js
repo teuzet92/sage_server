@@ -14,10 +14,11 @@ module.exports = class extends getClass('core/storage/storage') {
 		let modelTitle = this.parent.values.modelTitle;
 		let fields = {};
 		for (let paramObject of myParams) {
-			let { code, title, type } = paramObject.values;
+			let { code, title, description, type } = paramObject.values;
 			fields[code] = {
 				code,
 				title,
+				description,
 				type,
 			};
 		};
