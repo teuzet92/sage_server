@@ -68,7 +68,7 @@ function typedefFromSchema(schema) {
 		if (schema.webp_url) {
 			return {
 				name: 'resource',
-				type: 'webp',
+				resourceType: 'webp',
 			};
 		}
 		return {

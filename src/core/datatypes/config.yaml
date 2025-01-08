@@ -64,6 +64,30 @@ datatypes:
         title: Language
         type:
           name: string
+  enum:
+    title: Enum
+    params:
+      values:
+        title: Values
+        type:
+          name: array
+          valueType:
+            name: string
+      valueTitles:
+        title: Value titles
+        type:
+          name: array
+          valueType:
+            name: string
+  resource:
+    title: Resource
+    params:
+      resourceType:
+        title: Resource type
+        type:
+          name: enum
+          values:
+            - webp
   struct:
     title: Struct
     params:
@@ -86,3 +110,8 @@ datatypes:
                 title: Type
                 type:
                   name: typedef
+              - code: description
+                title: Description
+                type:
+                  name: string
+                  textArea: true

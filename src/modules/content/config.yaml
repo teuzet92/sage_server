@@ -116,6 +116,10 @@ datatypes:
     allowInContent: true
   script:
     allowInContent: true
+  enum:
+    allowInContent: true
+  resource:
+    allowInContent: true
   clink:
     title: Content Link
     allowInContent: true
