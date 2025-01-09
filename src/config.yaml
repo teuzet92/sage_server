@@ -9,6 +9,7 @@ requiredModules:
 
   modules/content: true
   modules/translations: true
+  modules/resources: true
 
   modules/overlord: true
   # modules/adventure: true

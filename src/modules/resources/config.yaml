@@ -1,0 +1,63 @@
+requiredModules:
+  core/datatypes: true
+
+
+.resourceSystem:
+  title: Ресурсная система
+  class: dweller
+  .extract:
+    class: modules/resources/extract
+    title: Актуализировать ресурсы
+    apiAccess: true
+    defaultApiAction: run
+    apiActions:
+      run:
+        title: Актуализировать ресурсы
+  .resources:
+    title: Ресурсы - все
+    class: core/storage/storage
+    providerConfig:
+      collection: resources
+    apiAccess: true
+    schema:
+      modelTitle: '{values.resourceId}'
+      fields:
+        type:
+          title: Тип
+          code: type
+          type:
+            name: enum
+            values:
+              - webp
+        resourceId:
+          title: Id ресурса
+          code: resourceId
+          type:
+            name: string
+  .webp:
+    class: dweller
+    .resources:
+      title: Ресурсы - Webp
+      apiAccess: true
+      class: core/storage/storage
+      forceMyParentIdInModels: values.type
+      providerConfig:
+        collection: resources
+      schema:
+        modelTitle: '{values.resourceId}'
+        provider: resourceSystem.resources
+
+datatypes:
+  resource:
+    title: Resource
+    allowInContent: true
+    params:
+      resourceType:
+        title: Resource type
+        type:
+          name: enum
+          values:
+            - webp
+resourceTypes:
+  webp:
+    extension: .webp

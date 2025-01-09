@@ -18,7 +18,7 @@ requiredModules:
             type:
               name: string
               textArea: true
-    contentDir: ../content
+    contentDir: ../tmp/content
 .content:
   .parseOverlordSchema:
     class: modules/overlord/parseOverlordSchema
@@ -33,3 +33,16 @@ requiredModules:
             code: schema
             type:
               name: json
+
+.resourceSystem:
+  .extract:
+    providers:
+      overlordGit: true
+    .overlordGit:
+      apiAccess: false
+      class: modules/overlord/gitResources
+      repoDir: ../tmp/overlord
+      resourcesRoot: overlord/frontend/ui/public
+      publicResDir: ../tmp/public/resources
+
+

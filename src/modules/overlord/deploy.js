@@ -40,15 +40,12 @@ module.exports = class extends getClass('dweller') {
 			}
 		}
 		if (contentRaw.rhaiScripts) {
-			console.log('THERE ARE SCRIPTS')
 			await fs.promises.mkdir(`${contentDir}/scripts`, { recursive: true });
 			for (let [ scriptId, script ] of Object.entries(contentRaw.rhaiScripts)) {
-				console.log('writing script', scriptId, script)
 				fs.writeFileSync(`${contentDir}/scripts/${scriptId}`, script);
 			}
 		}
 		let status = await git.status();
-		console.log(status)
 		let added = status.not_added;
 		let modified = status.modified;
 		if (modified.length == 0 && added.length == 0) return; // Нет изменений в контенте

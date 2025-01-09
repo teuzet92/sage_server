@@ -61,9 +61,9 @@ module.exports = class MongoProvider extends getClass('dweller') {
 		return this.addBulkOperation(collection, 'insertOne', preparedQuery);
 	}
 
-	insertMany(queries = []) {
-		assert(this.bulkWrite, 'insertMany is not supported for bulk mode');
-		let preparedQueries = queries.map(preparedQuery);
+	insertMany(config, queries = []) {
+		assert(!this.bulkWrite, 'insertMany is not supported for bulk mode');
+		let preparedQueries = queries.map(prepareQuery);
 		return this.database.collection(config.collection).insertMany(preparedQueries);
 	}
 

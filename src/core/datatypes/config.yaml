@@ -79,15 +79,6 @@ datatypes:
           name: array
           valueType:
             name: string
-  resource:
-    title: Resource
-    params:
-      resourceType:
-        title: Resource type
-        type:
-          name: enum
-          values:
-            - webp
   struct:
     title: Struct
     params:

@@ -4,22 +4,6 @@ function getNodeByDefinition(schema, stringAddress) {
 	return objget(schema, ...address);
 }
 
-
-// 0) Если есть признак id = true, то просто это игнорируем, айдишники у нас и так есть
-// 1) Если type = number или type = integer, то это числовой тип или ссылка.
-// Если есть признак content_property, то там айдишник того, на что ведем. Тогда это линк.
-// В противном случае - число.
-// С него берем minimum, maximum (которые нужно поддержать)
-// 2) Если type = array, то строим valueType из items
-// 3) Если type = string, то:
-//   - если есть признак color, то у нас color. Надо поддержать в примитивном виде
-// 	- если есть признак enum, то у нас enum. Надо поддержать в примитивном виде
-// 	- если script = true, то это rhai
-// 	- Если webp_url, то это ресурс-картинка. Надо поддержать в примитивном виде
-// 	- Иначе это строка (i18_text - признак переводимости)
-// 4) Если object, то это структура.
-// 	Пробегаем по required, адресуем соответствующее из properties. Собираем это как fields.
-
 function typedefFromSchema(schema) {
 	if (schema.id) return;
 	let schemaType = schema.type;

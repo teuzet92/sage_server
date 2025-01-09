@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require('cors');
+const path = require('path');
 
 const port = process.env.PORT ?? 5000;
 
@@ -16,6 +17,7 @@ module.exports = class extends getClass('dweller') {
 		const app = express();
 		app.use(bodyParser.urlencoded({ limit: "1mb", extended: true }));
 		app.use(bodyParser.json({ limit: "1mb" }));
+		app.use('/public/resources/', express.static('../public/resources')) // TODO: уместно ли тут?
 		app.use(cors());
 		this.httpServer = require('http').createServer(app);
 		this.app = app;
@@ -33,7 +35,7 @@ module.exports = class extends getClass('dweller') {
 			};
 			this.onHttpRequest(data, response);
 		});
-		env.log(`Http server started listening on port ${port}`);
+		env.log(`HTTP server started listening on port ${port}`);
 		this.httpServer.listen(port);
 	}
 

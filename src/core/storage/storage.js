@@ -62,7 +62,11 @@ module.exports = class extends getClass('dweller') {
 	async providerCall(method, query = {}, ...params) {
 		let forcedIdPath = this.config.forceMyParentIdInModels;
 		if (forcedIdPath) {
-			query[forcedIdPath] = this.parent.id;
+			if (Array.isArray(query)) {
+				query.forEach(q => q[forcedIdPath] = this.parent.id);
+			} else {
+				query[forcedIdPath] = this.parent.id;
+			}
 		}
 		let provider = this.provider;
 		return provider[method](this.config.providerConfig, query, ...params);
