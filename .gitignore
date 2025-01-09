@@ -2,12 +2,14 @@
 # Dependency directories
 node_modules/
 
-
 # dotenv environment variable files
 .env
 
 # Projects
 src/projects
 
-# Game content
-/content/
+# TMP
+/tmp/*
+
+# Resources
+/public/resources/
