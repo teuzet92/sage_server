@@ -2,7 +2,7 @@ storage:
   apiAccess: true
   class: core/storage
   defaultApiAction: getAll
-  provider: storageProviders.mongoMemory
+  provider: storageProviders.mongo
   idType:
     name: string
   apiActions:

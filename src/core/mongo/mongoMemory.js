@@ -90,7 +90,7 @@ module.exports = class MongoMemoryProvider extends getClass('dweller') {
 		return res;
 	}
 
-	async update(config, query, updates, params) {
+	async update(config, query, updates, params) { // TODO: updateOne
 		if (!updates) return;
 		let collection = config.collection;
 		await this.awaitCollection(collection);

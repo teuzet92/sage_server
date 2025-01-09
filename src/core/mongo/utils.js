@@ -18,4 +18,13 @@ function prepareResult(obj) {
 	return prepared;
 }
 
-module.exports = { prepareQuery, prepareResult }
+function createBulkPromise() {
+	let resolve, reject;
+	const promise = new Promise((res, rej) => {
+		resolve = res;
+		reject = rej;
+	});
+	return { promise, resolve, reject };
+}
+
+module.exports = { prepareQuery, prepareResult, createBulkPromise }

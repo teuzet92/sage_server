@@ -9,7 +9,7 @@ let setVar = function (varName, value) {
 	let dwellerVarsStrorage = engine.get('vars');
 	let query = { dwellerId: this.fullId, 'values.varName': varName };
 	let update = { 'values.value': value };
-	dwellerVarsStrorage.providerCall('update', query, update, { upsert: true });
+	dwellerVarsStrorage.providerCall('updateOne', query, update, { upsert: true });
 }
 
 onInit = async function () {

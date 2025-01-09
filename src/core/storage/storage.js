@@ -64,7 +64,7 @@ module.exports = class extends getClass('dweller') {
 		if (forcedIdPath) {
 			query[forcedIdPath] = this.parent.id;
 		}
-		let provider = await this.provider;
+		let provider = this.provider;
 		return provider[method](this.config.providerConfig, query, ...params);
 	}
 
@@ -131,7 +131,6 @@ module.exports = class extends getClass('dweller') {
 	}
 
 	async cmd_bulkUpdate({ models }) {
-		// TODO: Выполняем очень неэффективно
 		let modelDwellers = {};
 		for (let { modelId, update, updateTime } of models) {
 			// Проверяем все updateTime
@@ -139,18 +138,24 @@ module.exports = class extends getClass('dweller') {
 			assert(model.updateTime == updateTime, `Model ${modelId} has wrong updateTime. Expected: ${model.updateTime}, received: ${updateTime}`);
 			modelDwellers[modelId] = model;
 		}
+		this.provider.startBulk();
 		for (let { modelId, update, updateTime } of models) {
 			// Применяем изменения
 			let model = modelDwellers[modelId];
-			await model.update(update, updateTime);
+			model.update(update, updateTime);
 		}
+		await this.provider.executeBulk();
+		this.provider.stopBulk();
 	}
 
 	async cmd_bulkCreate({ models }) {
+		this.provider.startBulk();
 		for (let { values } of models) {
 			let model = this.createModel({ values });
-			await model.save();
+			model.save();
 		}
+		await this.provider.executeBulk();
+		this.provider.stopBulk();
 		return true; // TODO: Вернуть saveData?
 	}
 }

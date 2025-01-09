@@ -28,15 +28,14 @@ module.exports = class extends getClass('dweller') {
 		if (!this.createTime) {
 			this.createTime = this.time();
 			var creation = true;
-		} else {
-			this.updateTime = this.time();
 		}
+		this.updateTime = this.time();
 		let newSaveData = this.saveData();
 		if (creation) {
 			var res = this.parent.providerCall('insert', newSaveData);
 		} else {
 			newSaveData.updateTime = this.time();
-			var res = this.parent.providerCall('update', { id: this.id }, newSaveData);
+			var res = this.parent.providerCall('updateOne', { id: this.id }, newSaveData);
 		}
 		let oldSaveData = this.lastSaveData;
 		res.then(async () => {
