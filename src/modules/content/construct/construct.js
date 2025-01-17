@@ -1,16 +1,15 @@
 module.exports = class extends getClass('dweller') {
 
-	async getConstructorForParam(param) {
+	getConstructorForParam(param) {
 		// TODO: Облагородить и проверить что работает
 		let paramType = param.values.type.name;
 		let fixedConstructorId = engine.config.datatypes[paramType].valueConstructor;
 		if (fixedConstructorId) {
-			return this.get(`constructors.${constructorId}`);
+			return this.get(`constructors.${fixedConstructorId}`);
 		}
-		let out = { constructorId: `constructors.${this.config.defaultValueConstructor}` };
-		await this.execCallbacks('onGetConstructorForParam', param, out);
+		let out = { constructorId: this.config.defaultValueConstructor };
+		this.execCallbacks('onGetConstructorForParam', param, out);
 		return this.get(`constructors.${out.constructorId}`);
-
 	}
 
 	async run(targetId) {

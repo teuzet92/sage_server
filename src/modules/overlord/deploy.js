@@ -30,7 +30,7 @@ module.exports = class extends getClass('dweller') {
 		fs.rmSync(`${contentDir}/content.json`);
 
 		let contentConstruct = engine.get('content.construct');
-		let contentRaw = await contentConstruct.run('3zt4Lxm0RT'); // TODO
+		let contentRaw = await contentConstruct.run('gfuc9twe99'); // TODO
 		let content = contentRaw.content;
 		this.writeObjectToContent(contentRaw.content, 'content.json');
 		if (contentRaw.loc) {
@@ -54,9 +54,9 @@ module.exports = class extends getClass('dweller') {
 		if (adminMessage) {
 			commitMessage = [ commitMessage, adminMessage ];
 		};
-		let commitAuthor =  `${apiActionUser.id} <${apiActionUser.values.email}>`;
-		await git.commit(commitMessage, modified, { '--author': commitAuthor });
-		await git.push();
+		// let commitAuthor =  `${apiActionUser.id} <${apiActionUser.values.email}>`;
+		// await git.commit(commitMessage, modified, { '--author': commitAuthor });
+		// await git.push();
 		return 'Successfully pushed to content repo!';
 		// fs.rmSync(`${contentDir}`, { recursive: true, force: true });
 	}

@@ -82,7 +82,7 @@ function typedefFromSchema(schema) {
 	}
 }
 
-function templateFromSchema(schema) {
+function templateFromSchema(schema, targets) {
 	if (schema.type != 'object' && schema.type != 'array') { // Игнорируем все странное
 		return;
 	}
@@ -103,6 +103,7 @@ function templateFromSchema(schema) {
 				description: fieldSchema.description,
 				title: fieldSchema.title,
 				type: fieldTypedef,
+				targets,
 			});
 		}
 	}
@@ -111,6 +112,7 @@ function templateFromSchema(schema) {
 		description: schema.description,
 		isSingleton,
 		fields,
+		targets,
 	};
 }
 
@@ -157,13 +159,13 @@ function inlineRefs(currentNode, globalSchema) {
 
 module.exports = class extends getClass('dweller') {
 
-	async cmd_run({ schema }) {
+	async cmd_run({ schema, targets }) {
 		let newSchema = inlineRefs(schema, schema);
 		delete newSchema.definitions;
 		let res = {};
 		for (let templateCode of newSchema.required) {
 			let templateSchema = newSchema.properties[templateCode];
-			let parsedTemplate = templateFromSchema(templateSchema);
+			let parsedTemplate = templateFromSchema(templateSchema, targets);
 			if (parsedTemplate) {
 				res[templateCode] = parsedTemplate;
 			}
@@ -179,10 +181,12 @@ module.exports = class extends getClass('dweller') {
 					values: {
 						title: templateData.title,
 						singleton: templateData.isSingleton,
+						targets: templateData.targets,
 					}
 				});
-				await templateModel.save();
 			}
+			templateModel.values.targets = templateData.targets ?? templateModel.values.targets;
+			await templateModel.save();
 			let templateParamsStorage = templateModel.get('params');
 			let templateParams = await templateParamsStorage.getAll();
 			let fields = templateData.fields;
@@ -201,6 +205,7 @@ module.exports = class extends getClass('dweller') {
 					param.values.title = fieldData.title ?? param.values.title;
 					param.values.description = fieldData.description ?? param.values.description
 					param.values.type = fieldData.type ?? param.values.type;
+					param.values.targets = templateData.targets ?? param.values.targets;
 					await param.save();
 					// code, title, type, description
 				}

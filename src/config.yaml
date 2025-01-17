@@ -16,9 +16,9 @@ requiredModules:
 
 .storageProviders:
   .mongo:
-    db: adventure_test
+    db: overlord_dev
   .mongoMemory:
-    db: adventure_test
+    db: overlord_dev
 
 dweller:
   apiActions:

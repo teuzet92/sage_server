@@ -54,8 +54,6 @@ requiredModules:
             name: bool
     model:
       apiAccess: true
-      apiActions:
-        delete: false
       .params:
         apiAccess: true
         class: modules/content/templateParams

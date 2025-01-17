@@ -33,6 +33,14 @@ requiredModules:
             code: schema
             type:
               name: json
+          targets:
+            title: Targets
+            code: targets
+            type:
+              name: array
+              valueType:
+                name: link
+                storageId: content.construct.targets
 
 .resourceSystem:
   .extract:
