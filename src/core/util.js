@@ -61,9 +61,11 @@ global.objmerge = (target, source, onCollision = 'source' /* target, source, ass
 		const targetValue = target[key];
 		const sourceValue = source[key];
 
-		if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
-			target[key] = targetValue.concat(sourceValue); // check collisions?
-		} else if (isObject(targetValue) && isObject(sourceValue)) {
+		// TODO: Надо ли мержить массивы?
+		// if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
+		// 	target[key] = targetValue.concat(sourceValue); // check collisions?
+		// } else if ...
+		if (!Array.isArray(targetValue) && !Array.isArray(sourceValue) && isObject(targetValue) && isObject(sourceValue)) {
 			target[key] = objmerge(Object.assign({}, targetValue), sourceValue, onCollision);
 		} else {
 			if (targetValue == undefined) {
