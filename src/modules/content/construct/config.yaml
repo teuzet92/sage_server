@@ -19,7 +19,7 @@
     .targets:
       apiAccess: true
       title: Content targets
-      class: core/storage/storage
+      class: modules/content/construct/targets
       providerConfig:
         collection: contentTargets
       schema:
@@ -36,8 +36,16 @@
             type:
               name: bool
 
-      models:
+      model:
         apiAccess: true
+      apiActions:
+        createTarget:
+          params:
+            targetId:
+              type:
+                name: string
+              description: New target ID
+        create: false
     .constructors:
       class: dweller
       .clink:
