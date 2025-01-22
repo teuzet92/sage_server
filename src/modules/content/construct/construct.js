@@ -25,14 +25,17 @@ module.exports = class extends getClass('dweller') {
 			let templatesStorage = engine.get('content.templates');
 			let templateModels = await templatesStorage.getAll();
 			for (let templateModel of templateModels) {
+				let targets = templateModel.values.targets;
+				if (!targets) continue;
+				if (!targets.includes(targetId)) continue;
 				let paramsStorage = templateModel.get('params');
 				let rawParams = await paramsStorage.getAll();
 				let params = []; // Собираем только параметры, которые положено собирать
 				for (let param of rawParams) {
 					let paramTargets = param.values.targets;
-					if (paramTargets && paramTargets.find(target => targetId)) {
-						params.push(param.saveData());
-					}
+					if (!paramTargets) continue;
+					if (!paramTargets.includes(targetId)) continue;
+					params.push(param.saveData());
 				}
 				let objectsStorage = templateModel.get('objects');
 				let templateObjects = await objectsStorage.getAll();

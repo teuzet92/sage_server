@@ -1,5 +1,6 @@
 const fs = require('fs');
 const simpleGit = require('simple-git');
+const util = require('node:util');
 
 const USER = process.env.GIT_USER;
 const TOKEN = process.env.GIT_ACCESS_TOKEN;
@@ -19,6 +20,41 @@ module.exports = class extends getClass('dweller') {
 		fs.writeFileSync(`${this.config.contentDir}/${filename}`, json);
 	}
 
+	async complileRhaiContent() {
+		let contentConstruct = engine.get('content.construct');
+		let contentRhai = await contentConstruct.run('rhai');
+		let stringContent = JSON.stringify(contentRhai.content, null, 2);
+		stringContent = stringContent.replace(/'/g, '"');
+		stringContent = stringContent.replace(/\{/g, '#{');
+		let rhaiLibScript = `const CONTENT_RAW = ${stringContent};\n\n`;
+
+		let templateHelpers = Object.entries(contentRhai.content)
+			.map(([ templateId, templateData ]) => {
+				let helperScript = `fn ${templateId}(id) {\n`
+				helperScript += `    return global::CONTENT_RAW.${templateId}[\`\${id}\`];\n`;
+				helperScript += '}\n';
+				return helperScript;
+			})
+			.join('\n');
+		rhaiLibScript += templateHelpers;
+
+		let rhaiLibsStorage = engine.get('content.templates.script_modules.objects');
+		let contentLib;
+		let contentLibs = await rhaiLibsStorage.getAll({ 'values.name': 'content' });
+		if (contentLibs.length == 0) {
+			contentLib = rhaiLibsStorage.createModel({
+				values: {
+					name: 'content',
+					script: rhaiLibScript,
+				}
+			})
+		} else {
+			contentLib = contentLibs[0];
+			contentLib.values.script = rhaiLibScript;
+		}
+		await contentLib.save();
+	}
+
 	async run(apiActionUser, adminMessage) {
 		let contentDir = this.config.contentDir;
 		await this.initGitRepo();
@@ -29,9 +65,13 @@ module.exports = class extends getClass('dweller') {
 		fs.rmSync(`${contentDir}/loc`, { recursive: true, force: true });
 		fs.rmSync(`${contentDir}/content.json`);
 
+		await this.complileRhaiContent();
+		return;
+
 		let contentConstruct = engine.get('content.construct');
-		let contentRaw = await contentConstruct.run('gfuc9twe99'); // TODO
+		let contentRaw = await contentConstruct.run('overlord_rust');
 		let content = contentRaw.content;
+
 		this.writeObjectToContent(contentRaw.content, 'content.json');
 		if (contentRaw.loc) {
 			await fs.promises.mkdir(`${contentDir}/loc`, { recursive: true });
@@ -54,11 +94,11 @@ module.exports = class extends getClass('dweller') {
 		if (adminMessage) {
 			commitMessage = [ commitMessage, adminMessage ];
 		};
-		// let commitAuthor =  `${apiActionUser.id} <${apiActionUser.values.email}>`;
-		// await git.commit(commitMessage, modified, { '--author': commitAuthor });
-		// await git.push();
+		let commitAuthor = `${apiActionUser.id} <${apiActionUser.values.email}>`;
+		await git.commit(commitMessage, modified, { '--author': commitAuthor });
+		await git.push();
 		return 'Successfully pushed to content repo!';
-		// fs.rmSync(`${contentDir}`, { recursive: true, force: true });
+		fs.rmSync(`${contentDir}`, { recursive: true, force: true });
 	}
 
 	cmd_run({ apiActionUser, adminMessage }) {

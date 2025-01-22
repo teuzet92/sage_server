@@ -24,6 +24,11 @@ function typedefFromSchema(schema) {
 			integer: true
 		}
 	}
+	if (schemaType == 'boolean') {
+			return {
+				name: 'bool',
+			};
+		}
 	if (schemaType == 'array') {
 		return {
 			name: 'array',
@@ -92,7 +97,7 @@ function templateFromSchema(schema, targets) {
 	} else {
 		properties = schema.items;
 	}
-	let fieldCodes = properties.required;
+	let fieldCodes = Object.keys(properties.properties);
 	let fields = [];
 	for (let fieldCode of fieldCodes) {
 		let fieldSchema = properties.properties[fieldCode];
@@ -181,11 +186,23 @@ module.exports = class extends getClass('dweller') {
 					values: {
 						title: templateData.title,
 						singleton: templateData.isSingleton,
-						targets: templateData.targets,
 					}
 				});
 			}
-			templateModel.values.targets = templateData.targets ?? templateModel.values.targets;
+			let currentTargets = templateModel.values.targets;
+			templateModel.values.title = templateData.title ?? templateModel.values.title;
+			let newTargets = templateData.targets;
+			if (currentTargets) {
+				if (newTargets) {
+					for (let newTarget of newTargets) {
+						if (!currentTargets.includes(newTarget)) {
+							currentTargets.push(newTarget);
+						}
+					}
+				}
+			} else {
+				templateModel.values.targets = templateData.targets;
+			}
 			await templateModel.save();
 			let templateParamsStorage = templateModel.get('params');
 			let templateParams = await templateParamsStorage.getAll();
@@ -207,7 +224,6 @@ module.exports = class extends getClass('dweller') {
 					param.values.type = fieldData.type ?? param.values.type;
 					param.values.targets = templateData.targets ?? param.values.targets;
 					await param.save();
-					// code, title, type, description
 				}
 			}
 		}
