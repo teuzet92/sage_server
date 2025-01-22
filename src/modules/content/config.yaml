@@ -116,6 +116,8 @@ datatypes:
     allowInContent: true
   enum:
     allowInContent: true
+  color:
+    allowInContent: true
   clink:
     title: Content Link
     allowInContent: true

@@ -10,6 +10,8 @@ datatypes:
             name: string
   bool:
     title: Boolean
+  color:
+    title: Color
   number:
     title: Number
     params:
