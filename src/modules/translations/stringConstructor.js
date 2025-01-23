@@ -1,11 +1,12 @@
 module.exports = class extends getClass('dweller') {
 
-	async construct(value, param, objectSaveData) {
-		if (!param.values.type.translated) {
-			return value;
+	async construct(value, datatype, path, ctx) {
+		// TODO: Отвратительно работает с nested полями
+		if (!datatype.translated) {
+			return value ?? "";
 		}
 		let constructDweller = this.parent.parent;
-		let sourceId = `content.templates.${objectSaveData.templateId}.objects.${objectSaveData.id}:${param.values.code}`;
+		let sourceId = path.join('.');
 		objset(constructDweller.constructionCtx, true, 'translatedStrings', sourceId);
 		return sourceId;
 	}

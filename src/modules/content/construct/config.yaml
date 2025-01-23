@@ -35,6 +35,11 @@
             code: templatesAsArray
             type:
               name: bool
+          defaultEmptyFields:
+            title: Устанавливать дефолтные значения для пустых полей
+            code: defaultEmptyFields
+            type:
+              name: bool
 
       model:
         apiAccess: true
@@ -52,6 +57,17 @@
         class: modules/content/construct/datatypes/clink
       .base:
         class: modules/content/construct/datatypes/base
+      .struct:
+        class: modules/content/construct/datatypes/struct
+      .array:
+        class: modules/content/construct/datatypes/array
+      .number:
+        class: modules/content/construct/datatypes/number
+      .bool:
+        class: modules/content/construct/datatypes/bool
+      .resource:
+        class: modules/content/construct/datatypes/resource
+
 
   .templates:
     schema:
@@ -80,8 +96,13 @@
 datatypes:
   clink:
     valueConstructor: clink
-    params:
-      inline:
-        title: Inline
-        type:
-          name: bool
+  struct:
+    valueConstructor: struct
+  number:
+    valueConstructor: number
+  bool:
+    valueConstructor: bool
+  array:
+    valueConstructor: array
+  resource:
+    valueConstructor: resource

@@ -60,13 +60,13 @@ module.exports = class extends getClass('dweller') {
 		await this.initGitRepo();
 		// Хак. Реинициализируем гит в новой папке, а то он путается, будучи внутри репы
 		let git = simpleGit(contentDir);
+		// git.addConfig('core.autocrlf', false);
 
 		// Собираем весь контент с нуля
 		fs.rmSync(`${contentDir}/loc`, { recursive: true, force: true });
-		fs.rmSync(`${contentDir}/content.json`);
+		fs.rmSync(`${contentDir}/content.json`, { recursive: true, force: true });
 
 		await this.complileRhaiContent();
-		return;
 
 		let contentConstruct = engine.get('content.construct');
 		let contentRaw = await contentConstruct.run('overlord_rust');
@@ -86,10 +86,12 @@ module.exports = class extends getClass('dweller') {
 			}
 		}
 		let status = await git.status();
+		env.log(status);
 		let added = status.not_added;
 		let modified = status.modified;
-		if (modified.length == 0 && added.length == 0) return; // Нет изменений в контенте
-		await git.add('./*');
+		let deleted = status.deleted;
+		if (modified.length == 0 && added.length == 0 && deleted.length == 0) return; // Нет изменений в контенте
+		await git.add('*');
 		let commitMessage = `Content update from Overlord Admin.`;
 		if (adminMessage) {
 			commitMessage = [ commitMessage, adminMessage ];

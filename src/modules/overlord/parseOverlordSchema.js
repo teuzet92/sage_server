@@ -190,7 +190,7 @@ module.exports = class extends getClass('dweller') {
 				});
 			}
 			let currentTargets = templateModel.values.targets;
-			templateModel.values.title = templateData.title ?? templateModel.values.title;
+			templateModel.values.title = templateModel.values.title ?? templateData.title ?? templateModel.id;
 			let newTargets = templateData.targets;
 			if (currentTargets) {
 				if (newTargets) {
@@ -219,7 +219,7 @@ module.exports = class extends getClass('dweller') {
 							}
 						});
 					}
-					param.values.title = fieldData.title ?? param.values.title;
+					param.values.title = param.values.title ?? fieldData.title ?? fieldData.code;
 					param.values.description = fieldData.description ?? param.values.description
 					param.values.type = fieldData.type ?? param.values.type;
 					param.values.targets = templateData.targets ?? param.values.targets;

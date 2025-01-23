@@ -51,6 +51,6 @@ requiredModules:
       class: modules/overlord/gitResources
       repoDir: ../tmp/overlord
       resourcesRoot: overlord/frontend/ui/public
-      publicResDir: ../tmp/public/resources
+      publicResDir: ../public/resources
 
 

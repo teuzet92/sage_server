@@ -1,9 +1,14 @@
 module.exports = class extends getClass('dweller') {
 
-	async construct(value, param, objectSaveData) {
-		let scriptId = `content.${objectSaveData.templateId}.${objectSaveData.id}.${param.values.code}.rhai`;
-		let constructDweller = this.parent.parent;
-		objset(constructDweller.constructionCtx, value, 'rhaiScripts', scriptId);
-		return `{{ script('scripts/${scriptId}'') }}`;
+	async construct(value, datatype, path, ctx) {
+		let scriptId = path.join('.') + '.rhai';
+		let storedValue = value;
+		if (value !== undefined) {
+			storedValue = value.replace(/(\r\n|\n|\r)/gm, "");
+		} else {
+			storedValue = "";
+		}
+		objset(ctx, storedValue, 'rhaiScripts', scriptId);
+		return `{{ script('scripts/${scriptId}') }}`;
 	}
 }

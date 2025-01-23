@@ -1,14 +1,13 @@
 module.exports = class extends getClass('dweller') {
 
-	getConstructorForParam(param) {
-		// TODO: Облагородить и проверить что работает
-		let paramType = param.values.type.name;
-		let fixedConstructorId = engine.config.datatypes[paramType].valueConstructor;
+	getConstructorForDatatype(datatype) {
+		let fixedConstructorId = engine.config.datatypes[datatype.name].valueConstructor;
+		// env.log(fixedConstructorId)
 		if (fixedConstructorId) {
 			return this.get(`constructors.${fixedConstructorId}`);
 		}
 		let out = { constructorId: this.config.defaultValueConstructor };
-		this.execCallbacks('onGetConstructorForParam', param, out);
+		this.execCallbacks('onGetConstructorForDatatype', datatype, out);
 		return this.get(`constructors.${out.constructorId}`);
 	}
 
@@ -17,13 +16,20 @@ module.exports = class extends getClass('dweller') {
 		this.constructionCtx = { // Фиксируем контекст сборки
 			templates: {},
 			objects: {},
+			resources: {},
 			// TODO: translations, resources, scripts
 		};
 		try {
+			let resourceStorage = engine.get('resourceSystem.resources');
+			let resources = await resourceStorage.getAll();
+			for (let res of resources) {
+				this.constructionCtx.resources[res.id] = res.values.resourceId;
+			}
 			let targetModel = await this.getAsync(`targets.${targetId}`);
 			assert(targetModel, `Unknown content target '${targetId}'`);
 			let templatesStorage = engine.get('content.templates');
 			let templateModels = await templatesStorage.getAll();
+			this.constructionCtx.target = targetModel;
 			for (let templateModel of templateModels) {
 				let targets = templateModel.values.targets;
 				if (!targets) continue;
@@ -62,10 +68,15 @@ module.exports = class extends getClass('dweller') {
 				let templateTargets = template.values.targets;
 				if (templateTargets && templateTargets.find(target => targetId)) {
 					let constructed = templateCtx.constructed;
-					if (targetModel.values.templatesAsArray) {
-						constructed = Object.values(constructed);
+					if (template.values.singleton) {
+						content[template.id] = Object.values(constructed)[0];
 					}
-					content[template.id] = constructed;
+					else {
+						if (targetModel.values.templatesAsArray) {
+							constructed = Object.values(constructed);
+						}
+						content[template.id] = constructed;
+					}
 				}
 			}
 			var constructionCtx = this.constructionCtx;
@@ -91,12 +102,12 @@ module.exports = class extends getClass('dweller') {
 		let res = {
 			id: objectId,
 		};
+		let path = ['content', 'templates', templateId, 'objects'];
 		for (let param of Object.values(templateCtx.params)) {
-			let constructor = this.getConstructorForParam(param);
+			let paramType = param.values.type;
+			let constructor = this.getConstructorForDatatype(paramType);
 			let rawValue = objectData.values[param.values.code];
-			if (rawValue) { // TODO: Проверка получше? Или утащить в сборщик?
-				res[param.values.code] = await constructor.construct(rawValue, param, objectData, constructionCtx)
-			}
+			res[param.values.code] = await constructor.construct(rawValue, paramType, path.concat([objectId]), constructionCtx)
 		}
 		templateCtx.constructed[objectId] = res;
 		return res;
